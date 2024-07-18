@@ -12,5 +12,7 @@ export default configureStore({
     couples: couplesSlice,
     location: locationSlice,
     dances: dancesSlice,
+    // heats: heatsSlice,
+    // schedule: scheduleSlice,
   },
 });

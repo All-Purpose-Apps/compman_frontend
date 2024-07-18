@@ -26,7 +26,7 @@ export default function ViewStudios() {
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div>{error} <Button onClick={(e) => location.reload()}>Go Back</Button></div>;
     }
 
     const handleEdit = id => {

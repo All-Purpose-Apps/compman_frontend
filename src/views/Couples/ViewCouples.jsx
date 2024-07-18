@@ -80,7 +80,7 @@ export default function ViewCouples() {
             </Form.Group>
             <Table striped bordered hover className="view-couples">
                 <thead>
-                    <tr>
+                    <tr className="text-center">
                         <th>Leader</th>
                         <th>Follower</th>
                         <th>Dance</th>
@@ -91,11 +91,17 @@ export default function ViewCouples() {
                 </thead>
                 <tbody>
                     {currentCouples.length > 0 ? currentCouples.map(couple => (
-                        <tr key={couple._id} style={{ cursor: 'pointer' }} onClick={() => handleGetCouple(couple._id)}>
-                            <td>{couple.leader.fullName}</td>
-                            <td>{couple.follower.fullName}</td>
+                        <tr key={couple._id} style={{ cursor: 'pointer' }} onClick={() => handleGetCouple(couple._id)} className="align-middle">
+                            <td>
+                                <img src="https://i.pravatar.cc/50" alt={`${couple.leader.fullName}'s avatar`} style={{ width: '50px', height: '50px', borderRadius: '50%', margin: '10px' }} />
+                                {couple.leader.fullName}
+                            </td>
+                            <td>
+                                <img src="https://i.pravatar.cc/50" alt={`${couple.follower.fullName}'s avatar`} style={{ width: '50px', height: '50px', borderRadius: '50%', margin: '10px' }} />
+                                {couple.follower.fullName}
+                            </td>
                             <td>{couple.dance.title} - {couple.dance.danceCategory.name}</td>
-                            <td>{capitalizeWords(couple.ageCategory)}</td>
+                            <td className="text-center">{capitalizeWords(couple.ageCategory)}</td>
                             <td>{capitalizeWords(couple.level)}</td>
                             <td>
                                 <Button onClick={(e) => { e.stopPropagation(); handleEdit(couple._id); }}>Edit</Button>

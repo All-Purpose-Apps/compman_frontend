@@ -7,22 +7,22 @@ const Sidebar = () => {
         <div className="sidebar">
             <Nav className="flex-column">
                 <Nav.Item>
-                    <Nav.Link href="/">
+                    <Nav.Link href="/admin/dashboard">
                         <FaHome className="icon" /> Dashboard
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="/studios">
+                    <Nav.Link href="/admin/studios">
                         <FaBuilding className="icon" /> Studios
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="/dancers">
+                    <Nav.Link href="/admin/dancers">
                         <FaUsers className="icon" /> Dancers
                     </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="/couples">
+                    <Nav.Link href="/admin/couples">
                         <FaUser className="icon" /> Couples
                     </Nav.Link>
                 </Nav.Item>

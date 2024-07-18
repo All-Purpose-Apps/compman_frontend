@@ -26,7 +26,7 @@ export default function ViewDancers() {
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div>{error} <Button onClick={(e) => location.reload()}>Go Back</Button></div>;
     }
 
     const handleEdit = id => {
@@ -96,7 +96,8 @@ export default function ViewDancers() {
                 <tbody>
                     {currentDancers.length > 0 ? currentDancers.map(dancer => (
                         <tr key={dancer._id} style={{ cursor: 'pointer' }} onClick={() => handleGetDancer(dancer._id)}>
-                            <td>{dancer.fullName}</td>
+                            <td>
+                                <img src="https://i.pravatar.cc/50" alt={`${dancer.fullName}'s avatar`} style={{ width: '50px', height: '50px', borderRadius: '50%', margin: '10px' }} />{dancer.fullName}</td>
                             <td>{dancer.age}</td>
                             <td>{capitalizeWords(dancer.identifier, "/")}</td>
                             <td onClick={(e) => { e.stopPropagation(); handleStudioClick(dancer.studio._id); }}>{dancer.studio.name}</td>

@@ -54,23 +54,17 @@ export default function ViewOneDancer() {
                             <Card.Body>
                                 <Row>
                                     <Col md={12} className="text-center mb-4">
+                                        <img src="https://i.pravatar.cc/100" alt={`${dancer.fullName}'s avatar`} style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={12} className="text-center mb-4">
                                         <h1>{dancer.fullName}</h1>
                                     </Col>
                                 </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
-                                        <FaUser size={20} />
-                                    </Col>
+                                <Row className="mb-3 text-center">
                                     <Col md={11}>
-                                        <Card.Text>Identifier: {dancer.identifier}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
-                                        <FaChild size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>Age: {dancer.age}</Card.Text>
+                                        <Card.Text>{dancer.age} - {dancer.identifier}</Card.Text>
                                     </Col>
                                 </Row>
                             </Card.Body>
