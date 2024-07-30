@@ -14,6 +14,8 @@ import ViewCouples from 'src/views/Couples/ViewCouples';
 import ViewOneCouple from 'src/views/Couples/ViewOneCouple';
 import NewCouple from 'src/views/Couples/NewCouple';
 import EditCouple from 'src/views/Couples/EditCouple';
+// Heat Imports
+import ViewHeats from 'src/views/Heats/ViewHeats';
 // Auth Imports
 import Login from 'src/views/Auth/Login';
 
@@ -86,11 +88,11 @@ const routes = [
     layout: '/admin',
     component: EditCouple,
   },
-  // Auth Routes
+  // Heat Routes
   {
-    path: '/login',
-    layout: '/auth',
-    component: Login,
+    path: 'heats',
+    layout: '/admin',
+    component: ViewHeats,
   },
 ];
 

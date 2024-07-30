@@ -2,13 +2,12 @@ import { Outlet } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { capitalize } from '../utils';
 
-export default function MainLayout({ children }) {
+export default function MainLayout() {
   return (
     <Container fluid>
       <Row>
-        <Col md={2} className='sidebar-container'>
+        <Col className='sidebar-container' md={2}>
           <Sidebar />
         </Col>
         <Col className='main-container'>

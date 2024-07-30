@@ -1,8 +1,27 @@
 import React from 'react';
-import { Nav } from 'react-bootstrap';
+import { Nav, Button } from 'react-bootstrap';
 import { FaHome, FaUser, FaCog, FaBuilding, FaUsers } from 'react-icons/fa';
+import { app } from 'src/firebase';
+import { getAuth, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { clearUser } from 'src/store/userSlice';
+import { useDispatch } from 'react-redux';
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        const auth = getAuth(app);
+        signOut(auth).then(() => {
+            dispatch(clearUser());
+            navigate('/auth/login');
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+
     return (
         <div className="sidebar">
             <Nav className="flex-column">
@@ -26,6 +45,12 @@ const Sidebar = () => {
                         <FaUser className="icon" /> Couples
                     </Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link href="/admin/heats">
+                        <FaCog className="icon" /> Heats
+                    </Nav.Link>
+                </Nav.Item>
+                <Button variant="danger" onClick={() => handleLogout()}>Logout</Button>
             </Nav>
         </div>
     );

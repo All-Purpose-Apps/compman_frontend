@@ -35,6 +35,14 @@ export default function Dashboard() {
                         </Card.Body>
                     </Card>
                 </Col>
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Total Amount</Card.Title>
+                            <Card.Text>Amount</Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
             </Row>
             <Row>
                 <Col>

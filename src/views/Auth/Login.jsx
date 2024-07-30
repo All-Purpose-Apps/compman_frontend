@@ -1,22 +1,36 @@
 import React, { useState } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { app } from 'src/firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { setUser } from 'src/store/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const auth = getAuth(app);
+    const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        // Perform login logic here
-        if (email === 'admin@example.com' && password === 'password') {
-            navigate('/admin/dashboard');
-        } else {
-            setError('Invalid email or password');
-        }
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                const serializedUser = {
+                    email: user.email,
+                    uid: user.uid,
+                }
+                dispatch(setUser(serializedUser));
+                navigate('/admin/dashboard');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                setError(errorMessage);
+            });
     };
 
     return (
@@ -30,6 +44,7 @@ export default function Login() {
                         <Form.Control
                             type="email"
                             placeholder="Enter email"
+                            autoComplete='email'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -41,17 +56,19 @@ export default function Login() {
                         <Form.Control
                             type="password"
                             placeholder="Password"
+                            autoComplete='current-password'
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" className="mb-4">
                         Login
                     </Button>
+                    <p>Don't have an account? <a href="/auth/signup">Sign up</a></p>
                 </Form>
             </Card.Body>
-        </Card>
+        </Card >
     );
 }

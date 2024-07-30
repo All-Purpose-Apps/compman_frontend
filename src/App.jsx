@@ -3,6 +3,8 @@ import MainLayout from 'src/layouts/MainLayout'
 import AuthLayout from 'src/layouts/AuthLayout'
 import routes from 'src/routes'
 import Login from 'src/views/Auth/Login'
+import ProtectedRoute from './views/ProtectedRoute'
+import Signup from './views/Auth/SignUp'
 
 export default function App() {
 
@@ -20,11 +22,17 @@ export default function App() {
         <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
         </Route>
-        <Route path="/admin" element={<MainLayout />}>
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }>
           {getAdminRoutes(routes)}
         </Route>
       </Routes>
     </div>
   )
+
 }
