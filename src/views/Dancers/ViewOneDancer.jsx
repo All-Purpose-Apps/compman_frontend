@@ -31,7 +31,7 @@ export default function ViewOneDancer() {
     const error = useSelector(state => state.dancers.error);
 
     const handleStudioClick = (id) => {
-        navigate(`/studios/${id}`);
+        navigate(`/admin/studios/${id}`);
     }
 
     if (isLoading) {
@@ -45,7 +45,7 @@ export default function ViewOneDancer() {
     return (
         <div className="card-container">
             <Container className="mt-4">
-                <Button className="mb-4" onClick={() => navigate('/dancers')} variant="secondary">
+                <Button className="mb-4" onClick={() => navigate('/admin/dancers')} variant="secondary">
                     Back to Dancers
                 </Button>
                 <Row>
@@ -118,7 +118,7 @@ export default function ViewOneDancer() {
                         </Card>
                     </Col>
                 </Row>
-                <Button className="mt-4" onClick={() => navigate(`/dancers/${id}/edit`)} variant="primary">Edit Dancer</Button>
+                <Button className="mt-4" onClick={() => navigate(`/admin/dancers/edit/${id}`)} variant="primary">Edit Dancer</Button>
             </Container>
         </div>
     );

@@ -39,16 +39,21 @@ const NewCouple = () => {
     const onSubmit = (data) => {
         dispatch(addCouple(data));
         dispatch(fetchCouples());
-        navigate('/couples');
+        navigate('/admin/couples');
     };
 
     const handleCancel = () => {
-        navigate('/couples');
+        navigate('/admin/couples');
     };
 
     const danceOptions = dances.map(dance => ({
         value: dance._id,
         label: `${dance.title} - ${dance.danceCategory.name}`
+    }));
+
+    const dancerOptions = dancers.map(dancer => ({
+        value: dancer._id,
+        label: dancer.fullName
     }));
 
     if (isLoading) {
@@ -64,40 +69,20 @@ const NewCouple = () => {
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group controlId="leader">
                     <Form.Label>Leader</Form.Label>
-                    <Form.Control
-                        as="select"
-                        {...register('leader')}
-                        isInvalid={!!errors.leader}
-                    >
-                        <option value="">Select Leader</option>
-                        {dancers.map(dancer => (
-                            <option key={dancer._id} value={dancer._id}>
-                                {dancer.fullName}
-                            </option>
-                        ))}
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.leader?.message}
-                    </Form.Control.Feedback>
+                    <Select
+                        options={dancerOptions}
+                        onChange={(selectedOption) => setValue('leader', selectedOption.value)}
+                    />
+                    {errors.leader && <div className="invalid-feedback d-block">{errors.leader.message}</div>}
                 </Form.Group>
 
                 <Form.Group controlId="follower">
                     <Form.Label>Follower</Form.Label>
-                    <Form.Control
-                        as="select"
-                        {...register('follower')}
-                        isInvalid={!!errors.follower}
-                    >
-                        <option value="">Select Follower</option>
-                        {dancers.map(dancer => (
-                            <option key={dancer._id} value={dancer._id}>
-                                {dancer.fullName}
-                            </option>
-                        ))}
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.follower?.message}
-                    </Form.Control.Feedback>
+                    <Select
+                        options={dancerOptions}
+                        onChange={(selectedOption) => setValue('follower', selectedOption.value)}
+                    />
+                    {errors.follower && <div className="invalid-feedback d-block">{errors.follower.message}</div>}
                 </Form.Group>
 
                 <Form.Group controlId="dance">

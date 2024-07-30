@@ -50,7 +50,7 @@ const Sidebar = () => {
                         <FaCog className="icon" /> Heats
                     </Nav.Link>
                 </Nav.Item>
-                <Button variant="danger" onClick={() => handleLogout()}>Logout</Button>
+                <Button variant="danger" onClick={() => handleLogout()} style={{ width: '250px' }}>Logout</Button>
             </Nav>
         </div>
     );

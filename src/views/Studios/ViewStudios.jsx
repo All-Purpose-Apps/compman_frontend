@@ -30,20 +30,20 @@ export default function ViewStudios() {
     }
 
     const handleEdit = id => {
-        navigate(`/studios/${id}/edit`);
+        navigate(`/admin/studios/edit/${id}`);
     };
 
     const handleDelete = id => {
         dispatch(deleteStudio(id));
-        navigate('/studios');
+        navigate('/admin/studios');
     };
 
     const handleAddStudio = () => {
-        navigate('/studios/new');
+        navigate('/admin/studios/new');
     };
 
     const handleGetStudio = id => {
-        navigate(`/studios/${id}`);
+        navigate(`/admin/studios/${id}`);
     };
 
     const handleSearch = event => {

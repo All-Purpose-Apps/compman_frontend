@@ -27,11 +27,11 @@ const NewStudio = () => {
 
     const onSubmit = (data) => {
         dispatch(addStudio(data));
-        navigate('/studios');
+        navigate('/admin/studios');
     };
 
     const handleCancel = () => {
-        navigate('/studios');
+        navigate('/admin/studios');
     };
 
     return (

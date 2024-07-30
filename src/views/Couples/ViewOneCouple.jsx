@@ -46,7 +46,7 @@ export default function ViewOneCouple() {
     return (
         <div className="card-container">
             <Container className="mt-4">
-                <Button className="mb-4" onClick={() => navigate('/couples')} variant="secondary">
+                <Button className="mb-4" onClick={() => navigate('/admin/couples')} variant="secondary">
                     Back to Couples
                 </Button>
                 <Row>
@@ -88,7 +88,7 @@ export default function ViewOneCouple() {
                         </Card>
                     </Col>
                 </Row>
-                <Button className="mt-4" onClick={() => navigate(`/couples/${id}/edit`)} variant="primary">Edit Couple</Button>
+                <Button className="mt-4" onClick={() => navigate(`/admin/couples/edit/${id}`)} variant="primary">Edit Couple</Button>
             </Container>
         </div>
     );

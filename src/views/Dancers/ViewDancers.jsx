@@ -30,24 +30,24 @@ export default function ViewDancers() {
     }
 
     const handleEdit = id => {
-        navigate(`/dancers/${id}/edit`);
+        navigate(`/admin/dancers/edit/${id}`);
     };
 
     const handleDelete = id => {
         dispatch(deleteDancer(id));
-        navigate('/dancers');
+        navigate('/admin/dancers');
     };
 
     const handleAddDancer = () => {
-        navigate('/dancers/new');
+        navigate('/admin/dancers/new');
     };
 
     const handleGetDancer = id => {
-        navigate(`/dancers/${id}`);
+        navigate(`/admin/dancers/${id}`);
     };
 
     const handleStudioClick = id => {
-        navigate(`/studios/${id}`);
+        navigate(`/admin/studios/${id}`);
     };
 
     const handleSearch = event => {

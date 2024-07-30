@@ -30,20 +30,20 @@ export default function ViewCouples() {
     }
 
     const handleEdit = id => {
-        navigate(`/couples/${id}/edit`);
+        navigate(`/admin/couples/edit/${id}`);
     };
 
     const handleDelete = id => {
         dispatch(deleteCouple(id));
-        navigate('/couples');
+        navigate('/admin/couples');
     };
 
     const handleAddCouple = () => {
-        navigate('/couples/new');
+        navigate('/admin/couples/new');
     };
 
     const handleGetCouple = id => {
-        navigate(`/couples/${id}`);
+        navigate(`/admin/couples/${id}`);
     };
 
     const handleSearch = event => {

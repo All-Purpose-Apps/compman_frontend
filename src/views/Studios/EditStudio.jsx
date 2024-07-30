@@ -44,11 +44,11 @@ export default function EditStudio() {
     const onSubmit = (data) => {
         dispatch(editStudio({ id, ...data }));
         dispatch(getOneStudio(id));
-        navigate('/studios/' + id);
+        navigate('/admin/studios/' + id);
     };
 
     const handleCancel = () => {
-        navigate('/studios/' + id);
+        navigate('/admin/studios/' + id);
     };
 
     const isLoading = useSelector(state => state.studios.status) === 'loading';

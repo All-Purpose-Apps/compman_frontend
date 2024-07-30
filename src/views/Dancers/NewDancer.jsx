@@ -35,11 +35,11 @@ const NewDancer = () => {
     const onSubmit = (data) => {
         console.log('Form Data:', data);
         dispatch(addDancer(data));
-        navigate('/dancers');
+        navigate('/admin/dancers');
     };
 
     const handleCancel = () => {
-        navigate('/dancers');
+        navigate('/admin/dancers');
     };
 
     if (isLoading) {

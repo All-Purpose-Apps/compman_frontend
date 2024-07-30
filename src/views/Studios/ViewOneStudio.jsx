@@ -43,13 +43,13 @@ export default function ViewOneStudio() {
     }
 
     const handlePersonClick = (id) => {
-        navigate(`/dancers/${id}`);
+        navigate(`/admin/dancers/${id}`);
     }
 
     return (
         <div className="card-container">
             <Container className="mt-4">
-                <Button className="mb-4" onClick={() => navigate('/studios')} variant="secondary">
+                <Button className="mb-4" onClick={() => navigate('/admin/studios')} variant="secondary">
                     Back to Studios
                 </Button>
                 <Row>

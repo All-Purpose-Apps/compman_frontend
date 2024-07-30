@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -22,6 +22,7 @@ export default function EditCouple() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    const couple = useSelector(state => state.couples.couple[0]);
 
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
@@ -50,16 +51,21 @@ export default function EditCouple() {
 
     const onSubmit = (data) => {
         dispatch(editCouple({ id, ...data }));
-        navigate('/couples/' + id);
+        navigate('/admin/couples/' + id);
     };
 
     const handleCancel = () => {
-        navigate('/couples/' + id);
+        navigate('/admin/couples/' + id);
     };
 
     const danceOptions = dances.map(dance => ({
         value: dance._id,
         label: `${dance.title} - ${dance.danceCategory.name}`
+    }));
+
+    const dancerOptions = dancers.map(dancer => ({
+        value: dancer._id,
+        label: dancer.fullName
     }));
 
     if (isLoading) {
@@ -75,40 +81,22 @@ export default function EditCouple() {
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group controlId="leader">
                     <Form.Label>Leader</Form.Label>
-                    <Form.Control
-                        as="select"
-                        {...register('leader')}
-                        isInvalid={!!errors.leader}
-                    >
-                        <option value="">Select Leader</option>
-                        {dancers.map(dancer => (
-                            <option key={dancer._id} value={dancer._id}>
-                                {dancer.fullName}
-                            </option>
-                        ))}
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.leader?.message}
-                    </Form.Control.Feedback>
+                    <Select
+                        options={dancerOptions}
+                        onChange={(selectedOption) => setValue('leader', selectedOption.value)}
+                        defaultValue={dancerOptions.find(option => option.value === couple?.leader._id)}
+                    />
+                    {errors.leader && <div className="invalid-feedback d-block">{errors.leader.message}</div>}
                 </Form.Group>
 
                 <Form.Group controlId="follower">
                     <Form.Label>Follower</Form.Label>
-                    <Form.Control
-                        as="select"
-                        {...register('follower')}
-                        isInvalid={!!errors.follower}
-                    >
-                        <option value="">Select Follower</option>
-                        {dancers.map(dancer => (
-                            <option key={dancer._id} value={dancer._id}>
-                                {dancer.fullName}
-                            </option>
-                        ))}
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.follower?.message}
-                    </Form.Control.Feedback>
+                    <Select
+                        options={dancerOptions}
+                        onChange={(selectedOption) => setValue('follower', selectedOption.value)}
+                        defaultValue={dancerOptions.find(option => option.value === couple?.follower._id)}
+                    />
+                    {errors.follower && <div className="invalid-feedback d-block">{errors.follower.message}</div>}
                 </Form.Group>
 
                 <Form.Group controlId="dance">
@@ -116,6 +104,7 @@ export default function EditCouple() {
                     <Select
                         options={danceOptions}
                         onChange={(selectedOption) => setValue('dance', selectedOption.value)}
+                        defaultValue={danceOptions.find(option => option.value === couple?.dance._id)}
                     />
                     {errors.dance && <div className="invalid-feedback d-block">{errors.dance.message}</div>}
                 </Form.Group>

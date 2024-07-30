@@ -48,11 +48,11 @@ export default function EditDancer() {
     const onSubmit = (data) => {
         dispatch(editDancer({ id, ...data }));
         dispatch(getOneDancer(id));
-        navigate('/dancers/' + id);
+        navigate('/admin/dancers/' + id);
     };
 
     const handleCancel = () => {
-        navigate('/dancers/' + id);
+        navigate('/admin/dancers/' + id);
     };
 
     if (isLoading) {
