@@ -6,9 +6,9 @@ import { Form, Button } from 'react-bootstrap';
 import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDancers } from '../../store/dancersSlice';
-import { addCouple, fetchCouples } from '../../store/couplesSlice';
-import { fetchDances } from '../../store/dancesSlice';
+import { fetchDancers } from 'src/store/dancersSlice';
+import { addCouple, fetchCouples } from 'src/store/couplesSlice';
+import { fetchDances } from 'src/store/dancesSlice';
 
 const schema = yup.object().shape({
     leader: yup.string().required('Leader is required'),

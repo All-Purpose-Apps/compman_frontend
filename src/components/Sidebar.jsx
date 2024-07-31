@@ -26,6 +26,9 @@ const Sidebar = () => {
         <div className="sidebar">
             <Nav className="flex-column">
                 <Nav.Item>
+                    <p className='sidebar-title'>Compman</p>
+                </Nav.Item>
+                <Nav.Item>
                     <Nav.Link href="/admin/dashboard">
                         <FaHome className="icon" /> Dashboard
                     </Nav.Link>
