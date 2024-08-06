@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers } from 'src/store/dancersSlice';
 import { fetchStudios } from 'src/store/studiosSlice';
-import { Card, Row, Col } from 'react-bootstrap';
+import { fetchHeats } from 'src/store/heatsSlice';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import MainCalendar from 'src/components/MainCalendar'
 
 export default function Dashboard() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const dancers = useSelector(state => state.dancers.dancers);
     const studios = useSelector(state => state.studios.studios);
+    const heats = useSelector(state => state.heats.heats);
 
     useEffect(() => {
         dispatch(fetchDancers());
         dispatch(fetchStudios());
+        dispatch(fetchHeats());
     }, [dispatch]);
+
+    const handleClick = () => {
+        navigate('/admin/dancers/new');
+    }
+
     return (
         <div className="dashboard">
             <Row className="mb-4">
@@ -38,8 +48,8 @@ export default function Dashboard() {
                 <Col>
                     <Card>
                         <Card.Body>
-                            <Card.Title>Total Amount</Card.Title>
-                            <Card.Text>Amount</Card.Text>
+                            <Card.Title>Total Heats</Card.Title>
+                            <Card.Text>{heats.length}</Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>

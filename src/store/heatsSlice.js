@@ -26,6 +26,15 @@ export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
   }
 });
 
+export const deleteHeat = createAsyncThunk('heats/deleteHeat', async (id) => {
+  try {
+    const response = await axios.delete(`http://localhost:3000/api_v1/heats/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'Failed to add heat');
+  }
+});
+
 // Add other async thunks for fetching a single heat, editing, deleting, etc. if needed
 
 export const heatsSlice = createSlice({
@@ -50,9 +59,20 @@ export const heatsSlice = createSlice({
       })
       .addCase(addHeat.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.heats.push(action.payload); // Add the new heat to the array
+        state.heats = action.payload;
       })
       .addCase(addHeat.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(deleteHeat.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteHeat.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.heats = action.payload;
+      })
+      .addCase(deleteHeat.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

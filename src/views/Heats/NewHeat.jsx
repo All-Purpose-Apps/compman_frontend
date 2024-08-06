@@ -7,11 +7,9 @@ import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCouples } from 'src/store/couplesSlice';
-import DateTimePicker from 'react-datetime-picker';
-import 'react-datetime-picker/dist/DateTimePicker.css';
-import 'react-calendar/dist/Calendar.css';
-import 'react-clock/dist/Clock.css';
 import { addHeat, fetchHeats } from 'src/store/heatsSlice';
+import Datetime from 'react-datetime';
+import "react-datetime/css/react-datetime.css";
 
 
 const NewHeat = () => {
@@ -36,14 +34,18 @@ const NewHeat = () => {
         navigate('/admin/heats');
     };
 
+    const coupleOptions = couples.map(couple => ({
+        value: couple._id,
+        label: `${couple.leader.fullName} & ${couple.follower.fullName} - ${couple.dance.danceCategory.name} - ${couple.dance.title}`
+    }));
     const handleCancel = () => {
         navigate('/admin/heats');
     };
 
-    const coupleOptions = couples.map(couple => ({
-        value: couple._id,
-        label: `${couple.leader.fullName} & ${couple.follower.fullName}`
-    }));
+    const handleChange = (selected) => {
+        setSelectedCouples(selected);
+    };
+
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -62,7 +64,10 @@ const NewHeat = () => {
             <Form onSubmit={(e) => handleSubmit(e)}>
                 <Form.Group controlId="dateTime">
                     <Form.Label>Date and Time</Form.Label>
-                    <DateTimePicker onChange={(x) => setSelectedDate(x)} value={selectedDate} />
+                    <Datetime
+                        value={selectedDate}
+                        onChange={(date) => setSelectedDate(date)}
+                    />
                 </Form.Group>
 
                 <Form.Group controlId="couples">
@@ -71,7 +76,7 @@ const NewHeat = () => {
                         options={coupleOptions}
                         isMulti
                         closeMenuOnSelect={false}
-                        onChange={(selected) => setSelectedCouples(selected)}
+                        onChange={(selected) => handleChange(selected)}
                     />
                 </Form.Group>
 

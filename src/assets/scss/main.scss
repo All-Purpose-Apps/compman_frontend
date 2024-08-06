@@ -64,7 +64,6 @@
 }
 
 .sidebar {
-  width: 300px;
   height: 100vh;
   background-color: #343a40;
   padding-top: 20px;
@@ -100,6 +99,16 @@
 .location-container {
   display: flex;
   justify-content: space-between;
+  padding: 20px;
+  font-size: 30px;
+}
+
+.two-people {
+  width: 200px;
+}
+.two-people-container {
+  display: flex;
+  justify-content: center;
   padding: 20px;
   font-size: 30px;
 }

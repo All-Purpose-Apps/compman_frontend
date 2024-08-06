@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchHeats, deleteHeat } from 'src/store/heatsSlice';
 import { Table, Container, Row, Col, Button, Spinner, Form, Pagination } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const ViewHeats = () => {
-    const [heats, setHeats] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
-    const navigate = useNavigate();
+
+    const heats = useSelector(state => state.heats.heats);
+    const loading = useSelector(state => state.heats.status) === 'loading';
+    const error = useSelector(state => state.heats.error);
 
     useEffect(() => {
-        const fetchHeats = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api_v1/heats');
-                setHeats(response.data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchHeats();
-    }, []);
+        dispatch(fetchHeats());
+    }, [dispatch]);
 
     const handleAddHeat = () => {
         navigate('/admin/heats/new');
@@ -36,6 +29,12 @@ const ViewHeats = () => {
         setCurrentPage(1);
     };
 
+    const handleDelete = (id) => {
+        dispatch(deleteHeat(id));
+        dispatch(fetchHeats());
+        navigate('/admin/heats');
+    }
+
     const filteredHeats = heats.filter(heat => {
         const couplesString = heat.couples.map(couple =>
             `${couple.follower.fullName} & ${couple.leader.fullName}`).join(' ');
@@ -44,7 +43,8 @@ const ViewHeats = () => {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentHeats = filteredHeats.slice(indexOfFirstItem, indexOfLastItem);
+    const currentHeats = filteredHeats.slice(indexOfFirstItem, indexOfLastItem).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+    console.log(currentHeats)
     const totalPages = Math.ceil(filteredHeats.length / itemsPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -64,6 +64,18 @@ const ViewHeats = () => {
             </Container>
         );
     }
+
+    if (heats.length === 0) {
+        return (
+            <Container className="text-center">
+                <Button className="add-heat mb-3" onClick={handleAddHeat} variant="warning">
+                    Add Heat
+                </Button>
+                <p>No Heats</p>
+            </Container>
+        );
+    }
+
 
     return (
         <Container>
@@ -86,6 +98,7 @@ const ViewHeats = () => {
                             <tr>
                                 <th>#</th>
                                 <th>Date/Time</th>
+                                <th>Dance</th>
                                 <th>Couples</th>
                                 <th>Actions</th>
                             </tr>
@@ -95,6 +108,7 @@ const ViewHeats = () => {
                                 <tr key={heat._id}>
                                     <td>{index + 1}</td>
                                     <td>{new Date(heat.dateTime).toLocaleString()}</td>
+                                    <td>{heat.couples[0].dance.danceCategory.name} - {heat.couples[0].dance.title} </td>
                                     <td>
                                         {heat.couples.map(({ follower, leader }, i) => (
                                             <div key={i}>
@@ -103,8 +117,8 @@ const ViewHeats = () => {
                                         ))}
                                     </td>
                                     <td>
-                                        <Button onClick={(e) => { e.stopPropagation(); handleEdit(dancer._id); }}>Edit</Button>
-                                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(dancer._id); }}>Delete</Button>
+                                        <Button onClick={(e) => { e.stopPropagation(); handleEdit(heat._id); }}>Edit</Button>
+                                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(heat._id); }}>Delete</Button>
                                     </td>
                                 </tr>
                             ))}

@@ -6,6 +6,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { clearUser } from 'src/store/userSlice';
 import { useDispatch } from 'react-redux';
+import twoPeople from 'src/assets/images/two-people-ballroom-dancing.svg';
 
 const Sidebar = () => {
     const navigate = useNavigate();
@@ -26,7 +27,9 @@ const Sidebar = () => {
         <div className="sidebar">
             <Nav className="flex-column">
                 <Nav.Item>
-                    <p className='sidebar-title'>Compman</p>
+                    <div className="two-people-container">
+                        <img src={twoPeople} alt="" className="two-people" />
+                    </div>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link href="/admin/dashboard">
