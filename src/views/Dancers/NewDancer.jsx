@@ -46,6 +46,9 @@ const NewDancer = () => {
         dispatch(addDancer(data));
         setOpen(true);
         reset()
+        setTimeout(() => {
+            setOpen(false)
+        }, 3000);
     };
 
     const handleCancel = () => {
@@ -63,7 +66,7 @@ const NewDancer = () => {
     return (
         <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
             <Collapse in={open}>
-                <Alert severity="success" onClose={() => setOpen(false)}>This is a success Alert.</Alert>
+                <Alert severity="success">This is a success Alert.</Alert>
             </Collapse>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextField

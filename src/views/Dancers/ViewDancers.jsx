@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers, deleteDancer } from '../../store/dancersSlice';
-import { Button, Table, Form, Pagination } from 'react-bootstrap';
+import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { capitalizeWords } from '../../utils';
 
@@ -15,7 +15,7 @@ export default function ViewDancers() {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage] = useState(5);
 
     useEffect(() => {
         dispatch(fetchDancers());
@@ -68,57 +68,64 @@ export default function ViewDancers() {
 
     const totalPages = Math.ceil(filteredDancers.length / itemsPerPage);
 
-    const paginate = pageNumber => setCurrentPage(pageNumber);
+    const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div>
-            <Button className="add-dancer" onClick={handleAddDancer} variant="warning">
+            <Button variant="contained" color="warning" onClick={handleAddDancer} sx={{ mb: 2 }} className="add-dancer">
                 Add Dancer
             </Button>
-            <Form.Group controlId="search" className="mb-3 search-input">
-                <Form.Control
-                    type="text"
-                    placeholder="Search dancers..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-            </Form.Group>
-            <Table striped bordered hover className="view-dancers">
-                <thead>
-                    <tr>
-                        <th>Full Name</th>
-                        <th>Age</th>
-                        <th>Identifier</th>
-                        <th>Studio</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentDancers.length > 0 ? currentDancers.map(dancer => (
-                        <tr key={dancer._id} style={{ cursor: 'pointer' }} onClick={() => handleGetDancer(dancer._id)}>
-                            <td>{dancer.fullName}</td>
-                            <td>{dancer.age}</td>
-                            <td>{capitalizeWords(dancer.identifier, "/")}</td>
-                            <td onClick={(e) => { e.stopPropagation(); handleStudioClick(dancer.studio._id); }}>{dancer.studio.name}</td>
-                            <td>
-                                <Button onClick={(e) => { e.stopPropagation(); handleEdit(dancer._id); }}>Edit</Button>
-                                <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(dancer._id); }}>Delete</Button>
-                            </td>
-                        </tr>
-                    )) : (
-                        <tr>
-                            <td colSpan="5" className="text-center">No dancers available</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-            <Pagination className="justify-content-center">
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <Pagination.Item key={index + 1} active={index + 1 === currentPage} onClick={() => paginate(index + 1)}>
-                        {index + 1}
-                    </Pagination.Item>
-                ))}
-            </Pagination>
+            <TextField
+                id="search"
+                label="Search dancers..."
+                variant="outlined"
+                value={searchTerm}
+                onChange={handleSearch}
+                sx={{ ml: 2, mb: 2, width: 250 }}
+            />
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Full Name</TableCell>
+                            <TableCell>Age</TableCell>
+                            <TableCell>Identifier</TableCell>
+                            <TableCell>Studio</TableCell>
+                            <TableCell>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {currentDancers.length > 0 ? currentDancers.map(dancer => (
+                            <TableRow key={dancer._id} onClick={() => handleGetDancer(dancer._id)} sx={{ cursor: 'pointer' }}>
+                                <TableCell>{dancer.fullName}</TableCell>
+                                <TableCell>{dancer.age}</TableCell>
+                                <TableCell>{capitalizeWords(dancer.identifier, "/")}</TableCell>
+                                <TableCell onClick={(e) => { e.stopPropagation(); handleStudioClick(dancer.studio._id); }}>
+                                    {dancer.studio.name}
+                                </TableCell>
+                                <TableCell>
+                                    <Button variant="contained" onClick={(e) => { e.stopPropagation(); handleEdit(dancer._id); }} sx={{ mr: 1 }}>
+                                        Edit
+                                    </Button>
+                                    <Button variant="contained" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(dancer._id); }}>
+                                        Delete
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        )) : (
+                            <TableRow>
+                                <TableCell colSpan="5" align="center">No dancers available</TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={paginate}
+                sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+            />
         </div>
     );
 }
