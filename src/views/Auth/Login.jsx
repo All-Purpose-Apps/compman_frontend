@@ -27,9 +27,7 @@ export default function Login() {
                 navigate('/admin/dashboard');
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                setError(errorMessage);
+                setError(error.message);
             });
     };
 

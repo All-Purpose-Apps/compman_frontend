@@ -93,13 +93,11 @@ export default function ViewCouples() {
                     {currentCouples.length > 0 ? currentCouples.map(couple => (
                         <tr key={couple._id} style={{ cursor: 'pointer' }} onClick={() => handleGetCouple(couple._id)} className="align-middle">
                             <td>
-                                <img src="https://i.pravatar.cc/50" alt={`${couple.leader.fullName}'s avatar`} style={{ width: '50px', height: '50px', borderRadius: '50%', margin: '10px' }} />
                                 {couple.leader.fullName}
                             </td>
                             <td>
-                                <img src="https://i.pravatar.cc/50" alt={`${couple.follower.fullName}'s avatar`} style={{ width: '50px', height: '50px', borderRadius: '50%', margin: '10px' }} />
                                 {couple.follower.fullName}
-                            </td>
+                            </td>∑
                             <td>{couple.dance.title} - {couple.dance.danceCategory.name}</td>
                             <td className="text-center">{capitalizeWords(couple.ageCategory)}</td>
                             <td>{capitalizeWords(couple.level)}</td>
@@ -121,7 +119,7 @@ export default function ViewCouples() {
                         {index + 1}
                     </Pagination.Item>
                 ))}
-            </Pagination>
+            </Pagination>ß
         </div>
     );
 }

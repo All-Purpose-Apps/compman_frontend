@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeats, deleteHeat } from 'src/store/heatsSlice';
-import { Table, Container, Row, Col, Button, Spinner, Form, Pagination } from 'react-bootstrap';
+import {
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    Container, Grid, Button, CircularProgress, TextField, Pagination
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const ViewHeats = () => {
@@ -44,22 +47,21 @@ const ViewHeats = () => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentHeats = filteredHeats.slice(indexOfFirstItem, indexOfLastItem).sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-    console.log(currentHeats)
     const totalPages = Math.ceil(filteredHeats.length / itemsPerPage);
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginate = (event, value) => setCurrentPage(value);
 
     if (loading) {
         return (
-            <Container className="text-center">
-                <Spinner animation="border" />
+            <Container sx={{ textAlign: 'center' }}>
+                <CircularProgress />
             </Container>
         );
     }
 
     if (error) {
         return (
-            <Container className="text-center">
+            <Container sx={{ textAlign: 'center' }}>
                 <p>{error}</p>
             </Container>
         );
@@ -67,8 +69,8 @@ const ViewHeats = () => {
 
     if (heats.length === 0) {
         return (
-            <Container className="text-center">
-                <Button className="add-heat mb-3" onClick={handleAddHeat} variant="warning">
+            <Container sx={{ textAlign: 'center' }}>
+                <Button variant="contained" color="warning" onClick={handleAddHeat} sx={{ mb: 3 }}>
                     Add Heat
                 </Button>
                 <p>No Heats</p>
@@ -76,63 +78,76 @@ const ViewHeats = () => {
         );
     }
 
-
     return (
         <Container>
-            <Button className="add-heat mb-3" onClick={handleAddHeat} variant="warning">
+            <Button variant="contained" color="warning" onClick={handleAddHeat} sx={{ mb: 3 }}>
                 Add Heat
             </Button>
-            <Form.Group controlId="search" className="mb-3 search-input">
-                <Form.Control
-                    type="text"
-                    placeholder="Search heats..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-            </Form.Group>
-
-            <Row>
-                <Col>
-                    <Table striped bordered hover responsive className='view-heats'>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Date/Time</th>
-                                <th>Dance</th>
-                                <th>Couples</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentHeats.map((heat, index) => (
-                                <tr key={heat._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{new Date(heat.dateTime).toLocaleString()}</td>
-                                    <td>{heat.couples[0].dance.danceCategory.name} - {heat.couples[0].dance.title} </td>
-                                    <td>
-                                        {heat.couples.map(({ follower, leader }, i) => (
-                                            <div key={i}>
-                                                {follower.fullName} & {leader.fullName}
-                                            </div>
-                                        ))}
-                                    </td>
-                                    <td>
-                                        <Button onClick={(e) => { e.stopPropagation(); handleEdit(heat._id); }}>Edit</Button>
-                                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(heat._id); }}>Delete</Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
-            <Pagination className="justify-content-center">
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <Pagination.Item key={index + 1} active={index + 1 === currentPage} onClick={() => paginate(index + 1)}>
-                        {index + 1}
-                    </Pagination.Item>
-                ))}
-            </Pagination>
+            <TextField
+                id="search"
+                label="Search heats..."
+                variant="outlined"
+                value={searchTerm}
+                onChange={handleSearch}
+                fullWidth
+                sx={{ mb: 3 }}
+            />
+            <Grid container>
+                <Grid item xs={12}>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>#</TableCell>
+                                    <TableCell>Date/Time</TableCell>
+                                    <TableCell>Dance</TableCell>
+                                    <TableCell>Couples</TableCell>
+                                    <TableCell>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {currentHeats.map((heat, index) => (
+                                    <TableRow key={heat._id}>
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{new Date(heat.dateTime).toLocaleString()}</TableCell>
+                                        <TableCell>{`${heat.couples[0].dance.danceCategory.name} - ${heat.couples[0].dance.title}`}</TableCell>
+                                        <TableCell>
+                                            {heat.couples.map(({ follower, leader }, i) => (
+                                                <div key={i}>
+                                                    {follower.fullName} & {leader.fullName}
+                                                </div>
+                                            ))}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={(e) => { e.stopPropagation(); handleEdit(heat._id); }}
+                                                sx={{ mr: 1 }}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="error"
+                                                onClick={(e) => { e.stopPropagation(); handleDelete(heat._id); }}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Grid>
+            </Grid>
+            <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={paginate}
+                sx={{ mt: 3, justifyContent: 'center', display: 'flex' }}
+            />
         </Container>
     );
 };

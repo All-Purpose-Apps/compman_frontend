@@ -31,8 +31,6 @@ export default function MainCalendar() {
         return <div>Error: {errors}</div>;
     }
 
-
-
     return (
         <div>
             <Calendar

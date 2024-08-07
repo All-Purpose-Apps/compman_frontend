@@ -17,8 +17,10 @@ import EditCouple from 'src/views/Couples/EditCouple';
 // Heat Imports
 import ViewHeats from 'src/views/Heats/ViewHeats';
 import NewHeat from 'src/views/Heats/NewHeat';
+import AutoGenerateHeats from 'src/views/Heats/AutoGenerateHeats';
 // Auth Imports
 import Login from 'src/views/Auth/Login';
+import Settings from 'src/views/Settings';
 
 const routes = [
   {
@@ -98,7 +100,12 @@ const routes = [
   {
     path: 'heats/new',
     layout: '/admin',
-    component: NewHeat,
+    component: AutoGenerateHeats,
+  },
+  {
+    path: 'settings',
+    layout: '/admin',
+    component: Settings,
   },
 ];
 

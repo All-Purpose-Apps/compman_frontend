@@ -12,7 +12,7 @@ const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
     lastName: yup.string().required('Last Name is required'),
     age: yup.number().required('Age is required').positive().integer(),
-    identifier: yup.string().oneOf(['teacher/professional', 'student', 'coach']).required('Identifier is required'),
+    identifier: yup.string().oneOf(['professional', 'student', 'coach']).required('Identifier is required'),
     studio: yup.string().required('Studio is required'),
 });
 
@@ -97,7 +97,7 @@ const NewDancer = () => {
                         isInvalid={!!errors.identifier}
                     >
                         <option value="">Select Identifier</option>
-                        <option value="teacher/professional">Teacher/Professional</option>
+                        <option value="professional">Professional</option>
                         <option value="student">Student</option>
                         <option value="coach">Coach</option>
                     </Form.Control>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStudios, deleteStudio } from '../../store/studiosSlice';
-import { Button, Table, Form, Pagination } from 'react-bootstrap';
+import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, Container } from '@mui/material';
 import { formatPhoneNumber, capitalize } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 
@@ -64,61 +64,63 @@ export default function ViewStudios() {
 
     const totalPages = Math.ceil(filteredStudios.length / itemsPerPage);
 
-    const paginate = pageNumber => setCurrentPage(pageNumber);
+    const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div>
-            <Button className="add-studio" onClick={handleAddStudio} variant="warning">
+        <Container>
+            <Button variant="contained" color="warning" onClick={handleAddStudio}>
                 Add Studio
             </Button>
-            <Form.Group controlId="search" className="mb-3 search-input">
-                <Form.Control
-                    type="text"
-                    placeholder="Search studios..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-            </Form.Group>
-            <Table striped bordered hover className="view-studios">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Phone</th>
-                        <th>Studio Type</th>
-                        <th>Email</th>
-                        <th>Website</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentStudios.length > 0 ? currentStudios.map(studio => (
-                        <tr key={studio._id} style={{ cursor: 'pointer' }} onClick={() => handleGetStudio(studio._id)}>
-                            <td>{studio.name}</td>
-                            <td>{studio.location}</td>
-                            <td>{formatPhoneNumber(studio.phone)}</td>
-                            <td>{capitalize(studio.studioType)}</td>
-                            <td>{studio.email}</td>
-                            <td>{studio.website}</td>
-                            <td>
-                                <Button onClick={(e) => { e.stopPropagation(); handleEdit(studio._id); }}>Edit</Button>
-                                <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(studio._id); }}>Delete</Button>
-                            </td>
-                        </tr>
-                    )) : (
-                        <tr>
-                            <td colSpan="7" className="text-center">No studios available</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-            <Pagination className="justify-content-center">
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <Pagination.Item key={index + 1} active={index + 1 === currentPage} onClick={() => paginate(index + 1)}>
-                        {index + 1}
-                    </Pagination.Item>
-                ))}
-            </Pagination>
-        </div>
+            <TextField
+                id="search"
+                label="Search studios..."
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={searchTerm}
+                onChange={handleSearch}
+            />
+            <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Location</TableCell>
+                            <TableCell >Phone</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Website</TableCell>
+                            <TableCell>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {currentStudios.length > 0 ? currentStudios.map(studio => (
+                            <TableRow key={studio._id} style={{ cursor: 'pointer' }} onClick={() => handleGetStudio(studio._id)}>
+                                <TableCell>{studio.name}</TableCell>
+                                <TableCell>{studio.location}</TableCell>
+                                <TableCell sx={{ minWidth: '150px' }}>{formatPhoneNumber(studio.phone)}</TableCell>
+                                <TableCell>{studio.email}</TableCell>
+                                <TableCell>{studio.website}</TableCell>
+                                <TableCell>
+                                    <Button variant="outlined" onClick={(e) => { e.stopPropagation(); handleEdit(studio._id); }} sx={{ marginBottom: '10px' }}>Edit</Button>
+                                    <Button variant="outlined" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(studio._id); }}>Delete</Button>
+                                </TableCell>
+                            </TableRow>
+                        )) : (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center">No studios available</TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={paginate}
+                color="primary"
+                className="justify-content-center"
+                style={{ marginTop: '20px' }}
+            />
+        </Container>
     );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav, Button } from 'react-bootstrap';
-import { FaHome, FaUser, FaCog, FaBuilding, FaUsers } from 'react-icons/fa';
+import { FaHome, FaUser, FaCog, FaBuilding, FaUsers, FaFire } from 'react-icons/fa';
 import { app } from 'src/firebase';
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -53,7 +53,12 @@ const Sidebar = () => {
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link href="/admin/heats">
-                        <FaCog className="icon" /> Heats
+                        <FaFire className="icon" /> Heats
+                    </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link href="/admin/settings">
+                        <FaCog className="icon" /> Settings
                     </Nav.Link>
                 </Nav.Item>
                 <Button variant="danger" onClick={() => handleLogout()} style={{ width: '250px' }}>Logout</Button>
