@@ -119,7 +119,7 @@ export default function ViewCouples() {
                         {index + 1}
                     </Pagination.Item>
                 ))}
-            </Pagination>ß
+            </Pagination>
         </div>
     );
 }

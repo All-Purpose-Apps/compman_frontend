@@ -61,7 +61,10 @@ const Sidebar = () => {
                         <FaCog className="icon" /> Settings
                     </Nav.Link>
                 </Nav.Item>
-                <Button variant="danger" onClick={() => handleLogout()} style={{ width: '250px' }}>Logout</Button>
+                <Button variant="danger" onClick={() => handleLogout()} >Logout</Button>
+                <Nav.Item className="sidebar-footer">
+                    <p>&copy; 2024 All-Purpose Apps</p>
+                </Nav.Item>
             </Nav>
         </div>
     );

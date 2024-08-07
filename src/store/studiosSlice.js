@@ -10,7 +10,7 @@ const initialState = {
 
 export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api_v1/studios');
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -19,7 +19,7 @@ export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () =>
 
 export const getOneStudio = createAsyncThunk('studios/getOneStudio', async (id) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api_v1/studios/${id}`);
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -28,7 +28,7 @@ export const getOneStudio = createAsyncThunk('studios/getOneStudio', async (id) 
 
 export const addStudio = createAsyncThunk('studios/addStudio', async (studioData) => {
   try {
-    const response = await axios.post('http://localhost:3000/api_v1/studios', studioData);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/studios`, studioData);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -37,7 +37,7 @@ export const addStudio = createAsyncThunk('studios/addStudio', async (studioData
 
 export const editStudio = createAsyncThunk('studios/editStudio', async (studioData) => {
   try {
-    const response = await axios.put(`http://localhost:3000/api_v1/studios/${studioData.id}`, studioData);
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/studios/${studioData.id}`, studioData);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -46,7 +46,7 @@ export const editStudio = createAsyncThunk('studios/editStudio', async (studioDa
 
 export const deleteStudio = createAsyncThunk('studios/deleteStudio', async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/api_v1/studios/${id}`);
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/studios/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

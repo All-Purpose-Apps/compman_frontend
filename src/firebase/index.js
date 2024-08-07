@@ -10,3 +10,5 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
+
+import.meta.env.VITE_BACKEND_DEV;

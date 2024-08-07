@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneStudio } from 'src/store/studiosSlice';
-import { setLocation } from 'src/store/locationSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Container, Row, Card, Col, Table } from 'react-bootstrap';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaGlobe, FaBuilding } from 'react-icons/fa';
