@@ -1,12 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStudios } from '../../store/studiosSlice';
 import { addDancer } from '../../store/dancersSlice';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import { Collapse } from '@mui/material';
 
 const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
@@ -19,8 +28,9 @@ const schema = yup.object().shape({
 const NewDancer = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     });
 
@@ -33,9 +43,9 @@ const NewDancer = () => {
     const error = useSelector(state => state.studios.error);
 
     const onSubmit = (data) => {
-        console.log('Form Data:', data);
         dispatch(addDancer(data));
-        navigate('/admin/dancers');
+        setOpen(true);
+        reset()
     };
 
     const handleCancel = () => {
@@ -51,88 +61,70 @@ const NewDancer = () => {
     }
 
     return (
-        <div className='form-container'>
-            <Form onSubmit={handleSubmit(onSubmit)} >
-                <Form.Group controlId="firstName">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        {...register('firstName')}
-                        isInvalid={!!errors.firstName}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.firstName?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group controlId="lastName">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        {...register('lastName')}
-                        isInvalid={!!errors.lastName}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.lastName?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group controlId="age">
-                    <Form.Label>Age</Form.Label>
-                    <Form.Control
-                        type="number"
-                        {...register('age')}
-                        isInvalid={!!errors.age}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.age?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group controlId="identifier">
-                    <Form.Label>Identifier</Form.Label>
-                    <Form.Control
-                        as="select"
+        <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
+            <Collapse in={open}>
+                <Alert severity="success" onClose={() => setOpen(false)}>This is a success Alert.</Alert>
+            </Collapse>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <TextField
+                    label="First Name"
+                    {...register('firstName')}
+                    error={!!errors.firstName}
+                    helperText={errors.firstName?.message}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="Last Name"
+                    {...register('lastName')}
+                    error={!!errors.lastName}
+                    helperText={errors.lastName?.message}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="Age"
+                    type="number"
+                    {...register('age')}
+                    error={!!errors.age}
+                    helperText={errors.age?.message}
+                    fullWidth
+                    margin="normal"
+                />
+                <FormControl fullWidth margin="normal" error={!!errors.identifier}>
+                    <InputLabel>Identifier</InputLabel>
+                    <Select
                         {...register('identifier')}
-                        isInvalid={!!errors.identifier}
                     >
-                        <option value="">Select Identifier</option>
-                        <option value="professional">Professional</option>
-                        <option value="student">Student</option>
-                        <option value="coach">Coach</option>
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.identifier?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group controlId="studioId">
-                    <Form.Label>Studio</Form.Label>
-                    <Form.Control
-                        as="select"
+                        <MenuItem value="professional">Professional</MenuItem>
+                        <MenuItem value="student">Student</MenuItem>
+                        <MenuItem value="coach">Coach</MenuItem>
+                    </Select>
+                    <FormHelperText>{errors.identifier?.message}</FormHelperText>
+                </FormControl>
+                <FormControl fullWidth margin="normal" error={!!errors.studio}>
+                    <InputLabel>Studio</InputLabel>
+                    <Select
                         {...register('studio')}
-                        isInvalid={!!errors.studio}
                     >
-                        <option value="">Select Studio</option>
                         {studios.map(studio => (
-                            <option key={studio._id} value={studio._id}>
+                            <MenuItem key={studio._id} value={studio._id}>
                                 {studio.name}
-                            </option>
+                            </MenuItem>
                         ))}
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.studioId?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-                <Button variant="secondary" onClick={handleCancel}>
-                    Cancel
-                </Button>
-            </Form>
-        </div>
+                    </Select>
+                    <FormHelperText>{errors.studio?.message}</FormHelperText>
+                </FormControl>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                    <Button variant="contained" color="primary" type="submit">
+                        Submit
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                </Box>
+            </form>
+        </Box>
     );
 };
 
