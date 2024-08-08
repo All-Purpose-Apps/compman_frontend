@@ -6,6 +6,7 @@ import {
     Container, Grid, Button, CircularProgress, TextField, Pagination
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { capitalizeWords } from 'src/utils';
 
 const ViewHeats = () => {
     const dispatch = useDispatch();
@@ -25,6 +26,10 @@ const ViewHeats = () => {
 
     const handleAddHeat = () => {
         navigate('/admin/heats/new');
+    };
+
+    const handleGenerateHeat = () => {
+        navigate('/admin/heats/generate');
     };
 
     const handleSearch = (event) => {
@@ -70,8 +75,8 @@ const ViewHeats = () => {
     if (heats.length === 0) {
         return (
             <Container sx={{ textAlign: 'center' }}>
-                <Button variant="contained" color="warning" onClick={handleAddHeat} sx={{ mb: 3 }}>
-                    Add Heat
+                <Button variant="contained" color="warning" onClick={handleGenerateHeat} sx={{ mb: 3 }}>
+                    Generate Heats
                 </Button>
                 <p>No Heats</p>
             </Container>
@@ -101,6 +106,8 @@ const ViewHeats = () => {
                                     <TableCell>#</TableCell>
                                     <TableCell>Date/Time</TableCell>
                                     <TableCell>Dance</TableCell>
+                                    <TableCell>Age Category</TableCell>
+                                    <TableCell>Level</TableCell>
                                     <TableCell>Couples</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
@@ -111,6 +118,8 @@ const ViewHeats = () => {
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{new Date(heat.dateTime).toLocaleString()}</TableCell>
                                         <TableCell>{`${heat.couples[0].dance.danceCategory.name} - ${heat.couples[0].dance.title}`}</TableCell>
+                                        <TableCell sx={{ textAlign: 'center' }}>{capitalizeWords(heat.couples[0].ageCategory)}</TableCell>
+                                        <TableCell>{capitalizeWords(heat.couples[0].level)}</TableCell>
                                         <TableCell>
                                             {heat.couples.map(({ follower, leader }, i) => (
                                                 <div key={i}>

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { autoGenerateHeats } from 'src/utils/autoGenerateHeats';
 
 const initialState = {
   heats: [], // Store fetched heats
@@ -10,7 +11,7 @@ const initialState = {
 
 export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api_v1/heats');
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to fetch heats');
@@ -19,7 +20,12 @@ export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
 
 export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
   try {
-    const response = await axios.post('http://localhost:3000/api_v1/heats', heatData);
+    const couples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
+    const heats = await autoGenerateHeats(heatData, couples);
+    for (const heat of heats) {
+      await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heat);
+    }
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to add heat');
@@ -28,7 +34,7 @@ export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
 
 export const deleteHeat = createAsyncThunk('heats/deleteHeat', async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/api_v1/heats/${id}`);
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/heats/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to add heat');

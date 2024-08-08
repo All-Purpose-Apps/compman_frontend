@@ -18,8 +18,7 @@ import EditCouple from 'src/views/Couples/EditCouple';
 import ViewHeats from 'src/views/Heats/ViewHeats';
 import NewHeat from 'src/views/Heats/NewHeat';
 import AutoGenerateHeats from 'src/views/Heats/AutoGenerateHeats';
-// Auth Imports
-import Login from 'src/views/Auth/Login';
+// Settings Imports
 import Settings from 'src/views/Settings';
 
 const routes = [
@@ -98,9 +97,14 @@ const routes = [
     component: ViewHeats,
   },
   {
-    path: 'heats/new',
+    path: 'heats/generate',
     layout: '/admin',
     component: AutoGenerateHeats,
+  },
+  {
+    path: 'heats/new',
+    layout: '/admin',
+    component: NewHeat,
   },
   {
     path: 'settings',

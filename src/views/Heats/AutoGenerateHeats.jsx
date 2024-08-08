@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { Box, Button, TextField, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import { Box, Button, TextField, FormControl } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +12,7 @@ const AutoGenerateHeats = () => {
     const navigate = useNavigate();
     const [selectedStartDate, setSelectedStartDate] = useState(dayjs(new Date()));
     const [selectedEndDate, setSelectedEndDate] = useState(dayjs(new Date()));
-    const [selectedCouples, setSelectedCouples] = useState([]);
+    const [interval, setInterval] = useState(1.5);
 
     useEffect(() => {
         dispatch(fetchCouples());
@@ -27,10 +24,14 @@ const AutoGenerateHeats = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // console.log('start: ', selectedStartDate, 'end: ', selectedEndDate);
-        // const coupleIds = selectedCouples.map(couple => couple.value);
-        // dispatch(fetchHeats());
-        // navigate('/admin/heats');
+        const data = {
+            start: selectedStartDate,
+            end: selectedEndDate,
+            interval: interval
+        };
+        dispatch(addHeat(data));
+        dispatch(fetchHeats());
+        navigate('/admin/heats');
     };
 
     const coupleOptions = couples.map(couple => ({
@@ -39,10 +40,6 @@ const AutoGenerateHeats = () => {
     }));
     const handleCancel = () => {
         navigate('/admin/heats');
-    };
-
-    const handleChange = (selected) => {
-        setSelectedCouples(selected);
     };
 
     if (isLoading) {
@@ -74,6 +71,15 @@ const AutoGenerateHeats = () => {
                         value={selectedEndDate}
                         onChange={(date) => setSelectedEndDate(date)}
                         renderInput={(params) => <TextField {...params} />}
+                    />
+                </FormControl>
+                <FormControl fullWidth margin="normal">
+                    <TextField
+                        label="Interval (minutes)"
+                        type="number"
+                        value={interval}
+                        onChange={(e) => setInterval(e.target.value)}
+                        required
                     />
                 </FormControl>
                 <Box display="flex" justifyContent="space-between" mt={2}>

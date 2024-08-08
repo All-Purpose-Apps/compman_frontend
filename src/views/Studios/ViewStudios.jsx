@@ -68,14 +68,13 @@ export default function ViewStudios() {
 
     return (
         <Container>
-            <Button variant="contained" color="warning" onClick={handleAddStudio}>
+            <Button variant="contained" color="warning" onClick={handleAddStudio} className="add-studio">
                 Add Studio
             </Button>
             <TextField
                 id="search"
                 label="Search studios..."
                 variant="outlined"
-                fullWidth
                 margin="normal"
                 value={searchTerm}
                 onChange={handleSearch}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCouples, deleteCouple } from '../../store/couplesSlice'; // Assuming you have a couplesSlice
-import { Button, Table, Form, Pagination } from 'react-bootstrap';
+import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, Box, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { capitalizeWords } from '../../utils';
 
@@ -15,18 +15,26 @@ export default function ViewCouples() {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage] = useState(9);
 
     useEffect(() => {
         dispatch(fetchCouples());
     }, [dispatch]);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return (
+            <Box sx={{ mt: 4 }}>
+                <Typography variant="h6" color="error">{error}</Typography>
+            </Box>
+        );
     }
 
     const handleEdit = id => {
@@ -63,63 +71,67 @@ export default function ViewCouples() {
 
     const totalPages = Math.ceil(filteredCouples.length / itemsPerPage);
 
-    const paginate = pageNumber => setCurrentPage(pageNumber);
+    const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div>
-            <Button className="add-couple float-end" onClick={handleAddCouple} variant="warning">
+        <Box>
+            <Button
+                variant="contained"
+                color="warning"
+                onClick={handleAddCouple}
+                sx={{ float: 'right', mb: 2 }}
+            >
                 Add Couple
             </Button>
-            <Form.Group controlId="search" className="mb-3 search-input">
-                <Form.Control
-                    type="text"
-                    placeholder="Search couples..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-            </Form.Group>
-            <Table striped bordered hover className="view-couples">
-                <thead>
-                    <tr className="text-center">
-                        <th>Leader</th>
-                        <th>Follower</th>
-                        <th>Dance</th>
-                        <th>Age Category</th>
-                        <th>Level</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentCouples.length > 0 ? currentCouples.map(couple => (
-                        <tr key={couple._id} style={{ cursor: 'pointer' }} onClick={() => handleGetCouple(couple._id)} className="align-middle">
-                            <td>
-                                {couple.leader.fullName}
-                            </td>
-                            <td>
-                                {couple.follower.fullName}
-                            </td>∑
-                            <td>{couple.dance.title} - {couple.dance.danceCategory.name}</td>
-                            <td className="text-center">{capitalizeWords(couple.ageCategory)}</td>
-                            <td>{capitalizeWords(couple.level)}</td>
-                            <td>
-                                <Button onClick={(e) => { e.stopPropagation(); handleEdit(couple._id); }}>Edit</Button>
-                                <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(couple._id); }}>Delete</Button>
-                            </td>
-                        </tr>
-                    )) : (
-                        <tr>
-                            <td colSpan="6" className="text-center">No couples available</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-            <Pagination className="justify-content-center">
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <Pagination.Item key={index + 1} active={index + 1 === currentPage} onClick={() => paginate(index + 1)}>
-                        {index + 1}
-                    </Pagination.Item>
-                ))}
-            </Pagination>
-        </div>
+            <TextField
+                id="search"
+                label="Search couples..."
+                variant="outlined"
+                value={searchTerm}
+                onChange={handleSearch}
+                sx={{ mb: 2 }}
+            />
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow className="text-center">
+                            <TableCell>Leader</TableCell>
+                            <TableCell>Follower</TableCell>
+                            <TableCell>Dance</TableCell>
+                            <TableCell>Age Category</TableCell>
+                            <TableCell>Level</TableCell>
+                            <TableCell>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {currentCouples.length > 0 ? currentCouples.map(couple => (
+                            <TableRow key={couple._id} sx={{ cursor: 'pointer' }} onClick={() => handleGetCouple(couple._id)} className="align-middle">
+                                <TableCell>{couple.leader.fullName}</TableCell>
+                                <TableCell>{couple.follower.fullName}</TableCell>
+                                <TableCell>{couple.dance.title} - {couple.dance.danceCategory.name}</TableCell>
+                                <TableCell className="text-center">{capitalizeWords(couple.ageCategory)}</TableCell>
+                                <TableCell>{capitalizeWords(couple.level)}</TableCell>
+                                <TableCell>
+                                    <Button variant="contained" onClick={(e) => { e.stopPropagation(); handleEdit(couple._id); }}>Edit</Button>
+                                    <Button variant="contained" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(couple._id); }} sx={{ ml: 1 }}>
+                                        Delete
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        )) : (
+                            <TableRow>
+                                <TableCell colSpan="6" align="center">No couples available</TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={paginate}
+                sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+            />
+        </Box>
     );
 }

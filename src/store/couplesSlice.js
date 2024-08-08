@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { checkCouples } from 'src/utils/checkCouples';
 
 const initialState = {
   couples: [],
@@ -10,7 +11,7 @@ const initialState = {
 
 export const fetchCouples = createAsyncThunk('couples/fetchCouples', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api_v1/couples');
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -19,7 +20,7 @@ export const fetchCouples = createAsyncThunk('couples/fetchCouples', async () =>
 
 export const getOneCouple = createAsyncThunk('couples/getOneCouple', async (id) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api_v1/couples/${id}`);
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -28,8 +29,13 @@ export const getOneCouple = createAsyncThunk('couples/getOneCouple', async (id) 
 
 export const addCouple = createAsyncThunk('couples/addCouple', async (coupleData) => {
   try {
-    const response = await axios.post('http://localhost:3000/api_v1/couples', coupleData);
-    return response.data;
+    const couples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
+    const newArray = await checkCouples(couples, coupleData);
+    for (const couple of newArray) {
+      await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/couples`, couple);
+    }
+    const newCouples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
+    return newCouples.data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }
@@ -37,7 +43,7 @@ export const addCouple = createAsyncThunk('couples/addCouple', async (coupleData
 
 export const deleteCouple = createAsyncThunk('couples/deleteCouple', async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/api_v1/couples/${id}`);
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/couples/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -46,7 +52,7 @@ export const deleteCouple = createAsyncThunk('couples/deleteCouple', async (id) 
 
 export const editCouple = createAsyncThunk('couples/editCouple', async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/api_v1/couples/${id}`);
+    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/couples/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
