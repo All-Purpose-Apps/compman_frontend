@@ -1,24 +1,26 @@
 import { Outlet } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Grid } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
 export default function MainLayout() {
   return (
-    <Container fluid>
-      <Row>
-        <Col className='sidebar-container' md={2}>
+    <Container maxWidth={false} disableGutters>
+      <Grid container>
+        <Grid item xs={2} className='sidebar-container'>
           <Sidebar />
-        </Col>
-        <Col className='main-container'>
-          <Row className='header-container'>
-            <Header />
-          </Row>
-          <Row id="content">
-            <Outlet />
-          </Row>
-        </Col>
-      </Row>
+        </Grid>
+        <Grid item xs={10} className='main-container'>
+          <Grid container direction="column">
+            <Grid item className='header-container'>
+              <Header />
+            </Grid>
+            <Grid item id="content">
+              <Outlet />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </Container>
   );
 }

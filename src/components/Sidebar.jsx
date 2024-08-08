@@ -22,7 +22,6 @@ const Sidebar = () => {
         });
     }
 
-
     return (
         <div className="sidebar">
             <Nav className="flex-column">

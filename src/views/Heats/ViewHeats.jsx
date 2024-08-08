@@ -14,7 +14,7 @@ const ViewHeats = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage] = useState(7);
 
     const heats = useSelector(state => state.heats.heats);
     const loading = useSelector(state => state.heats.status) === 'loading';
@@ -85,16 +85,15 @@ const ViewHeats = () => {
 
     return (
         <Container>
-            <Button variant="contained" color="warning" onClick={handleAddHeat} sx={{ mb: 3 }}>
+            {/* <Button variant="contained" color="warning" onClick={handleAddHeat} sx={{ mb: 3 }} className='add-heat'>
                 Add Heat
-            </Button>
+            </Button> */}
             <TextField
                 id="search"
                 label="Search heats..."
                 variant="outlined"
                 value={searchTerm}
                 onChange={handleSearch}
-                fullWidth
                 sx={{ mb: 3 }}
             />
             <Grid container>
