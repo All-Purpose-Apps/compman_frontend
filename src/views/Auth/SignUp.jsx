@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { TextField, Button, Card, CardContent, CardHeader, Alert, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { setUser } from 'src/store/userSlice'; // Adjust the path as necessary
@@ -40,49 +40,55 @@ export default function Signup() {
 
     return (
         <Card>
-            <Card.Body>
-                <Card.Title>Signup</Card.Title>
-                {error && <Alert variant="danger">{error}</Alert>}
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="formEmail" className="mb-3">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </Form.Group>
-
-                    <Form.Group controlId="formPassword" className="mb-3">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </Form.Group>
-
-                    <Form.Group controlId="formConfirmPassword" className="mb-3">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Confirm Password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                        />
-                    </Form.Group>
-
-                    <Button variant="primary" type="submit" className="mb-4">
-                        Signup
-                    </Button>
-                    <p>Already have an account? <a href="/auth/login">Login in</a></p>
-                </Form>
-            </Card.Body>
+            <CardHeader title="Signup" />
+            <CardContent>
+                {error && <Alert severity="error">{error}</Alert>}
+                <Box component="form" onSubmit={handleSubmit}>
+                    <TextField
+                        id="formEmail"
+                        label="Email address"
+                        type="email"
+                        placeholder="Enter email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                        required
+                    />
+                    <TextField
+                        id="formPassword"
+                        label="Password"
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                        required
+                    />
+                    <TextField
+                        id="formConfirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        fullWidth
+                        margin="normal"
+                        required
+                    />
+                    <Box mt={2}>
+                        <Button variant="contained" color="primary" type="submit" fullWidth>
+                            Signup
+                        </Button>
+                    </Box>
+                    <Box mt={2}>
+                        <Typography>
+                            Already have an account? <a href="/auth/login">Login</a>
+                        </Typography>
+                    </Box>
+                </Box>
+            </CardContent>
         </Card>
     );
 }

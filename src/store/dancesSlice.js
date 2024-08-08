@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchDances = createAsyncThunk('dances/fetchDances', async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api_v1/dances');
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/dances`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

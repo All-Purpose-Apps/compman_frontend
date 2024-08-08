@@ -1,15 +1,17 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Box, Container, Grid } from '@mui/material';
 
 export default function AuthLayout() {
     return (
-        <Container fluid className="auth-layout">
-            <Row className="justify-content-center align-items-center min-vh-100">
-                <Col md={4}>
-                    <Outlet />
-                </Col>
-            </Row>
-        </Container>
+        <Box className="auth-layout picture-background" sx={{ minHeight: '100vh' }}>
+            <Container maxWidth="xl">
+                <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
+                    <Grid item xs={12} md={4}>
+                        <Outlet />
+                    </Grid>
+                </Grid>
+            </Container>
+        </Box>
     );
 }

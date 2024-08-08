@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers } from 'src/store/dancersSlice';
 import { fetchStudios } from 'src/store/studiosSlice';
 import { fetchHeats } from 'src/store/heatsSlice';
-import { Card, Row, Col, Button } from 'react-bootstrap';
-import MainCalendar from 'src/components/MainCalendar'
+import { Card, CardContent, CardHeader, Grid, Button, Box, Typography } from '@mui/material';
+import MainCalendar from 'src/components/MainCalendar';
 
 export default function Dashboard() {
 
@@ -27,43 +27,43 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="dashboard">
-            <Row className="mb-4">
-                <Col>
+        <Box>
+            <Grid container spacing={4} className="mb-4">
+                <Grid item xs={12} sm={4}>
                     <Card>
-                        <Card.Body>
-                            <Card.Title>Total Dancers</Card.Title>
-                            <Card.Text>{dancers.length}</Card.Text>
-                        </Card.Body>
+                        <CardHeader title="Total Dancers" />
+                        <CardContent>
+                            <Typography variant="h6">{dancers.length}</Typography>
+                        </CardContent>
                     </Card>
-                </Col>
-                <Col>
+                </Grid>
+                <Grid item xs={12} sm={4}>
                     <Card>
-                        <Card.Body>
-                            <Card.Title>Total Studios</Card.Title>
-                            <Card.Text>{studios.length}</Card.Text>
-                        </Card.Body>
+                        <CardHeader title="Total Studios" />
+                        <CardContent>
+                            <Typography variant="h6">{studios.length}</Typography>
+                        </CardContent>
                     </Card>
-                </Col>
-                <Col>
+                </Grid>
+                <Grid item xs={12} sm={4}>
                     <Card>
-                        <Card.Body>
-                            <Card.Title>Total Heats</Card.Title>
-                            <Card.Text>{heats.length}</Card.Text>
-                        </Card.Body>
+                        <CardHeader title="Total Heats" />
+                        <CardContent>
+                            <Typography variant="h6">{heats.length}</Typography>
+                        </CardContent>
                     </Card>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item xs={12}>
                     <Card>
-                        <Card.Body>
-                            <Card.Title>Calendar</Card.Title>
+                        <CardHeader title="Calendar" />
+                        <CardContent>
                             <MainCalendar />
-                        </Card.Body>
+                        </CardContent>
                     </Card>
-                </Col>
-            </Row>
-        </div>
-    )
+                </Grid>
+            </Grid>
+        </Box>
+    );
 }

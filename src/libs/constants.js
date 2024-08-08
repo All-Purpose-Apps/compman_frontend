@@ -1,1 +1,1 @@
-export const BRAND = 'CompMan';
+export const BRAND = 'COMPMAN';
