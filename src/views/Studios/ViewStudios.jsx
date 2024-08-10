@@ -1,32 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from "react";
+import { Box, IconButton, useTheme, Button } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { tokens } from "src/utils/theme";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStudios, deleteStudio } from '../../store/studiosSlice';
-import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, Container } from '@mui/material';
-import { formatPhoneNumber, capitalize } from '../../utils';
-import { useNavigate } from 'react-router-dom';
+import { fetchStudios, deleteStudio } from 'src/store/studiosSlice';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { formatPhoneNumber } from 'src/utils/formatPhoneNumber';
+import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
 
-export default function ViewStudios() {
+const CustomToolbar = () => {
+    const navigate = useNavigate();
+    const handleAddStudio = () => {
+        navigate('/admin/studios/new');
+    };
+    return (
+        <GridToolbarContainer>
+            <Box sx={{ flexGrow: 1 }}>
+                <GridToolbarQuickFilter />
+            </Box>
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={handleAddStudio}
+            >
+                Add Studio
+            </Button>
+        </GridToolbarContainer>
+    );
+};
+
+const Studios = () => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const studios = useSelector(state => state.studios.studios);
-    const isLoading = useSelector(state => state.studios.status) === 'loading';
-    const error = useSelector(state => state.studios.error);
-
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
 
     useEffect(() => {
         dispatch(fetchStudios());
     }, [dispatch]);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    const studios = useSelector(state => state.studios.studios);
 
-    if (error) {
-        return <div>{error} <Button onClick={(e) => location.reload()}>Go Back</Button></div>;
+    function getRowId(row) {
+        return row._id;
     }
 
     const handleEdit = id => {
@@ -38,88 +56,126 @@ export default function ViewStudios() {
         navigate('/admin/studios');
     };
 
-    const handleAddStudio = () => {
-        navigate('/admin/studios/new');
-    };
+
 
     const handleGetStudio = id => {
         navigate(`/admin/studios/${id}`);
     };
 
-    const handleSearch = event => {
-        setSearchTerm(event.target.value);
-        setCurrentPage(1);
-    };
-
-    // Filter and paginate the studios
-    const filteredStudios = studios.filter(studio =>
-        studio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        studio.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        studio.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentStudios = filteredStudios.slice(indexOfFirstItem, indexOfLastItem);
-
-    const totalPages = Math.ceil(filteredStudios.length / itemsPerPage);
-
-    const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
+    const columns = [
+        {
+            field: "name",
+            headerName: "Name",
+            flex: 1,
+        },
+        {
+            field: "location",
+            headerName: "Location",
+            flex: 1,
+        },
+        {
+            field: "phone",
+            headerName: "Phone Number",
+            flex: .5,
+            renderCell: (params) => (
+                formatPhoneNumber(params.row.phone)
+            ),
+        },
+        {
+            field: "email",
+            headerName: "Email",
+            flex: 1,
+        },
+        {
+            field: "website",
+            headerName: "Website",
+            flex: 1,
+        },
+        {
+            field: "actions",
+            headerName: "Actions",
+            flex: .5,
+            renderCell: (params) => (
+                <Box>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleEdit(params.row._id); }}>
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(params.row._id); }}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Box >
+            ),
+        },
+    ];
 
     return (
-        <Container>
-            <Button variant="contained" color="warning" onClick={handleAddStudio} className="add-studio">
-                Add Studio
-            </Button>
-            <TextField
-                id="search"
-                label="Search studios..."
-                variant="outlined"
-                margin="normal"
-                value={searchTerm}
-                onChange={handleSearch}
-            />
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Location</TableCell>
-                            <TableCell >Phone</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Website</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {currentStudios.length > 0 ? currentStudios.map(studio => (
-                            <TableRow key={studio._id} style={{ cursor: 'pointer' }} onClick={() => handleGetStudio(studio._id)}>
-                                <TableCell>{studio.name}</TableCell>
-                                <TableCell>{studio.location}</TableCell>
-                                <TableCell sx={{ minWidth: '150px' }}>{formatPhoneNumber(studio.phone)}</TableCell>
-                                <TableCell>{studio.email}</TableCell>
-                                <TableCell>{studio.website}</TableCell>
-                                <TableCell>
-                                    <Button variant="outlined" onClick={(e) => { e.stopPropagation(); handleEdit(studio._id); }} sx={{ marginBottom: '10px' }}>Edit</Button>
-                                    <Button variant="outlined" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(studio._id); }}>Delete</Button>
-                                </TableCell>
-                            </TableRow>
-                        )) : (
-                            <TableRow>
-                                <TableCell colSpan={7} align="center">No studios available</TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={paginate}
-                color="primary"
-                className="justify-content-center"
-                style={{ marginTop: '20px' }}
-            />
-        </Container>
+        <Box m="20px">
+            <Box
+                m="40px 0 0 0"
+                height="75vh"
+                sx={{
+                    "& .MuiDataGrid-root": {
+                        border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                        fontSize: "16px", // Adjust cell font size
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[700],
+                        borderBottom: "none",
+                        fontSize: "18px", // Adjust header font size
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[700],
+                        fontSize: "16px",
+                    },
+                    "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                    },
+
+                }}
+            >
+                <DataGrid
+                    rows={studios}
+                    columns={columns}
+                    getRowId={getRowId}
+                    onRowClick={params => handleGetStudio(params.row._id)}
+                    slots={{ toolbar: CustomToolbar }}
+                    pageSizeOptions={[5, 10, 25, 50, 100]}
+                    pageSize={5}
+                    pagination={true}
+                    sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                            fontSize: "16px",
+                            display: 'flex',
+                            alignItems: 'center',
+                        },
+                        "& .MuiTablePagination-toolbar": {
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        },
+                        "& .MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
+                            fontSize: "14px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: '0',
+                        },
+                        //increase font size select input
+                        "& .MuiSelect-select": {
+                            fontSize: "14px",
+                        },
+                    }}
+                />
+            </Box>
+        </Box>
     );
-}
+};
+
+export default Studios;

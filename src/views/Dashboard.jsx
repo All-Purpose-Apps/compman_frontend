@@ -5,7 +5,6 @@ import { fetchDancers } from 'src/store/dancersSlice';
 import { fetchStudios } from 'src/store/studiosSlice';
 import { fetchHeats } from 'src/store/heatsSlice';
 import { Card, CardContent, CardHeader, Grid, Button, Box, Typography } from '@mui/material';
-import MainCalendar from 'src/components/MainCalendar';
 
 export default function Dashboard() {
 
@@ -28,7 +27,7 @@ export default function Dashboard() {
 
     return (
         <Box>
-            <Grid container spacing={4} className="mb-4">
+            <Grid container spacing={4} className="mb-4 p-4">
                 <Grid item xs={12} sm={4}>
                     <Card>
                         <CardHeader title="Total Dancers" />
@@ -50,16 +49,6 @@ export default function Dashboard() {
                         <CardHeader title="Total Heats" />
                         <CardContent>
                             <Typography variant="h6">{heats.length}</Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-            <Grid container>
-                <Grid item xs={12}>
-                    <Card>
-                        <CardHeader title="Calendar" />
-                        <CardContent>
-                            <MainCalendar />
                         </CardContent>
                     </Card>
                 </Grid>

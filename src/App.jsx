@@ -6,7 +6,7 @@ import Login from 'src/views/Auth/Login'
 import ProtectedRoute from './views/ProtectedRoute'
 import Signup from './views/Auth/SignUp'
 
-export default function App() {
+function App() {
 
   const getAdminRoutes = (routes) => {
     return routes.map((prop, key) => {
@@ -17,7 +17,7 @@ export default function App() {
   }
 
   return (
-    <div>
+    <>
       <Routes>
         <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/auth" element={<AuthLayout />}>
@@ -32,7 +32,8 @@ export default function App() {
           {getAdminRoutes(routes)}
         </Route>
       </Routes>
-    </div>
-  )
-
+    </>
+  );
 }
+
+export default App;

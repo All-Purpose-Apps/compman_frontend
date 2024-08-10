@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneStudio } from 'src/store/studiosSlice';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Container, Row, Card, Col, Table } from 'react-bootstrap';
+import { Box, Button, Container, Grid, Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaGlobe, FaBuilding } from 'react-icons/fa';
 import { capitalize, formatPhoneNumber, capitalizeWords } from 'src/utils';
 
 export default function ViewOneStudio() {
     const [studio, setStudio] = useState({});
     const [people, setPeople] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -17,14 +19,14 @@ export default function ViewOneStudio() {
     useEffect(() => {
         async function fetchStudio() {
             const response = await dispatch(getOneStudio(id));
-            setPeople(response.payload.people)
+            setPeople(response.payload.people);
             setStudio({
                 name: capitalize(response.payload[0].name),
                 location: capitalize(response.payload[0].location),
                 phone: formatPhoneNumber(response.payload[0].phone),
                 studioType: capitalize(response.payload[0].studioType),
                 email: response.payload[0].email,
-                website: response.payload[0].website
+                website: response.payload[0].website,
             });
         }
         fetchStudio();
@@ -34,122 +36,153 @@ export default function ViewOneStudio() {
     const error = useSelector(state => state.studios.error);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Typography>Loading...</Typography>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <Typography>{error}</Typography>;
     }
 
     const handlePersonClick = (id) => {
         navigate(`/admin/dancers/${id}`);
-    }
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
-        <div className="card-container">
-            <Container className="mt-4">
-                <Button className="mb-4" onClick={() => navigate('/admin/studios')} variant="secondary">
+        <Box className="card-container" sx={{ mt: 4 }}>
+            <Container>
+                <Button variant="contained" color="secondary" onClick={() => navigate('/admin/studios')}>
                     Back to Studios
                 </Button>
-                <Row>
-                    <Col md={6}>
-                        <Card className="shadow-sm">
-                            <Card.Body>
-                                <Row>
-                                    <Col md={12} className="text-center mb-4">
-                                        <h1>{studio.name}</h1>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{ ml: 2 }}
+                    onClick={() => navigate(`/admin/studios/edit/${id}`)}
+                >
+                    Edit Studio
+                </Button>
+                <Grid container spacing={4} sx={{ mt: 4 }}>
+                    <Grid item xs={12} md={6}>
+                        <Card elevation={3}>
+                            <CardContent>
+                                <Box textAlign="center" mb={4}>
+                                    <Typography variant="h4">{studio.name}</Typography>
+                                </Box>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
                                         <FaMapMarkerAlt size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>{studio.location}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>{studio.location}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
                                         <FaPhone size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>{studio.phone}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>{studio.phone}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
                                         <FaBuilding size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>{studio.studioType}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>{studio.studioType}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
                                         <FaEnvelope size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>{studio.email}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>{studio.email}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
                                         <FaGlobe size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>
                                             <a href={studio.website} target="_blank" rel="noopener noreferrer">
                                                 {studio.website}
                                             </a>
-                                        </Card.Text>
-                                    </Col>
-                                </Row>
-                            </Card.Body>
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
                         </Card>
-                    </Col>
-                    <Col md={6}>
-                        <Card className="shadow-sm">
-                            <Card.Body>
-                                <Row>
-                                    <Col md={12} className="text-center mb-4">
-                                        <h2>Dancers</h2>
-                                    </Col>
-                                    <Col>
-                                        <Button className="mb-4 float-end" onClick={() => navigate('/dancers/new')} variant="primary">
-                                            Add Dancer
-                                        </Button>
-                                    </Col>
-                                </Row>
-                                <Table striped bordered hover>
-                                    <thead>
-                                        <tr>
-                                            <th>Full Name</th>
-                                            <th>Age</th>
-                                            <th>Identifier</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {people && people.length > 0 ? (
-                                            people.map(person => (
-                                                <tr key={person._id} onClick={() => handlePersonClick(person._id)} style={{ cursor: 'pointer' }}>
-                                                    <td>{capitalize(person.fullName)}</td>
-                                                    <td>{person.age}</td>
-                                                    <td>{capitalizeWords(person.identifier, "/")}</td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="3" className="text-center">No people found</td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </Table>
-                            </Card.Body>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Card elevation={3}>
+                            <CardContent>
+                                <Box textAlign="center" mb={4}>
+                                    <Typography variant="h5">Dancers</Typography>
+                                </Box>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{ mb: 2 }}
+                                    onClick={() => navigate('/admin/dancers/new')}
+                                >
+                                    Add Dancer
+                                </Button>
+                                <TableContainer component={Paper}>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Full Name</TableCell>
+                                                <TableCell>Age</TableCell>
+                                                <TableCell>Identifier</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {people && people.length > 0 ? (
+                                                people.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(person => (
+                                                    <TableRow
+                                                        key={person._id}
+                                                        onClick={() => handlePersonClick(person._id)}
+                                                        sx={{ cursor: 'pointer' }}
+                                                    >
+                                                        <TableCell>{capitalize(person.fullName)}</TableCell>
+                                                        <TableCell>{person.age}</TableCell>
+                                                        <TableCell>{capitalizeWords(person.identifier, "/")}</TableCell>
+                                                    </TableRow>
+                                                ))
+                                            ) : (
+                                                <TableRow>
+                                                    <TableCell colSpan={3} align="center">No people found</TableCell>
+                                                </TableRow>
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5]}
+                                        component="div"
+                                        count={people.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                    />
+                                </TableContainer>
+                            </CardContent>
                         </Card>
-                    </Col>
-                </Row>
-                <Button className="mt-4" onClick={() => navigate(`/studios/${id}/edit`)} variant="primary">Edit Studio</Button>
+                    </Grid>
+                </Grid>
+
             </Container>
-        </div>
+        </Box>
     );
 }

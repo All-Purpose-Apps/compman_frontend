@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Form, Button } from 'react-bootstrap';
+import { TextField, Button, MenuItem, Box, Grid } from '@mui/material';
 import { getOneStudio, editStudio } from '../../store/studiosSlice';
 
-const schema = yup.object().shape({
+// Validation schema using Yup
+const validationSchema = yup.object().shape({
     name: yup.string().required('Name is required'),
     location: yup.string().required('Location is required'),
     phone: yup.string().matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits').required('Phone is required'),
-    studioType: yup.string().required('Studio Type is required'),
     email: yup.string().email('Invalid email address').required('Email is required'),
-    website: yup.string().url('Invalid URL').required('Website is required'),
+    website: yup.string()
+        .matches(
+            /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9./]+$/,
+            'Enter a valid URL'
+        )
+        .required('Website is required'),
 });
 
 export default function EditStudio() {
@@ -21,34 +25,42 @@ export default function EditStudio() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm({
-        resolver: yupResolver(schema)
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            location: '',
+            phone: '',
+            email: '',
+            website: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            dispatch(editStudio({ id, ...values }));
+            dispatch(getOneStudio(id));
+            navigate(`/admin/studios/${id}`);
+        },
     });
 
     useEffect(() => {
         const fetchStudio = async () => {
             const response = await dispatch(getOneStudio(id));
-            const studio = response.payload[0]
+            const studio = response.payload[0];
 
-            setValue('name', studio.name);
-            setValue('location', studio.location);
-            setValue('phone', studio.phone);
-            setValue('studioType', studio.studioType);
-            setValue('email', studio.email);
-            setValue('website', studio.website);
+            formik.setValues({
+                name: studio.name,
+                location: studio.location,
+                phone: studio.phone,
+                studioType: studio.studioType,
+                email: studio.email,
+                website: studio.website,
+            });
         };
 
         fetchStudio();
-    }, [dispatch, id, setValue]);
-
-    const onSubmit = (data) => {
-        dispatch(editStudio({ id, ...data }));
-        dispatch(getOneStudio(id));
-        navigate('/admin/studios/' + id);
-    };
+    }, [dispatch, id]);
 
     const handleCancel = () => {
-        navigate('/admin/studios/' + id);
+        navigate(`/admin/studios/${id}`);
     };
 
     const isLoading = useSelector(state => state.studios.status) === 'loading';
@@ -63,91 +75,102 @@ export default function EditStudio() {
     }
 
     return (
-        <div className="form-container">
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group controlId="name">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        {...register('name')}
-                        isInvalid={!!errors.name}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.name?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
+        <Box sx={{ maxWidth: 600, mx: 'auto', mt: 4 }}>
+            <form onSubmit={() => formik.handleSubmit()}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            id="name"
+                            name="name"
+                            label="Name"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.name && Boolean(formik.errors.name)}
+                            helperText={formik.touched.name && formik.errors.name}
+                        />
+                    </Grid>
 
-                <Form.Group controlId="location">
-                    <Form.Label>Location</Form.Label>
-                    <Form.Control
-                        type="text"
-                        {...register('location')}
-                        isInvalid={!!errors.location}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.location?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            id="location"
+                            name="location"
+                            label="Location"
+                            value={formik.values.location}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.location && Boolean(formik.errors.location)}
+                            helperText={formik.touched.location && formik.errors.location}
+                        />
+                    </Grid>
 
-                <Form.Group controlId="phone">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                        type="text"
-                        {...register('phone')}
-                        isInvalid={!!errors.phone}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.phone?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            id="phone"
+                            name="phone"
+                            label="Phone"
+                            value={formik.values.phone}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.phone && Boolean(formik.errors.phone)}
+                            helperText={formik.touched.phone && formik.errors.phone}
+                        />
+                    </Grid>
 
-                <Form.Group controlId="studioType">
-                    <Form.Label>Studio Type</Form.Label>
-                    <Form.Control
-                        as="select"
-                        {...register('studioType')}
-                        isInvalid={!!errors.studioType}
-                    >
-                        <option value="">Select Studio Type</option>
-                        <option value="franchise">Franchise</option>
-                        <option value="independent">Independent</option>
-                    </Form.Control>
-                    <Form.Control.Feedback type="invalid">
-                        {errors.studioType?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            id="email"
+                            name="email"
+                            label="Email"
+                            type="email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                            helperText={formik.touched.email && formik.errors.email}
+                        />
+                    </Grid>
 
-                <Form.Group controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        type="email"
-                        {...register('email')}
-                        isInvalid={!!errors.email}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.email?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            id="website"
+                            name="website"
+                            label="Website"
+                            value={formik.values.website}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.website && Boolean(formik.errors.website)}
+                            helperText={formik.touched.website && formik.errors.website}
+                        />
+                    </Grid>
 
-                <Form.Group controlId="website">
-                    <Form.Label>Website</Form.Label>
-                    <Form.Control
-                        type="text"
-                        {...register('website')}
-                        isInvalid={!!errors.website}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                        {errors.website?.message}
-                    </Form.Control.Feedback>
-                </Form.Group>
-
-                <Button variant="primary" type="submit">
-                    Save
-                </Button>
-                <Button variant="secondary" onClick={handleCancel}>
-                    Cancel
-                </Button>
-            </Form>
-        </div>
+                    <Grid item xs={12}>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                            type="submit"
+                        >
+                            Save
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            color="secondary"
+                            variant="outlined"
+                            fullWidth
+                            onClick={handleCancel}
+                        >
+                            Cancel
+                        </Button>
+                    </Grid>
+                </Grid>
+            </form>
+        </Box>
     );
 }
