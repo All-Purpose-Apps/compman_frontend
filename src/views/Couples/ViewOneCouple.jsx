@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneCouple } from 'src/store/couplesSlice'; // Assuming you have a couplesSlice with getOneCouple action
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Container, Row, Card, Col } from 'react-bootstrap';
+import { Box, Button, Container, Grid, Card, CardContent, Typography } from '@mui/material';
 import { FaUser, FaChild, FaIdBadge } from 'react-icons/fa';
 import { capitalize, capitalizeWords } from 'src/utils';
 
@@ -32,11 +32,11 @@ export default function ViewOneCouple() {
     const error = useSelector(state => state.couples.error);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Typography>Loading...</Typography>;
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <Typography>{error}</Typography>;
     }
 
     if (!couple) {
@@ -44,52 +44,57 @@ export default function ViewOneCouple() {
     }
 
     return (
-        <div className="card-container">
-            <Container className="mt-4">
-                <Button className="mb-4" onClick={() => navigate('/admin/couples')} variant="secondary">
+        <Box className="card-container" sx={{ mt: 4 }}>
+            <Container>
+                <Button variant="contained" color="secondary" onClick={() => navigate('/admin/couples')} sx={{ mb: 4 }}>
                     Back to Couples
                 </Button>
-                <Row>
-                    <Col md={10}>
-                        <Card className="shadow-sm">
-                            <Card.Body>
-                                <Row>
-                                    <Col md={12} className="text-center mb-4">
-                                        <h1>{`${couple.leader.fullName} & ${couple.follower.fullName}`}</h1>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                <Grid container justifyContent="center">
+                    <Grid item xs={12} md={10}>
+                        <Card elevation={3}>
+                            <CardContent>
+                                <Box textAlign="center" mb={4}>
+                                    <Typography variant="h4">{`${couple.leader.fullName} & ${couple.follower.fullName}`}</Typography>
+                                </Box>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item>
                                         <FaUser size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>Leader: {capitalize(couple.leader.fullName)}</Card.Text>
-                                        <Card.Text>Follower: {capitalize(couple.follower.fullName)}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>Leader: {capitalize(couple.leader.fullName)}</Typography>
+                                        <Typography>Follower: {capitalize(couple.follower.fullName)}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2} alignItems="center" mt={2}>
+                                    <Grid item>
                                         <FaChild size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>Age Category: {couple.ageCategory}</Card.Text>
-                                        <Card.Text>Level: {couple.level}</Card.Text>
-                                    </Col>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Col md={1} className="d-flex align-items-center justify-content-center">
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>Age Category: {couple.ageCategory}</Typography>
+                                        <Typography>Level: {couple.level}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={2} alignItems="center" mt={2}>
+                                    <Grid item>
                                         <FaIdBadge size={20} />
-                                    </Col>
-                                    <Col md={11}>
-                                        <Card.Text>Dance: {couple.dance.title} - {couple.dance.danceCategory.name}</Card.Text>
-                                    </Col>
-                                </Row>
-                            </Card.Body>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>Dance: {couple.dance.title} - {couple.dance.danceCategory.name}</Typography>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
                         </Card>
-                    </Col>
-                </Row>
-                <Button className="mt-4" onClick={() => navigate(`/admin/couples/edit/${id}`)} variant="primary">Edit Couple</Button>
+                    </Grid>
+                </Grid>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 4 }}
+                    onClick={() => navigate(`/admin/couples/edit/${id}`)}
+                >
+                    Edit Couple
+                </Button>
             </Container>
-        </div>
+        </Box>
     );
 }

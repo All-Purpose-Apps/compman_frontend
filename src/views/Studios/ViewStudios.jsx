@@ -21,7 +21,7 @@ const CustomToolbar = () => {
                 <GridToolbarQuickFilter />
             </Box>
             <Button
-                color="primary"
+                color="secondary"
                 variant="contained"
                 onClick={handleAddStudio}
             >

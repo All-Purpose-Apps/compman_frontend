@@ -1,40 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from "react";
+import { Box, IconButton, useTheme, Button } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { tokens } from "src/utils/theme";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCouples, deleteCouple } from '../../store/couplesSlice'; // Assuming you have a couplesSlice
-import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, Box, CircularProgress, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { capitalizeWords } from '../../utils';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { formatPhoneNumber } from 'src/utils/formatPhoneNumber';
+import { GridToolbarContainer } from "@mui/x-data-grid";
+import { capitalizeWords } from 'src/utils';
+import { fetchCouples, deleteCouple } from "src/store/couplesSlice";
 
-export default function ViewCouples() {
+const CustomToolbar = ({ selectedRows }) => {
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const handleAddCouple = () => {
+        navigate('/admin/couples/new');
+    };
+    const handleDelete = () => {
+        selectedRows.forEach((row) => {
+            dispatch(deleteCouple(row));
+        })
+        dispatch(fetchCouples());
+    }
+    return (
+        <GridToolbarContainer>
+            <Box sx={{ flexGrow: 1 }}>
+                <GridToolbar sx={{
+                    'button': {
+                        color: theme.palette.mode === 'dark' ? 'white' : 'black',
+                    }
+                }} />
+            </Box>
+            <Button
+                color="secondary"
+                variant="contained"
+                onClick={handleAddCouple}
+            >
+                Add Entries
+            </Button>
+            {selectedRows.length > 0 && (
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDelete}
+                >
+                    Delete Selected
+                </Button>
+            )}
+        </GridToolbarContainer>
+    );
+};
+
+const Couples = () => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const couples = useSelector(state => state.couples.couples);
-    const isLoading = useSelector(state => state.couples.status) === 'loading';
-    const error = useSelector(state => state.couples.error);
-
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(9);
+    const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
         dispatch(fetchCouples());
     }, [dispatch]);
 
-    if (isLoading) {
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <CircularProgress />
-            </Box>
-        );
-    }
+    const couples = useSelector(state => state.couples.couples);
 
-    if (error) {
-        return (
-            <Box sx={{ mt: 4 }}>
-                <Typography variant="h6" color="error">{error}</Typography>
-            </Box>
-        );
+    function getRowId(row) {
+        return row._id;
     }
 
     const handleEdit = id => {
@@ -46,92 +79,123 @@ export default function ViewCouples() {
         navigate('/admin/couples');
     };
 
-    const handleAddCouple = () => {
-        navigate('/admin/couples/new');
-    };
+
 
     const handleGetCouple = id => {
         navigate(`/admin/couples/${id}`);
     };
 
-    const handleSearch = event => {
-        setSearchTerm(event.target.value);
-        setCurrentPage(1);
-    };
-
-    // Filter and paginate the couples
-    const filteredCouples = couples.filter(couple =>
-        couple.leader.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        couple.follower.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentCouples = filteredCouples.slice(indexOfFirstItem, indexOfLastItem);
-
-    const totalPages = Math.ceil(filteredCouples.length / itemsPerPage);
-
-    const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
+    const columns = [
+        { field: 'leader', headerName: 'Leader', flex: 1, valueGetter: (params) => params.fullName },
+        { field: 'follower', headerName: 'Follower', flex: 1, valueGetter: (params) => params.fullName },
+        {
+            field: 'dance',
+            headerName: 'Dance',
+            flex: 1,
+            valueGetter: (params) => `${params.title} - ${params.danceCategory.name}`,
+        },
+        {
+            field: 'ageCategory',
+            headerName: 'Age Category',
+            flex: .5,
+            valueGetter: (params) => capitalizeWords(params),
+        },
+        {
+            field: 'level',
+            headerName: 'Level',
+            flex: 1,
+            valueGetter: (params) => capitalizeWords(params),
+        },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            flex: .5,
+            sortable: false,
+            renderCell: (params) => (
+                <Box>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleEdit(params.row._id); }}>
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(params.row._id); }}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Box >
+            ),
+        },
+    ];
 
     return (
-        <Box>
-            <Button
-                variant="contained"
-                color="warning"
-                onClick={handleAddCouple}
-                sx={{ float: 'right', mb: 2 }}
+        <Box m="20px">
+            <Box
+                m="40px 0 0 0"
+                height="75vh"
+                sx={{
+                    "& .MuiDataGrid-root": {
+                        border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                        fontSize: "16px", // Adjust cell font size
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[700],
+                        borderBottom: "none",
+                        fontSize: "18px", // Adjust header font size
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[700],
+                        fontSize: "16px",
+                    },
+                    "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                    },
+
+                }}
             >
-                Add Couple
-            </Button>
-            <TextField
-                id="search"
-                label="Search couples..."
-                variant="outlined"
-                value={searchTerm}
-                onChange={handleSearch}
-                sx={{ mb: 2 }}
-            />
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow className="text-center">
-                            <TableCell>Leader</TableCell>
-                            <TableCell>Follower</TableCell>
-                            <TableCell>Dance</TableCell>
-                            <TableCell>Age Category</TableCell>
-                            <TableCell>Level</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {currentCouples.length > 0 ? currentCouples.map(couple => (
-                            <TableRow key={couple._id} sx={{ cursor: 'pointer' }} onClick={() => handleGetCouple(couple._id)} className="align-middle">
-                                <TableCell>{couple.leader.fullName}</TableCell>
-                                <TableCell>{couple.follower.fullName}</TableCell>
-                                <TableCell>{couple.dance.title} - {couple.dance.danceCategory.name}</TableCell>
-                                <TableCell className="text-center">{capitalizeWords(couple.ageCategory)}</TableCell>
-                                <TableCell>{capitalizeWords(couple.level)}</TableCell>
-                                <TableCell>
-                                    <Button variant="contained" onClick={(e) => { e.stopPropagation(); handleEdit(couple._id); }}>Edit</Button>
-                                    <Button variant="contained" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(couple._id); }} sx={{ ml: 1 }}>
-                                        Delete
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )) : (
-                            <TableRow>
-                                <TableCell colSpan="6" align="center">No couples available</TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={paginate}
-                sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
-            />
-        </Box>
+
+                <DataGrid
+                    rows={couples}
+                    columns={columns}
+                    getRowId={getRowId}
+                    onRowClick={params => handleGetCouple(params.row._id)}
+                    slots={{ toolbar: CustomToolbar }}
+                    slotProps={{ toolbar: { selectedRows } }}
+                    checkboxSelection
+                    onRowSelectionModelChange={(params) => setSelectedRows(params)}
+                    pageSizeOptions={[5, 10, 25, 50, 100]}
+                    pageSize={5}
+                    pagination={true}
+                    sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                            fontSize: "16px",
+                            display: 'flex',
+                            alignItems: 'center',
+                        },
+                        "& .MuiTablePagination-toolbar": {
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        },
+                        "& .MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
+                            fontSize: "14px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: '0',
+                        },
+                        //increase font size select input
+                        "& .MuiSelect-select": {
+                            fontSize: "14px",
+                        },
+                    }}
+                />
+            </Box>
+        </Box >
     );
-}
+};
+
+export default Couples;

@@ -51,6 +51,15 @@ export default function ViewOneDancer() {
             >
                 Back to Dancers
             </Button>
+            <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => navigate(`/admin/dancers/edit/${id}`)}
+                sx={{ mb: 4, ml: 4 }}
+
+            >
+                Edit Dancer
+            </Button>
             <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                     <Card sx={{ boxShadow: 3 }}>
@@ -108,14 +117,7 @@ export default function ViewOneDancer() {
                     </Card>
                 </Grid>
             </Grid>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate(`/admin/dancers/edit/${id}`)}
-                sx={{ mt: 4 }}
-            >
-                Edit Dancer
-            </Button>
+
         </Container>
     );
 }

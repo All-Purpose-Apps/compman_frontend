@@ -1,32 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from "react";
+import { Box, IconButton, useTheme, Button } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { tokens } from "src/utils/theme";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDancers, deleteDancer } from '../../store/dancersSlice';
-import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { capitalizeWords } from '../../utils';
+import { fetchDancers, deleteDancer } from "src/store/dancersSlice";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { capitalize } from "src/utils/capitalize";
 
-export default function ViewDancers() {
+const CustomToolbar = () => {
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const handleAddDancer = () => {
+        navigate('/admin/dancers/new');
+    };
+    return (
+        <GridToolbarContainer>
+            <Box sx={{ flexGrow: 1 }}>
+                <GridToolbar sx={{
+                    'button': {
+                        color: theme.palette.mode === 'dark' ? 'white' : 'black',
+                    }
+                }} />
+            </Box>
+            <Button
+                color="secondary"
+                variant="contained"
+                onClick={handleAddDancer}
+            >
+                Add Dancer
+            </Button>
+        </GridToolbarContainer>
+    );
+};
+
+const ViewDancers = () => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const dancers = useSelector(state => state.dancers.dancers);
-    const isLoading = useSelector(state => state.dancers.status) === 'loading';
-    const error = useSelector(state => state.dancers.error);
-
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(5);
 
     useEffect(() => {
         dispatch(fetchDancers());
     }, [dispatch]);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>{error} <Button onClick={(e) => location.reload()}>Go Back</Button></div>;
+    const dancers = useSelector(state => state.dancers.dancers);
+    function getRowId(row) {
+        return row._id;
     }
 
     const handleEdit = id => {
@@ -38,94 +60,123 @@ export default function ViewDancers() {
         navigate('/admin/dancers');
     };
 
-    const handleAddDancer = () => {
-        navigate('/admin/dancers/new');
-    };
 
-    const handleGetDancer = id => {
+
+    const handleGetStudio = id => {
         navigate(`/admin/dancers/${id}`);
     };
 
-    const handleStudioClick = id => {
-        navigate(`/admin/studios/${id}`);
-    };
-
-    const handleSearch = event => {
-        setSearchTerm(event.target.value);
-        setCurrentPage(1);
-    };
-
-    // Filter and paginate the dancers
-    const filteredDancers = dancers.filter(dancer =>
-        dancer.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dancer.identifier.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        dancer.studio.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentDancers = filteredDancers.slice(indexOfFirstItem, indexOfLastItem);
-
-    const totalPages = Math.ceil(filteredDancers.length / itemsPerPage);
-
-    const paginate = (event, pageNumber) => setCurrentPage(pageNumber);
+    const columns = [
+        {
+            field: "fullName",
+            headerName: "Full Name",
+            flex: 1,
+        },
+        {
+            field: "age",
+            headerName: "Age",
+            flex: .5,
+        },
+        {
+            field: "identifier",
+            headerName: "Identifier",
+            flex: 1,
+            renderCell: (params) => (
+                capitalize(params.row.identifier))
+        },
+        {
+            field: "studio",
+            headerName: "Studio",
+            flex: 1,
+            renderCell: (params) => (
+                params.row.studio.name)
+        },
+        {
+            field: "actions",
+            headerName: "Actions",
+            flex: .5,
+            renderCell: (params) => (
+                <Box>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleEdit(params.row._id); }}>
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(params.row._id); }}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Box >
+            ),
+        },
+    ];
 
     return (
-        <div>
-            <Button variant="contained" color="warning" onClick={handleAddDancer} sx={{ mb: 2 }} className="add-dancer">
-                Add Dancer
-            </Button>
-            <TextField
-                id="search"
-                label="Search dancers..."
-                variant="outlined"
-                value={searchTerm}
-                onChange={handleSearch}
-                sx={{ ml: 2, mb: 2, width: 250 }}
-            />
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Full Name</TableCell>
-                            <TableCell>Age</TableCell>
-                            <TableCell>Identifier</TableCell>
-                            <TableCell>Studio</TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {currentDancers.length > 0 ? currentDancers.map(dancer => (
-                            <TableRow key={dancer._id} onClick={() => handleGetDancer(dancer._id)} sx={{ cursor: 'pointer' }}>
-                                <TableCell>{dancer.fullName}</TableCell>
-                                <TableCell>{dancer.age}</TableCell>
-                                <TableCell>{capitalizeWords(dancer.identifier, "/")}</TableCell>
-                                <TableCell onClick={(e) => { e.stopPropagation(); handleStudioClick(dancer.studio._id); }}>
-                                    {dancer.studio.name}
-                                </TableCell>
-                                <TableCell>
-                                    <Button variant="contained" onClick={(e) => { e.stopPropagation(); handleEdit(dancer._id); }} sx={{ mr: 1 }}>
-                                        Edit
-                                    </Button>
-                                    <Button variant="contained" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(dancer._id); }}>
-                                        Delete
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )) : (
-                            <TableRow>
-                                <TableCell colSpan="5" align="center">No dancers available</TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={paginate}
-                sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
-            />
-        </div>
+        <Box m="20px">
+            <Box
+                m="40px 0 0 0"
+                height="75vh"
+                sx={{
+                    "& .MuiDataGrid-root": {
+                        border: "none",
+                    },
+                    "& .MuiDataGrid-cell": {
+                        borderBottom: "none",
+                        fontSize: "16px", // Adjust cell font size
+                    },
+                    "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: colors.blueAccent[700],
+                        borderBottom: "none",
+                        fontSize: "18px", // Adjust header font size
+                    },
+                    "& .MuiDataGrid-virtualScroller": {
+                        backgroundColor: colors.primary[400],
+                    },
+                    "& .MuiDataGrid-footerContainer": {
+                        borderTop: "none",
+                        backgroundColor: colors.blueAccent[700],
+                        fontSize: "16px",
+                    },
+                    "& .MuiCheckbox-root": {
+                        color: `${colors.greenAccent[200]} !important`,
+                    },
+
+
+                }}
+            >
+                <DataGrid
+                    rows={dancers}
+                    columns={columns}
+                    getRowId={getRowId}
+                    onRowClick={params => handleGetStudio(params.row._id)}
+                    slots={{ toolbar: CustomToolbar }}
+                    pageSizeOptions={[5, 10, 25, 50, 100]}
+                    pageSize={5}
+                    pagination={true}
+                    sx={{
+                        "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                            fontSize: "16px",
+                            display: 'flex',
+                            alignItems: 'center',
+                        },
+                        "& .MuiTablePagination-toolbar": {
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        },
+                        "& .MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
+                            fontSize: "14px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginBottom: '0',
+                        },
+                        //increase font size select input
+                        "& .MuiSelect-select": {
+                            fontSize: "14px",
+                        },
+                    }}
+                />
+            </Box>
+        </Box>
     );
-}
+};
+
+export default ViewDancers;

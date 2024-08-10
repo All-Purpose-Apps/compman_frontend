@@ -30,7 +30,7 @@ const NewDancer = () => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset, getValue } = useForm({
         resolver: yupResolver(schema)
     });
 
