@@ -9,11 +9,11 @@ import ViewDancers from 'src/views/Dancers/ViewDancers';
 import ViewOneDancer from 'src/views/Dancers/ViewOneDancer';
 import NewDancer from 'src/views/Dancers/NewDancer';
 import EditDancer from 'src/views/Dancers/EditDancer';
-// Couple Imports
-import ViewCouples from 'src/views/Couples/ViewCouples';
-import ViewOneCouple from 'src/views/Couples/ViewOneCouple';
-import NewCouple from 'src/views/Couples/NewCouple';
-import EditCouple from 'src/views/Couples/EditCouple';
+// Entries Imports
+import ViewEntries from 'src/views/Entries/ViewEntries';
+import ViewOneEntry from 'src/views/Entries/ViewOneEntry';
+import NewEntry from 'src/views/Entries/NewEntry';
+import EditEntry from 'src/views/Entries/EditEntry';
 // Heat Imports
 import ViewHeats from 'src/views/Heats/ViewHeats';
 import NewHeat from 'src/views/Heats/NewHeat';
@@ -69,26 +69,26 @@ const routes = [
     layout: '/admin',
     component: EditDancer,
   },
-  // Couple Routes
+  // Entry Routes
   {
-    path: 'couples',
+    path: 'entries',
     layout: '/admin',
-    component: ViewCouples,
+    component: ViewEntries,
   },
   {
-    path: 'couples/:id',
+    path: 'entries/:id',
     layout: '/admin',
-    component: ViewOneCouple,
+    component: ViewOneEntry,
   },
   {
-    path: 'couples/new',
+    path: 'entries/new',
     layout: '/admin',
-    component: NewCouple,
+    component: NewEntry,
   },
   {
-    path: 'couples/edit/:id',
+    path: 'entries/edit/:id',
     layout: '/admin',
-    component: EditCouple,
+    component: EditEntry,
   },
   // Heat Routes
   {

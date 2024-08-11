@@ -1,10 +1,22 @@
-import { fetchDances } from 'src/store/dancesSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { Card, Grid, Button, List, ListItem, ListItemText, Tabs, Tab, Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+//Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDances } from 'src/store/dancesSlice';
+// MUI Components
+import { Card, Grid, Button, useTheme, Tabs, Tab, Box, Typography } from '@mui/material';
+// Components
+import TabPanel from 'src/components/TabPanel';
+// Utils
+import { tokens } from "src/utils/theme";
 
 export default function Settings() {
+    // Theme Colors
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+    // Redux
     const dispatch = useDispatch();
+    // Local state
+    const [tabValue, setTabValue] = useState(0);
 
     useEffect(() => {
         dispatch(fetchDances());
@@ -12,7 +24,6 @@ export default function Settings() {
 
     const user = useSelector((state) => state.user.user);
     const dances = useSelector((state) => state.dances.dances);
-    const [tabValue, setTabValue] = useState(0);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
@@ -58,7 +69,12 @@ export default function Settings() {
                                 aria-label="dance categories"
                             >
                                 {danceCategories.map((category, index) => (
-                                    <Tab key={index} label={category} />
+                                    <Tab key={index} label={category} sx={{
+                                        // change selected tab color
+                                        '&.Mui-selected': {
+                                            color: colors.greenAccent[300],
+                                        }
+                                    }} />
                                 ))}
                             </Tabs>
                             {danceCategories.map((category, index) => (
@@ -76,22 +92,3 @@ export default function Settings() {
     );
 }
 
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}

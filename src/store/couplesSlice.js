@@ -50,9 +50,9 @@ export const deleteCouple = createAsyncThunk('couples/deleteCouple', async (id) 
   }
 });
 
-export const editCouple = createAsyncThunk('couples/editCouple', async (id) => {
+export const editCouple = createAsyncThunk('couples/editCouple', async (params) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/couples/${id}`);
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/couples/${params.id}`, params);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

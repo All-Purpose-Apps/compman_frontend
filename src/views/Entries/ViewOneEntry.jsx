@@ -6,7 +6,7 @@ import { Box, Button, Container, Grid, Card, CardContent, Typography } from '@mu
 import { FaUser, FaChild, FaIdBadge } from 'react-icons/fa';
 import { capitalize, capitalizeWords } from 'src/utils';
 
-export default function ViewOneCouple() {
+export default function ViewOneEntry() {
     const [couple, setCouple] = useState(null);
 
     const dispatch = useDispatch();
@@ -46,8 +46,18 @@ export default function ViewOneCouple() {
     return (
         <Box className="card-container" sx={{ mt: 4 }}>
             <Container>
-                <Button variant="contained" color="secondary" onClick={() => navigate('/admin/couples')} sx={{ mb: 4 }}>
-                    Back to Couples
+                <Button variant="contained" color="secondary" onClick={() => navigate('/admin/entries')}
+                    sx={{ mb: 4 }}
+                >
+                    Back to Entries
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => navigate(`/admin/entries/edit/${id}`)}
+                    sx={{ mb: 4, ml: 4 }}
+                >
+                    Edit Couple
                 </Button>
                 <Grid container justifyContent="center">
                     <Grid item xs={12} md={10}>
@@ -86,14 +96,7 @@ export default function ViewOneCouple() {
                         </Card>
                     </Grid>
                 </Grid>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ mt: 4 }}
-                    onClick={() => navigate(`/admin/couples/edit/${id}`)}
-                >
-                    Edit Couple
-                </Button>
+
             </Container>
         </Box>
     );

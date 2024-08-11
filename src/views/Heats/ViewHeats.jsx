@@ -85,9 +85,9 @@ const ViewHeats = () => {
 
     return (
         <Container>
-            {/* <Button variant="contained" color="warning" onClick={handleAddHeat} sx={{ mb: 3 }} className='add-heat'>
-                Add Heat
-            </Button> */}
+            <Button variant="contained" color="secondary" onClick={handleGenerateHeat} sx={{ mb: 3, float: 'right' }} className='add-heat'>
+                Generate More Heats
+            </Button>
             <TextField
                 id="search"
                 label="Search heats..."

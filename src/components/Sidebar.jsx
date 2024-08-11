@@ -212,7 +212,7 @@ const MyProSidebar = () => {
                         />
                         <Item
                             title="Entries"
-                            to="/admin/couples"
+                            to="/admin/entries"
                             icon={<PeopleOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}

@@ -15,7 +15,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { Collapse } from '@mui/material';
+import { Collapse, Paper, useTheme } from '@mui/material';
+import { tokens } from 'src/utils/theme';
 
 const schema = yup.object().shape({
     firstName: yup.string().required('First Name is required'),
@@ -26,6 +27,9 @@ const schema = yup.object().shape({
 });
 
 const NewDancer = () => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -68,65 +72,67 @@ const NewDancer = () => {
             <Collapse in={open}>
                 <Alert severity="success">This is a success Alert.</Alert>
             </Collapse>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField
-                    label="First Name"
-                    {...register('firstName')}
-                    error={!!errors.firstName}
-                    helperText={errors.firstName?.message}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Last Name"
-                    {...register('lastName')}
-                    error={!!errors.lastName}
-                    helperText={errors.lastName?.message}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Age"
-                    type="number"
-                    {...register('age')}
-                    error={!!errors.age}
-                    helperText={errors.age?.message}
-                    fullWidth
-                    margin="normal"
-                />
-                <FormControl fullWidth margin="normal" error={!!errors.identifier}>
-                    <InputLabel>Identifier</InputLabel>
-                    <Select
-                        {...register('identifier')}
-                    >
-                        <MenuItem value="professional">Professional</MenuItem>
-                        <MenuItem value="student">Student</MenuItem>
-                        <MenuItem value="coach">Coach</MenuItem>
-                    </Select>
-                    <FormHelperText>{errors.identifier?.message}</FormHelperText>
-                </FormControl>
-                <FormControl fullWidth margin="normal" error={!!errors.studio}>
-                    <InputLabel>Studio</InputLabel>
-                    <Select
-                        {...register('studio')}
-                    >
-                        {studios.map(studio => (
-                            <MenuItem key={studio._id} value={studio._id}>
-                                {studio.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    <FormHelperText>{errors.studio?.message}</FormHelperText>
-                </FormControl>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                    <Button variant="contained" color="primary" type="submit">
-                        Submit
-                    </Button>
-                    <Button variant="outlined" color="secondary" onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                </Box>
-            </form>
+            <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <TextField
+                        label="First Name"
+                        {...register('firstName')}
+                        error={!!errors.firstName}
+                        helperText={errors.firstName?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Last Name"
+                        {...register('lastName')}
+                        error={!!errors.lastName}
+                        helperText={errors.lastName?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Age"
+                        type="number"
+                        {...register('age')}
+                        error={!!errors.age}
+                        helperText={errors.age?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <FormControl fullWidth margin="normal" error={!!errors.identifier}>
+                        <InputLabel>Identifier</InputLabel>
+                        <Select
+                            {...register('identifier')}
+                        >
+                            <MenuItem value="professional">Professional</MenuItem>
+                            <MenuItem value="student">Student</MenuItem>
+                            <MenuItem value="coach">Coach</MenuItem>
+                        </Select>
+                        <FormHelperText>{errors.identifier?.message}</FormHelperText>
+                    </FormControl>
+                    <FormControl fullWidth margin="normal" error={!!errors.studio}>
+                        <InputLabel>Studio</InputLabel>
+                        <Select
+                            {...register('studio')}
+                        >
+                            {studios.map(studio => (
+                                <MenuItem key={studio._id} value={studio._id}>
+                                    {studio.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{errors.studio?.message}</FormHelperText>
+                    </FormControl>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                        <Button variant="contained" color="primary" type="submit">
+                            Submit
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </Box>
+                </form>
+            </Paper>
         </Box>
     );
 };

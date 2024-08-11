@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDancers, deleteDancer } from "src/store/dancersSlice";
+import { fetchCouples, deleteCouple } from "src/store/couplesSlice";
 // MUI Components
 import { Box, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -11,10 +11,10 @@ import CustomToolbar from "src/components/CustomToolbar";
 import ActionButtons from "src/components/ActionButtons";
 // Utils
 import { tokens } from "src/utils/theme";
-import { capitalize } from "src/utils";
+import { capitalizeWords } from 'src/utils';
 import { gridSxSettings, boxSxSettings } from "src/utils/customSX";
 
-const ViewDancers = () => {
+export default function Entries() {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
@@ -22,68 +22,66 @@ const ViewDancers = () => {
     const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
-        dispatch(fetchDancers());
+        dispatch(fetchCouples());
     }, [dispatch]);
 
-    const dancers = useSelector(state => state.dancers.dancers);
+    const couples = useSelector(state => state.couples.couples);
 
     function getRowId(row) {
         return row._id;
     }
 
     const handleEdit = id => {
-        navigate(`/admin/dancers/edit/${id}`);
+        navigate(`/admin/entries/edit/${id}`);
     };
 
     const handleDelete = id => {
-        dispatch(deleteDancer(id));
-        navigate('/admin/dancers');
+        dispatch(deleteCouple(id));
+        navigate('/admin/entries');
     };
 
     const handleMultiDelete = () => {
         selectedRows.forEach((row) => {
-            dispatch(deleteDancer(row));
+            dispatch(deleteCouple(row));
         })
-        dispatch(fetchDancers());
+        dispatch(fetchCouples());
     }
 
-    const handleGetStudio = id => {
-        navigate(`/admin/dancers/${id}`);
+    const handleGetCouple = id => {
+        navigate(`/admin/entries/${id}`);
     };
 
-    const handleAddDancer = () => {
-        navigate('/admin/dancers/new');
+    const handleAddEntry = () => {
+        navigate('/admin/entries/new');
     };
+
 
     const columns = [
+        { field: 'leader', headerName: 'Leader', flex: 1, valueGetter: (params) => params.fullName },
+        { field: 'follower', headerName: 'Follower', flex: 1, valueGetter: (params) => params.fullName },
         {
-            field: "fullName",
-            headerName: "Full Name",
+            field: 'dance',
+            headerName: 'Dance',
             flex: 1,
+            valueGetter: (params) => `${params.title} - ${params.danceCategory.name}`,
         },
         {
-            field: "age",
-            headerName: "Age",
+            field: 'ageCategory',
+            headerName: 'Age Category',
             flex: .5,
+            valueGetter: (params) => capitalizeWords(params),
         },
         {
-            field: "identifier",
-            headerName: "Identifier",
+            field: 'level',
+            headerName: 'Level',
             flex: 1,
-            renderCell: (params) => (
-                capitalize(params.row.identifier))
+            valueGetter: (params) => capitalizeWords(params),
         },
         {
-            field: "studio",
-            headerName: "Studio",
-            flex: 1,
-            renderCell: (params) => (
-                params.row.studio.name)
-        },
-        {
-            field: "actions",
-            headerName: "Actions",
+            field: 'actions',
+            headerName: 'Actions',
             flex: .5,
+            sortable: false,
             renderCell: (params) => (
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
             ),
@@ -98,22 +96,20 @@ const ViewDancers = () => {
                 sx={boxSxSettings(colors)}
             >
                 <DataGrid
-                    rows={dancers}
+                    rows={couples}
                     columns={columns}
                     getRowId={getRowId}
-                    onRowClick={params => handleGetStudio(params.row._id)}
+                    onRowClick={params => handleGetCouple(params.row._id)}
+                    slots={{ toolbar: CustomToolbar }}
+                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddEntry, theme: theme.palette.mode, button: 'Entry' } }}
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
-                    slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, theme: theme.palette.mode, button: 'Dancer' } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}
                     sx={gridSxSettings(colors)}
                 />
             </Box>
-        </Box>
+        </Box >
     );
 };
-
-export default ViewDancers;

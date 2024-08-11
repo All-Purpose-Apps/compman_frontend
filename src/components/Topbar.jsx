@@ -1,7 +1,6 @@
-import React from "react";
 import { useContext } from "react";
 import { ColorModeContext, tokens } from "src/utils/theme";
-import { useTheme, Box, IconButton, InputBase, Typography } from "@mui/material";
+import { useTheme, Box, IconButton, Typography } from "@mui/material";
 import { useProSidebar } from "react-pro-sidebar";
 import { app } from 'src/firebase';
 import { getAuth, signOut } from 'firebase/auth';
@@ -14,7 +13,6 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import SearchIcon from "@mui/icons-material/Search";
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 
 const Topbar = () => {
@@ -72,7 +70,7 @@ const Topbar = () => {
                         <DarkModeOutlinedIcon />
                     )}
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => navigate('/admin/settings')}>
                     <SettingsOutlinedIcon />
                 </IconButton>
 

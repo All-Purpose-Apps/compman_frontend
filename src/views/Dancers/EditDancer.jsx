@@ -4,7 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Container, CircularProgress, Typography } from '@mui/material';
+import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Container, CircularProgress, Typography, useTheme, Paper } from '@mui/material';
+import { tokens } from 'src/utils/theme';
 import { getOneDancer, editDancer } from '../../store/dancersSlice';
 import { fetchStudios } from '../../store/studiosSlice';
 
@@ -17,6 +18,8 @@ const schema = yup.object().shape({
 });
 
 export default function EditDancer() {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -67,67 +70,69 @@ export default function EditDancer() {
 
     return (
         <Container sx={{ mt: 4 }}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField
-                    label="First Name"
-                    {...register('firstName')}
-                    error={!!errors.firstName}
-                    helperText={errors.firstName?.message}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Last Name"
-                    {...register('lastName')}
-                    error={!!errors.lastName}
-                    helperText={errors.lastName?.message}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Age"
-                    type="number"
-                    {...register('age')}
-                    error={!!errors.age}
-                    helperText={errors.age?.message}
-                    fullWidth
-                    margin="normal"
-                />
-                <FormControl fullWidth margin="normal" error={!!errors.identifier}>
-                    <InputLabel>Identifier</InputLabel>
-                    <Select
-                        {...register('identifier')}
-                        value={getValues('identifier')}
-                    >
-                        <MenuItem value="">Select Identifier</MenuItem>
-                        <MenuItem value="professional">Professional</MenuItem>
-                        <MenuItem value="student">Student</MenuItem>
-                        <MenuItem value="coach">Coach</MenuItem>
-                    </Select>
-                    <Typography variant="caption" color="error">{errors.identifier?.message}</Typography>
-                </FormControl>
-                <FormControl fullWidth margin="normal" error={!!errors.studio}>
-                    <InputLabel>Studio</InputLabel>
-                    <Select
-                        {...register('studio')}
-                        value={getValues('studio')}
-                    >
-                        <MenuItem value="">Select Studio</MenuItem>
-                        {studios.map(studio => (
-                            <MenuItem key={studio._id} value={studio._id}>
-                                {studio.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    <Typography variant="caption" color="error">{errors.studio?.message}</Typography>
-                </FormControl>
-                <Button variant="contained" color="primary" type="submit" sx={{ mt: 2, mr: 2 }}>
-                    Save
-                </Button>
-                <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ mt: 2 }}>
-                    Cancel
-                </Button>
-            </form>
+            <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <TextField
+                        label="First Name"
+                        {...register('firstName')}
+                        error={!!errors.firstName}
+                        helperText={errors.firstName?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Last Name"
+                        {...register('lastName')}
+                        error={!!errors.lastName}
+                        helperText={errors.lastName?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Age"
+                        type="number"
+                        {...register('age')}
+                        error={!!errors.age}
+                        helperText={errors.age?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <FormControl fullWidth margin="normal" error={!!errors.identifier}>
+                        <InputLabel>Identifier</InputLabel>
+                        <Select
+                            {...register('identifier')}
+                            value={getValues('identifier')}
+                        >
+                            <MenuItem value="">Select Identifier</MenuItem>
+                            <MenuItem value="professional">Professional</MenuItem>
+                            <MenuItem value="student">Student</MenuItem>
+                            <MenuItem value="coach">Coach</MenuItem>
+                        </Select>
+                        <Typography variant="caption" color="error">{errors.identifier?.message}</Typography>
+                    </FormControl>
+                    <FormControl fullWidth margin="normal" error={!!errors.studio}>
+                        <InputLabel>Studio</InputLabel>
+                        <Select
+                            {...register('studio')}
+                            value={getValues('studio')}
+                        >
+                            <MenuItem value="">Select Studio</MenuItem>
+                            {studios.map(studio => (
+                                <MenuItem key={studio._id} value={studio._id}>
+                                    {studio.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <Typography variant="caption" color="error">{errors.studio?.message}</Typography>
+                    </FormControl>
+                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 2, mr: 2 }}>
+                        Save
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ mt: 2 }}>
+                        Cancel
+                    </Button>
+                </form>
+            </Paper>
         </Container>
     );
 }
