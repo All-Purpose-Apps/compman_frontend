@@ -55,7 +55,7 @@ const AutoGenerateHeats = () => {
     }
 
     return (
-        <Box className='form-container' sx={{ p: 2 }}>
+        <Box className='form-container' sx={{ p: 4 }}>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <FormControl fullWidth margin="normal">
                     <DateTimePicker
