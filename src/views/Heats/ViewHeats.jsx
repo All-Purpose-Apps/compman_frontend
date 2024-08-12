@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeats, deleteHeat } from "src/store/heatsSlice";
 // MUI Components
-import { Box, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 // Components
 import CustomToolbar from "src/components/CustomToolbar";
@@ -39,17 +39,16 @@ const ViewHeats = () => {
         navigate(`/admin/heats/edit/${id}`);
     };
 
-    const handleDelete = id => {
-        dispatch(deleteHeat(id));
+    const handleDelete = async (id) => {
+        await dispatch(deleteHeat(id));
+        dispatch(fetchHeats());
         navigate('/admin/heats');
     };
 
-    const handleMultiDelete = () => {
-        selectedRows.forEach((row) => {
-            dispatch(deleteHeat(row));
-        })
+    const handleMultiDelete = async () => {
+        await dispatch(deleteHeat(selectedRows.join(',')))
         dispatch(fetchHeats());
-    }
+    };
 
     const handleGetStudio = id => {
         navigate(`/admin/heats/${id}`);
@@ -59,30 +58,41 @@ const ViewHeats = () => {
         navigate('/admin/heats/generate');
     };
 
+    const getRowHeight = (params) => {
+        const numberOfCouples = params.model.couples.length;
+        const baseHeight = 32; // Default row height for one line
+        const lineHeight = 24; // Estimated line height for each additional couple entry
+
+        return baseHeight + (numberOfCouples - 1) * lineHeight;
+    };
+
     const columns = [
         {
             field: "number",
             headerName: "#",
             flex: .10,
+            sortable: false,
             renderCell: (params) => (params.api.getRowIndexRelativeToVisibleRows(params.id) + 1)
         },
-        // DateTime
         {
             field: "dateTime",
             headerName: "Date/Time",
             flex: .6,
+            sortable: false,
             renderCell: (params) => (new Date(params.row.dateTime).toLocaleString())
         },
         {
             field: "dance",
             headerName: "Dance",
             flex: 1,
-            renderCell: (params) => (`${params.row.dance.title} - ${params.row.dance.danceCategory.name}`)
+            sortable: false,
+            renderCell: (params) => (`${params.row.dance.title} - ${params.row.dance.danceCategory?.name}`)
         },
         {
             field: "ageCategory",
             headerName: "Age Category",
             flex: .3,
+            sortable: false,
             align: 'center',
             renderCell: (params) => (
                 capitalize(params.row.couples[0].ageCategory))
@@ -91,6 +101,7 @@ const ViewHeats = () => {
             field: "level",
             headerName: "Level",
             flex: .5,
+            sortable: false,
             renderCell: (params) => (
                 capitalizeWords(params.row.couples[0].level))
         },
@@ -98,12 +109,17 @@ const ViewHeats = () => {
             field: "couples",
             headerName: "Entries",
             flex: 1,
+            sortable: false,
             renderCell: (params) => {
-                return params.row.couples.map(({ follower, leader }, i) => (
-                    <div key={i}>
-                        {follower.fullName} & {leader.fullName}
+                return (
+                    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        {params.row.couples.map(({ follower, leader }, i) => (
+                            <Typography key={i} component="li" sx={{ listStyleType: "none" }}>
+                                {follower.fullName} & {leader.fullName}
+                            </Typography>
+                        ))}
                     </div>
-                ))
+                );
 
             }
         },
@@ -111,6 +127,7 @@ const ViewHeats = () => {
             field: "actions",
             headerName: "Actions",
             flex: .5,
+            sortable: false,
             renderCell: (params) => (
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
             ),
@@ -126,7 +143,7 @@ const ViewHeats = () => {
                 sx={boxSxSettings(colors)}
             >
                 <DataGrid
-                    rows={heats}
+                    rows={heats ? heats : []}
                     columns={columns}
                     getRowId={getRowId}
                     onRowClick={params => handleGetStudio(params.row._id)}
@@ -138,6 +155,7 @@ const ViewHeats = () => {
                     pageSize={5}
                     pagination={true}
                     sx={gridSxSettings(colors)}
+                    getRowHeight={getRowHeight}
                 />
             </Box>
         </Box>

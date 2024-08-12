@@ -21,7 +21,8 @@ export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
 export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
   try {
     const couples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
-    const heats = await autoGenerateHeats(heatData, couples);
+    const currentHeats = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
+    const heats = await autoGenerateHeats(heatData, couples, currentHeats);
     for (const heat of heats) {
       await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heat);
     }

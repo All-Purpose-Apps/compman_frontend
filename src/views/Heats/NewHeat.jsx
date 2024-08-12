@@ -65,7 +65,7 @@ const NewHeat = () => {
                 <DateTimePicker
                     value={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
-                    renderInput={(params) => <TextField {...params} />}
+                    slotProps={{ textField: { variant: 'outlined' } }}
                 />
             </FormControl>
 

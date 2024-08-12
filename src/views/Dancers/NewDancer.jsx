@@ -29,7 +29,6 @@ const schema = yup.object().shape({
 const NewDancer = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
