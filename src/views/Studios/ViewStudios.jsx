@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import { Box, IconButton, useTheme, Button } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "src/utils/theme";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,28 +6,11 @@ import { fetchStudios, deleteStudio } from 'src/store/studiosSlice';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formatPhoneNumber } from 'src/utils/formatPhoneNumber';
+import { Box, IconButton, useTheme, Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
-
-const CustomToolbar = () => {
-    const navigate = useNavigate();
-    const handleAddStudio = () => {
-        navigate('/admin/studios/new');
-    };
-    return (
-        <GridToolbarContainer>
-            <Box sx={{ flexGrow: 1 }}>
-                <GridToolbarQuickFilter />
-            </Box>
-            <Button
-                color="secondary"
-                variant="contained"
-                onClick={handleAddStudio}
-            >
-                Add Studio
-            </Button>
-        </GridToolbarContainer>
-    );
-};
+import LoadingModal from "src/components/LoadingModal";
+import CustomToolbar from "src/components/CustomToolbar";
 
 const Studios = () => {
     const theme = useTheme();
@@ -42,6 +23,8 @@ const Studios = () => {
     }, [dispatch]);
 
     const studios = useSelector(state => state.studios.studios);
+    const loading = useSelector(state => state.studios.status) === 'loading';
+    const error = useSelector(state => state.studios.error);
 
     function getRowId(row) {
         return row._id;
@@ -56,7 +39,9 @@ const Studios = () => {
         navigate('/admin/studios');
     };
 
-
+    const handleAddStudio = () => {
+        navigate('/admin/studios/new');
+    };
 
     const handleGetStudio = id => {
         navigate(`/admin/studios/${id}`);
@@ -110,6 +95,7 @@ const Studios = () => {
 
     return (
         <Box m="20px">
+            <LoadingModal loading={loading} resource="Studios" />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
@@ -146,6 +132,7 @@ const Studios = () => {
                     getRowId={getRowId}
                     onRowClick={params => handleGetStudio(params.row._id)}
                     slots={{ toolbar: CustomToolbar }}
+                    slotProps={{ toolbar: { handleAdd: handleAddStudio, theme: theme.palette.mode, button: 'Add Studio' } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}

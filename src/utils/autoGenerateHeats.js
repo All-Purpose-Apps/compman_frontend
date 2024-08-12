@@ -1,9 +1,6 @@
 export function autoGenerateHeats(timeRange, couples) {
   const times = generateTimeIntervals(timeRange.start.toDate(), timeRange.end.toDate(), timeRange.interval);
   const timeSlots = scheduleCouples(times, couples.data);
-  //   console.log(JSON.stringify(couples.data));
-  //   console.log(JSON.stringify(times));
-  //   console.log(timeSlots);
   return timeSlots;
 }
 function generateTimeIntervals(startDate, endDate, intervalMinutes) {
@@ -45,12 +42,9 @@ function scheduleCouples(timeSlots, couples) {
         coupleDanceHistory.set(coupleId, new Set());
       }
 
+      // Check if the couple has already performed this combination in any time slot
       const canAddCouple =
-        scheduledSlot.couples.length < 8 &&
-        !usedDancers.has(leaderId) &&
-        !usedDancers.has(followerId) &&
-        !coupleDanceHistory.get(coupleId).has(coupleDetails) &&
-        (scheduledSlot.couples.length === 0 || slotDetails.has(coupleDetails));
+        scheduledSlot.couples.length < 8 && !usedDancers.has(leaderId) && !usedDancers.has(followerId) && !coupleDanceHistory.get(coupleId).has(coupleDetails); // Ensure the couple has not danced this combination before
 
       if (canAddCouple) {
         scheduledSlot.couples.push(couple);

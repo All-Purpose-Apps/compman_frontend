@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, FormControl } from '@mui/material';
+import { Box, Button, TextField, FormControl, Dialog, DialogTitle, DialogContent, DialogContentText, CircularProgress } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,11 +12,13 @@ const AutoGenerateHeats = () => {
     const navigate = useNavigate();
     const [selectedStartDate, setSelectedStartDate] = useState(dayjs(new Date()));
     const [selectedEndDate, setSelectedEndDate] = useState(dayjs(new Date()));
+    const [open, setOpen] = useState(false);
     const [interval, setInterval] = useState(1.5);
 
     useEffect(() => {
         dispatch(fetchCouples());
     }, [dispatch]);
+    const [progress, setProgress] = React.useState(0);
 
     const couples = useSelector(state => state.couples.couples);
     const isLoading = useSelector(state => state.couples.status) === 'loading';
@@ -31,13 +33,13 @@ const AutoGenerateHeats = () => {
         };
         dispatch(addHeat(data));
         dispatch(fetchHeats());
-        navigate('/admin/heats');
+        setOpen(true);
+        setTimeout(() => {
+            setOpen(false);
+            navigate('/admin/heats');
+        }, 3000);
     };
 
-    const coupleOptions = couples.map(couple => ({
-        value: couple._id,
-        label: `${couple.leader.fullName} & ${couple.follower.fullName} - ${couple.dance.danceCategory.name} - ${couple.dance.title}`
-    }));
     const handleCancel = () => {
         navigate('/admin/heats');
     };
@@ -56,6 +58,32 @@ const AutoGenerateHeats = () => {
 
     return (
         <Box className='form-container' sx={{ p: 4 }}>
+            <Dialog
+                open={open}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Generating Heats
+                </DialogTitle>
+                <DialogContent>
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        minHeight="150px" // Adjust height as needed
+                    >
+                        <DialogContentText
+                            id="alert-dialog-description"
+                            align="center" // Center text horizontally
+                        >
+                            Please allow a few seconds for the heats to be generated.
+                        </DialogContentText>
+                        <CircularProgress sx={{ mt: 2 }} /> {/* Adds some margin to separate text and spinner */}
+                    </Box>
+                </DialogContent>
+            </Dialog>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <FormControl fullWidth margin="normal">
                     <DateTimePicker

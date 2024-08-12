@@ -4,10 +4,13 @@ const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, butt
     return (
         <GridToolbarContainer>
             <Box sx={{ flexGrow: 1 }}>
-                <GridToolbar sx={{
+                <GridToolbar printOptions={{
+                    pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }', hideToolbar: true,
+                }} sx={{
                     'button': {
                         color: theme === 'dark' ? 'white' : 'black',
-                    }
+
+                    },
                 }} />
             </Box>
             <Button
@@ -15,9 +18,9 @@ const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, butt
                 variant="contained"
                 onClick={handleAdd}
             >
-                Add {button}
+                {button}
             </Button>
-            {selectedRows.length > 0 && (
+            {selectedRows?.length > 0 && (
                 <Button
                     variant="contained"
                     color="error"

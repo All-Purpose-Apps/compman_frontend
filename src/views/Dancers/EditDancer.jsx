@@ -1,138 +1,183 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Container, CircularProgress, Typography, useTheme, Paper } from '@mui/material';
-import { tokens } from 'src/utils/theme';
-import { getOneDancer, editDancer } from '../../store/dancersSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchStudios } from '../../store/studiosSlice';
+import { getOneDancer, editDancer } from '../../store/dancersSlice';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import { Collapse, Paper, useTheme } from '@mui/material';
+import { tokens } from 'src/utils/theme';
 
-const schema = yup.object().shape({
-    firstName: yup.string().required('First Name is required'),
-    lastName: yup.string().required('Last Name is required'),
-    age: yup.number().required('Age is required').positive().integer(),
-    identifier: yup.string().oneOf(['professional', 'student', 'coach']).required('Identifier is required'),
-    studio: yup.string().required('Studio is required'),
-});
-
-export default function EditDancer() {
+const EditDancer = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    const [open, setOpen] = useState(false);
 
-    const { register, handleSubmit, setValue, formState: { errors }, getValues } = useForm({
-        resolver: yupResolver(schema)
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        age: '',
+        identifier: '',
+        studio: '',
     });
 
+    const [errors, setErrors] = useState({});
+
     useEffect(() => {
-        const fetchDancer = async () => {
+        const fetchDancerData = async () => {
             const response = await dispatch(getOneDancer(id));
             const dancer = response.payload[0];
-            setValue('firstName', dancer.firstName);
-            setValue('lastName', dancer.lastName);
-            setValue('age', dancer.age);
-            setValue('identifier', dancer.identifier);
-            setValue('studio', dancer.studio._id);
+            if (dancer) {
+                setFormData({
+                    firstName: dancer.firstName,
+                    lastName: dancer.lastName,
+                    age: dancer.age,
+                    identifier: dancer.identifier,
+                    studio: dancer.studio._id,
+                });
+            }
         };
 
-        fetchDancer();
+        fetchDancerData();
         dispatch(fetchStudios());
-    }, [dispatch, id, setValue]);
+    }, [dispatch, id]);
 
     const studios = useSelector(state => state.studios.studios);
-    const isLoading = useSelector(state => state.dancers.status) === 'loading';
-    const error = useSelector(state => state.dancers.error);
+    const isLoading = useSelector(state => state.studios.status) === 'loading';
+    const error = useSelector(state => state.studios.error);
 
-    const onSubmit = (data) => {
-        dispatch(editDancer({ id, ...data }));
-        navigate('/admin/dancers/' + id);
+    const validate = () => {
+        const newErrors = {};
+        if (!formData.firstName) newErrors.firstName = 'First Name is required';
+        if (!formData.lastName) newErrors.lastName = 'Last Name is required';
+        if (!formData.age || formData.age <= 0) newErrors.age = 'Age is required and must be a positive integer';
+        if (!['professional', 'student', 'coach'].includes(formData.identifier)) newErrors.identifier = 'Identifier is required';
+        if (!formData.studio) newErrors.studio = 'Studio is required';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (validate()) {
+            dispatch(editDancer({ id, ...formData }));
+            getOneDancer(id)
+            setOpen(true);
+            setTimeout(() => {
+                setOpen(false);
+                navigate(`/admin/dancers/${id}`);
+            }, 1000)
+        }
     };
 
     const handleCancel = () => {
-        navigate('/admin/dancers/' + id);
+        navigate('/admin/dancers');
     };
 
     if (isLoading) {
-        return <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <CircularProgress />
-        </Container>;
+        return <div>Loading...</div>;
     }
 
     if (error) {
-        return <Container sx={{ mt: 4 }}>
-            <Typography variant="h6" color="error">{error}</Typography>
-        </Container>;
+        return <div>{error}</div>;
     }
 
     return (
-        <Container sx={{ mt: 4 }}>
+        <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
+            <Collapse in={open}>
+                <Alert severity="success" sx={{ mb: 2 }}> Updated dancer successfully, redirecting... </Alert>
+            </Collapse>
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit}>
                     <TextField
                         label="First Name"
-                        {...register('firstName')}
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
                         error={!!errors.firstName}
-                        helperText={errors.firstName?.message}
+                        helperText={errors.firstName}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Last Name"
-                        {...register('lastName')}
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
                         error={!!errors.lastName}
-                        helperText={errors.lastName?.message}
+                        helperText={errors.lastName}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Age"
+                        name="age"
                         type="number"
-                        {...register('age')}
+                        value={formData.age}
+                        onChange={handleChange}
                         error={!!errors.age}
-                        helperText={errors.age?.message}
+                        helperText={errors.age}
                         fullWidth
                         margin="normal"
                     />
-                    <FormControl fullWidth margin="normal" error={!!errors.identifier}>
-                        <InputLabel>Identifier</InputLabel>
-                        <Select
-                            {...register('identifier')}
-                            value={getValues('identifier')}
-                        >
-                            <MenuItem value="">Select Identifier</MenuItem>
-                            <MenuItem value="professional">Professional</MenuItem>
-                            <MenuItem value="student">Student</MenuItem>
-                            <MenuItem value="coach">Coach</MenuItem>
-                        </Select>
-                        <Typography variant="caption" color="error">{errors.identifier?.message}</Typography>
-                    </FormControl>
-                    <FormControl fullWidth margin="normal" error={!!errors.studio}>
-                        <InputLabel>Studio</InputLabel>
-                        <Select
-                            {...register('studio')}
-                            value={getValues('studio')}
-                        >
-                            <MenuItem value="">Select Studio</MenuItem>
-                            {studios.map(studio => (
-                                <MenuItem key={studio._id} value={studio._id}>
-                                    {studio.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <Typography variant="caption" color="error">{errors.studio?.message}</Typography>
-                    </FormControl>
-                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 2, mr: 2 }}>
-                        Save
-                    </Button>
-                    <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ mt: 2 }}>
-                        Cancel
-                    </Button>
+                    <TextField
+                        select
+                        label="Identifier"
+                        name="identifier"
+                        value={formData.identifier}
+                        onChange={handleChange}
+                        error={!!errors.identifier}
+                        helperText={errors.identifier}
+                        fullWidth
+                        margin="normal"
+                    >
+                        <MenuItem value="professional">Professional</MenuItem>
+                        <MenuItem value="student">Student</MenuItem>
+                        <MenuItem value="coach">Coach</MenuItem>
+                    </TextField>
+                    <TextField
+                        select
+                        label="Studio"
+                        name="studio"
+                        value={formData.studio}
+                        onChange={handleChange}
+                        error={!!errors.studio}
+                        helperText={errors.studio}
+                        fullWidth
+                        margin="normal"
+                    >
+                        {studios.map(studio => (
+                            <MenuItem key={studio._id} value={studio._id}>
+                                {studio.name}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                        <Button variant="contained" color="primary" type="submit">
+                            Save
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </Box>
                 </form>
             </Paper>
-        </Container>
+        </Box>
     );
-}
+};
+
+export default EditDancer;

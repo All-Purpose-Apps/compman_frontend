@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -33,8 +33,9 @@ const NewDancer = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const firstNameRef = useRef(null); // Ref to focus on the first input field
 
-    const { register, handleSubmit, formState: { errors }, reset, getValue } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
         resolver: yupResolver(schema)
     });
 
@@ -48,11 +49,16 @@ const NewDancer = () => {
 
     const onSubmit = (data) => {
         dispatch(addDancer(data));
-        setOpen(true);
-        reset()
-        setTimeout(() => {
-            setOpen(false)
-        }, 3000);
+        if (!error) {
+            setOpen(true);
+            reset();
+            if (firstNameRef.current) {
+                firstNameRef.current.focus(); // Focus on the first input field after reset
+            }
+            setTimeout(() => {
+                setOpen(false)
+            }, 3000);
+        }
     };
 
     const handleCancel = () => {
@@ -70,13 +76,14 @@ const NewDancer = () => {
     return (
         <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
             <Collapse in={open}>
-                <Alert severity="success">This is a success Alert.</Alert>
+                <Alert severity="success">Dancer added successfully!</Alert>
             </Collapse>
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         label="First Name"
                         {...register('firstName')}
+                        inputRef={firstNameRef} // Attach the ref to the first input field
                         error={!!errors.firstName}
                         helperText={errors.firstName?.message}
                         fullWidth

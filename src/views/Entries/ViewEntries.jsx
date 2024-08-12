@@ -13,6 +13,7 @@ import ActionButtons from "src/components/ActionButtons";
 import { tokens } from "src/utils/theme";
 import { capitalizeWords } from 'src/utils';
 import { gridSxSettings, boxSxSettings } from "src/utils/customSX";
+import LoadingModal from "src/components/LoadingModal";
 
 export default function Entries() {
     const theme = useTheme();
@@ -26,6 +27,8 @@ export default function Entries() {
     }, [dispatch]);
 
     const couples = useSelector(state => state.couples.couples);
+    const loading = useSelector(state => state.couples.status) === 'loading';
+    const error = useSelector(state => state.couples.error);
 
     function getRowId(row) {
         return row._id;
@@ -90,6 +93,7 @@ export default function Entries() {
 
     return (
         <Box m="20px">
+            <LoadingModal loading={loading} resource='Entries' />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
@@ -101,7 +105,7 @@ export default function Entries() {
                     getRowId={getRowId}
                     onRowClick={params => handleGetCouple(params.row._id)}
                     slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddEntry, theme: theme.palette.mode, button: 'Entry' } }}
+                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddEntry, theme: theme.palette.mode, button: 'Add Entry' } }}
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     pageSizeOptions={[5, 10, 25, 50, 100]}

@@ -13,6 +13,7 @@ import ActionButtons from "src/components/ActionButtons";
 import { tokens } from "src/utils/theme";
 import { capitalize } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils/customSX";
+import LoadingModal from "src/components/LoadingModal";
 
 const ViewDancers = () => {
     const theme = useTheme();
@@ -26,6 +27,8 @@ const ViewDancers = () => {
     }, [dispatch]);
 
     const dancers = useSelector(state => state.dancers.dancers);
+    const loading = useSelector(state => state.dancers.status) === 'loading';
+    const error = useSelector(state => state.dancers.error);
 
     function getRowId(row) {
         return row._id;
@@ -92,6 +95,7 @@ const ViewDancers = () => {
 
     return (
         <Box m="20px">
+            <LoadingModal loading={loading} resource='Dancers' />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
@@ -105,7 +109,7 @@ const ViewDancers = () => {
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, theme: theme.palette.mode, button: 'Dancer' } }}
+                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, theme: theme.palette.mode, button: 'Add Dancer' } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}
