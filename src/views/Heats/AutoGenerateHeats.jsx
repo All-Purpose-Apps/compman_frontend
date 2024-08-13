@@ -50,12 +50,32 @@ const AutoGenerateHeats = () => {
         return <div>Loading...</div>;
     }
 
-    if (errors) {
-        return <div>Error: {errors}</div>;
-    }
-
     if (couples.length === 0) {
-        return <div>No couples available. Please create couples first.</div>;
+        return <Dialog
+            open={couples.length === 0}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogContent>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    minHeight="150px" // Adjust height as needed
+                >
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        align="center" // Center text horizontally
+                    >
+                        No Entries, Please create entries first.
+                    </DialogContentText>
+                    <Button variant="outlined" onClick={() => navigate('/admin/entries')} sx={{ color: 'white', mt: 2 }}>
+                        Go to Entries
+                    </Button>
+                </Box>
+            </DialogContent>
+        </Dialog>
     }
 
     return (
@@ -86,6 +106,7 @@ const AutoGenerateHeats = () => {
                     </Box>
                 </DialogContent>
             </Dialog>
+
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary, maxWidth: '500px' }}>
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <FormControl fullWidth margin="normal">

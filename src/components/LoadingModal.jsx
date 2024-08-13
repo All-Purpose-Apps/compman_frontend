@@ -17,7 +17,7 @@ export default function LoadingModal({ loading, resource }) {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <CircularProgress sx={{ mt: 2 }} /> {/* Adds some margin to separate text and spinner */}
+                    <CircularProgress sx={{ mt: 2 }} />
                 </Box>
             </DialogContent>
         </Dialog>

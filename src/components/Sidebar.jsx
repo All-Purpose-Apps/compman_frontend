@@ -10,7 +10,6 @@ import { tokens } from "src/utils/theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import twoPeople from 'src/assets/images/two-people-ballroom-dancing.svg';
 import { BRAND } from "src/utils/constants";
-
 // ICONS
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
@@ -34,7 +33,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
             style={{ color: colors.grey[100] }}
             onClick={() => {
                 setSelected(title);
-                localStorage.setItem('selectedMenuItem', title); // Save to localStorage
+                localStorage.setItem('selectedMenuItem', title);
             }}
             icon={icon}
             routerLink={<Link to={to} />}
@@ -48,7 +47,7 @@ const MyProSidebar = () => {
     const auth = getAuth(app);
     const dispatch = useDispatch();
 
-    // Retrieve the selected menu item from localStorage on initial render
+
     const [selected, setSelected] = useState(localStorage.getItem('selectedMenuItem') || "Dashboard");
 
     useEffect(() => {

@@ -19,34 +19,48 @@ function generateTimeIntervals(startDate, endDate, intervalMinutes) {
 function scheduleCouples(timeslots, couples, currentHeats) {
   let heats = []; // To store the final heats with scheduled couples
   let usedCombinations = new Set(); // To track used (dance, ageCategory, level) combinations for each couple
-  let participantsInHeat = new Set(); // To track all participants (leaders and followers) in the current heat
+  let heatMap = new Map(); // To map timeslots to their respective heats
 
   // Sort timeslots by datetime to ensure they are in order
   let sortedTimeslots = timeslots.sort((a, b) => new Date(a) - new Date(b));
 
-  // Start numbering heats from 1
-  let heatNumber = 1;
+  // Populate the heatMap with currentHeats and mark used combinations
+  currentHeats.forEach((heat) => {
+    heatMap.set(heat.dateTime, heat);
+    heat.couples.forEach((couple) => {
+      let combination = `${couple.id}-${couple.dance}-${couple.ageCategory}-${couple.level}`;
+      usedCombinations.add(combination);
+    });
+  });
+
+  // Start numbering heats from the current max number
+  let heatNumber = currentHeats.length ? Math.max(...currentHeats.map((h) => h.number)) + 1 : 1;
+  let lastHeat = null; // To keep track of the last created or filled heat
 
   sortedTimeslots.forEach((timeslot) => {
-    // Check if there's an existing heat for this timeslot
-    if (currentHeats.length > 0 && new Date(currentHeats[0].dateTime) <= new Date(timeslot)) {
-      // If so, reuse the existing heat
-      let existingHeat = currentHeats.shift();
-      heats.push(existingHeat);
-      return;
+    let currentTime = new Date(timeslot);
+    let heat;
+
+    // Check if there's an overlap of 90 seconds with the last heat
+    if (lastHeat && currentTime - new Date(lastHeat.dateTime) <= 90000) {
+      heat = lastHeat;
+    } else if (heatMap.has(timeslot)) {
+      // Use the existing heat if it's already in the heatMap
+      heat = heatMap.get(timeslot);
+    } else {
+      // Create a new heat if it doesn't exist and there's no overlap
+      heat = {
+        number: heatNumber++,
+        couples: [],
+        dateTime: timeslot,
+        dance: null,
+        ageCategory: null,
+        level: null,
+      };
+      heatMap.set(timeslot, heat);
     }
 
-    // Create a new heat
-    let heat = {
-      number: heatNumber, // Numbering the heats sequentially
-      couples: [],
-      dateTime: timeslot,
-      dance: null,
-      ageCategory: null,
-      level: null,
-    };
-
-    participantsInHeat.clear();
+    let participantsInHeat = new Set(heat.couples.flatMap((couple) => [couple.leader._id, couple.follower._id]));
 
     for (let couple of couples) {
       let dance = couple.dance._id;
@@ -88,11 +102,14 @@ function scheduleCouples(timeslots, couples, currentHeats) {
       }
     }
 
-    // Only add the heat if it has at least one couple
-    if (heat.couples.length > 0) {
+    // Only add the heat to the final list if it has at least one couple and it doesn't already exist
+    if (!heats.includes(heat) && heat.couples.length > 0) {
       heats.push(heat);
-      heatNumber++;
     }
+
+    // Update the lastHeat to the current heat
+    lastHeat = heat;
   });
+
   return heats;
 }

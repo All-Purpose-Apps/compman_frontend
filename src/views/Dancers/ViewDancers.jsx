@@ -38,15 +38,13 @@ const ViewDancers = () => {
         navigate(`/admin/dancers/edit/${id}`);
     };
 
-    const handleDelete = id => {
-        dispatch(deleteDancer(id));
-        navigate('/admin/dancers');
+    const handleDelete = async (id) => {
+        await dispatch(deleteDancer(id));
+        dispatch(fetchDancers());
     };
 
-    const handleMultiDelete = () => {
-        selectedRows.forEach((row) => {
-            dispatch(deleteDancer(row));
-        })
+    const handleMultiDelete = async () => {
+        await dispatch(deleteDancer(selectedRows))
         dispatch(fetchDancers());
     }
 

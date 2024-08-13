@@ -51,9 +51,6 @@ const NewHeat = () => {
         return <Box display="flex" justifyContent="center" alignItems="center"><CircularProgress /></Box>;
     }
 
-    if (errors) {
-        return <Typography color="error">Error: {errors}</Typography>;
-    }
 
     if (couples.length === 0) {
         return <Typography>No couples available. Please create couples first.</Typography>;
@@ -61,6 +58,16 @@ const NewHeat = () => {
 
     return (
         <Box component="form" onSubmit={handleSubmit} className='form-container'>
+            <Box display="flex" justifyContent="center" alignItems="center">
+                <Modal open={errors}>
+                    <Box sx={{ width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+                        <Typography variant="h6" component="div" gutterBottom>
+                            Error
+                        </Typography>
+                        <Typography color="error">Error: {errors}</Typography>
+                    </Box>
+                </Modal>
+            </Box>
             <FormControl fullWidth margin="normal">
                 <DateTimePicker
                     value={selectedDate}

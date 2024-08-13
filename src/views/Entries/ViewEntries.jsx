@@ -23,7 +23,11 @@ export default function Entries() {
     const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
-        dispatch(fetchCouples());
+        const fetchData = async () => {
+            await dispatch(fetchCouples());
+        };
+
+        fetchData();
     }, [dispatch]);
 
     const couples = useSelector(state => state.couples.couples);
@@ -38,15 +42,13 @@ export default function Entries() {
         navigate(`/admin/entries/edit/${id}`);
     };
 
-    const handleDelete = id => {
-        dispatch(deleteCouple(id));
+    const handleDelete = async (id) => {
+        await dispatch(deleteCouple(id));
         navigate('/admin/entries');
     };
 
-    const handleMultiDelete = () => {
-        selectedRows.forEach((row) => {
-            dispatch(deleteCouple(row));
-        })
+    const handleMultiDelete = async () => {
+        await dispatch(deleteCouple(selectedRows));
         dispatch(fetchCouples());
     }
 
