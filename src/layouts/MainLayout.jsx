@@ -10,7 +10,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 export default function MainLayout() {
   const [theme, colorMode] = useMode();
   const isMobile = useMediaQuery('(max-width:600px)');
-  const [alertVisible, setAlertVisible] = useState(isMobile);
 
   const handleClose = () => {
     setAlertVisible(false);
@@ -23,7 +22,7 @@ export default function MainLayout() {
         <MyProSidebarProvider>
           <div className="app">
             <main className="content">
-              {alertVisible && isMobile && (
+              {isMobile && (
                 <Box sx={{ mt: 2, mb: 2, mx: 2 }}>
                   <Alert
                     severity="warning"
