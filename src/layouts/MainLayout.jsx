@@ -4,7 +4,7 @@ import { CssBaseline, ThemeProvider, Box, Alert, IconButton } from "@mui/materia
 import CloseIcon from '@mui/icons-material/Close';
 import { ColorModeContext, useMode } from "src/utils/theme";
 import Topbar from "src/components/Topbar";
-import { MyProSidebarProvider } from 'src/components/sidebarContext';
+import { MyProSidebarProvider } from 'src/components/Sidebar/sidebarContext';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function MainLayout() {

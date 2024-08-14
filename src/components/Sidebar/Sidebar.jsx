@@ -4,7 +4,7 @@ import { app } from 'src/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from 'src/store/userSlice';
-import { useSidebarContext } from "src/components/sidebarContext";
+import { useSidebarContext } from "src/components/Sidebar/sidebarContext";
 import { Link } from "react-router-dom";
 import { tokens } from "src/utils/theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
