@@ -11,6 +11,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import LoadingModal from "src/components/LoadingModal";
 import CustomToolbar from "src/components/CustomToolbar";
+import { boxSxSettings, gridSxSettings } from "src/utils";
 
 const Studios = () => {
     const theme = useTheme();
@@ -99,32 +100,7 @@ const Studios = () => {
             <Box
                 m="40px 0 0 0"
                 height="75vh"
-                sx={{
-                    "& .MuiDataGrid-root": {
-                        border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                        fontSize: "16px", // Adjust cell font size
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[700],
-                        borderBottom: "none",
-                        fontSize: "18px", // Adjust header font size
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[700],
-                        fontSize: "16px",
-                    },
-                    "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                    },
-
-                }}
+                sx={boxSxSettings(colors)}
             >
                 <DataGrid
                     rows={studios}
@@ -136,29 +112,7 @@ const Studios = () => {
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}
-                    sx={{
-                        "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[700],
-                            fontSize: "16px",
-                            display: 'flex',
-                            alignItems: 'center',
-                        },
-                        "& .MuiTablePagination-toolbar": {
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        },
-                        "& .MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows": {
-                            fontSize: "14px",
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginBottom: '0',
-                        },
-                        //increase font size select input
-                        "& .MuiSelect-select": {
-                            fontSize: "14px",
-                        },
-                    }}
+                    sx={gridSxSettings(colors)}
                 />
             </Box>
         </Box>

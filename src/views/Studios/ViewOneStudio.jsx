@@ -77,7 +77,7 @@ export default function ViewOneStudio() {
                                 <Box textAlign="center" mb={4}>
                                     <Typography variant="h4">{studio.name}</Typography>
                                 </Box>
-                                <Grid container spacing={2} alignItems="center">
+                                <Grid container spacing={2} alignItems="center" mb={2}>
                                     <Grid item>
                                         <FaMapMarkerAlt size={20} />
                                     </Grid>
@@ -85,7 +85,7 @@ export default function ViewOneStudio() {
                                         <Typography>{studio.location}</Typography>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2} alignItems="center">
+                                <Grid container spacing={2} alignItems="center" mb={2}>
                                     <Grid item>
                                         <FaPhone size={20} />
                                     </Grid>
@@ -93,7 +93,7 @@ export default function ViewOneStudio() {
                                         <Typography>{studio.phone}</Typography>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2} alignItems="center">
+                                <Grid container spacing={2} alignItems="center" mb={2}>
                                     <Grid item>
                                         <FaBuilding size={20} />
                                     </Grid>
@@ -101,7 +101,7 @@ export default function ViewOneStudio() {
                                         <Typography>{studio.studioType}</Typography>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2} alignItems="center">
+                                <Grid container spacing={2} alignItems="center" mb={2}>
                                     <Grid item>
                                         <FaEnvelope size={20} />
                                     </Grid>
@@ -109,7 +109,7 @@ export default function ViewOneStudio() {
                                         <Typography>{studio.email}</Typography>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2} alignItems="center">
+                                <Grid container spacing={2} alignItems="center" mb={2}>
                                     <Grid item>
                                         <FaGlobe size={20} />
                                     </Grid>
