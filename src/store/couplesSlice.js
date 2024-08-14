@@ -29,13 +29,8 @@ export const getOneCouple = createAsyncThunk('couples/getOneCouple', async (id) 
 
 export const addCouple = createAsyncThunk('couples/addCouple', async (coupleData) => {
   try {
-    const couples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
-    const newArray = await checkCouples(couples, coupleData);
-    for (const couple of newArray) {
-      await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/couples`, couple);
-    }
-    const newCouples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
-    return newCouples.data;
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/couples`, coupleData);
+    return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }
