@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { autoGenerateHeats } from '../utils/autoGenerateHeats';
 
 const initialState = {
   heats: [],
@@ -19,7 +20,10 @@ export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
 
 export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heatData);
+    const couples = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/couples`);
+    const currentHeats = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
+    const heats = await autoGenerateHeats(heatData, couples, currentHeats);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heats);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to add heat');

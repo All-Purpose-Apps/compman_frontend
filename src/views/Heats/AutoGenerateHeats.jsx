@@ -33,7 +33,7 @@ const AutoGenerateHeats = () => {
             interval: interval
         };
         dispatch(addHeat(data));
-        // dispatch(fetchHeats());
+        dispatch(fetchHeats());
         navigate('/admin/heats');
     };
 
