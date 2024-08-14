@@ -37,7 +37,7 @@ const EditDancer = () => {
             const dancer = response.payload[0];
             if (dancer) {
                 setFormData({
-                    number: dancer.number,
+                    number: dancer.number ? dancer.number : '',
                     firstName: dancer.firstName,
                     lastName: dancer.lastName,
                     age: dancer.age,

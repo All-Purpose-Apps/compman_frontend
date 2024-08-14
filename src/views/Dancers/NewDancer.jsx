@@ -145,7 +145,7 @@ const NewDancer = () => {
                         <FormHelperText>{errors.identifier?.message}</FormHelperText>
                     </FormControl>
                     <FormControl fullWidth margin="normal" error={!!errors.studio}>
-                        <InputLabel>Studio</InputLabel>
+                        <InputLabel id="studio">Studio</InputLabel>
                         <Select
                             {...register('studio')}
                             defaultValue=""
