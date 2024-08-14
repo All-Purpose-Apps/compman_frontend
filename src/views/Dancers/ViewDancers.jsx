@@ -57,6 +57,7 @@ const ViewDancers = () => {
     };
 
     const columns = [
+        { field: 'number', headerName: '#', flex: .2, align: 'center', headerAlign: 'center' },
         {
             field: "fullName",
             headerName: "Full Name",

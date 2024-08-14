@@ -21,6 +21,7 @@ const EditDancer = () => {
     const [open, setOpen] = useState(false);
 
     const [formData, setFormData] = useState({
+        number: '',
         firstName: '',
         lastName: '',
         age: '',
@@ -36,6 +37,7 @@ const EditDancer = () => {
             const dancer = response.payload[0];
             if (dancer) {
                 setFormData({
+                    number: dancer.number,
                     firstName: dancer.firstName,
                     lastName: dancer.lastName,
                     age: dancer.age,
@@ -65,6 +67,7 @@ const EditDancer = () => {
     };
 
     const handleChange = (e) => {
+
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
@@ -103,6 +106,16 @@ const EditDancer = () => {
             </Collapse>
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
                 <form onSubmit={handleSubmit}>
+                    <TextField
+                        label="Number"
+                        name="number"
+                        value={formData.number}
+                        onChange={handleChange}
+                        error={!!errors.number}
+                        helperText={errors.number?.message}
+                        fullWidth
+                        margin="normal"
+                    />
                     <TextField
                         label="First Name"
                         name="firstName"

@@ -18,6 +18,7 @@ import { Paper, useTheme, Snackbar } from '@mui/material';
 import { tokens } from 'src/utils/theme';
 
 const schema = yup.object().shape({
+    number: yup.number().integer().transform((value, originalValue) => (originalValue === '' ? undefined : value)),
     firstName: yup.string().required('First Name is required'),
     lastName: yup.string().required('Last Name is required'),
     age: yup.number().required('Age is required').positive().integer(),
@@ -95,6 +96,16 @@ const NewDancer = () => {
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <TextField
+                        label="Number"
+                        type="number"
+                        name='number'
+                        {...register('number')}
+                        error={!!errors.number}
+                        helperText={errors.number?.message}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
                         label="First Name"
                         {...register('firstName')}
                         inputRef={firstNameRef} // Attach the ref to the first input field
@@ -125,6 +136,7 @@ const NewDancer = () => {
                         <Select
                             {...register('identifier')}
                             defaultValue=""
+                            label="Identifier"
                         >
                             <MenuItem value="professional">Professional</MenuItem>
                             <MenuItem value="student">Student</MenuItem>
@@ -137,6 +149,7 @@ const NewDancer = () => {
                         <Select
                             {...register('studio')}
                             defaultValue=""
+                            label="Studio"
                         >
                             {studios.map(studio => (
                                 <MenuItem key={studio._id} value={studio._id}>

@@ -17,6 +17,7 @@ export default function ViewOneDancer() {
             const response = await dispatch(getOneDancer(id));
             const dancer = response.payload[0];
             setDancer({
+                number: dancer.number,
                 fullName: capitalize(dancer.fullName),
                 age: dancer.age,
                 identifier: capitalizeWords(dancer.identifier, '/'),
@@ -64,6 +65,9 @@ export default function ViewOneDancer() {
                 <Grid item xs={12} md={6}>
                     <Card sx={{ boxShadow: 3 }}>
                         <CardContent>
+                            <Typography variant="h5" component="h2" align="center" gutterBottom>
+                                # {dancer.number}
+                            </Typography>
                             <Typography variant="h4" component="h1" align="center" gutterBottom>
                                 {dancer.fullName}
                             </Typography>
