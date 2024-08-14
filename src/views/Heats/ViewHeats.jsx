@@ -97,14 +97,14 @@ const ViewHeats = () => {
             flex: .3,
             sortable: false,
             align: 'center',
-            renderCell: (params) => (params.row.ageCategory)
+            renderCell: (params) => (capitalize(params.row.ageCategory))
         },
         {
             field: "level",
             headerName: "Level",
             flex: .5,
             sortable: false,
-            renderCell: (params) => (params.row.level)
+            renderCell: (params) => (capitalizeWords(params.row.level))
         },
         {
             field: "couples",

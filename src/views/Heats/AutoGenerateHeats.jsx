@@ -15,7 +15,6 @@ const AutoGenerateHeats = () => {
     const navigate = useNavigate();
     const [selectedStartDate, setSelectedStartDate] = useState(dayjs(new Date()));
     const [selectedEndDate, setSelectedEndDate] = useState(dayjs(new Date()));
-    const [open, setOpen] = useState(false);
     const [interval, setInterval] = useState(1.5);
 
     useEffect(() => {
@@ -34,12 +33,8 @@ const AutoGenerateHeats = () => {
             interval: interval
         };
         dispatch(addHeat(data));
-        dispatch(fetchHeats());
-        setOpen(true);
-        setTimeout(() => {
-            setOpen(false);
-            navigate('/admin/heats');
-        }, 3000);
+        // dispatch(fetchHeats());
+        navigate('/admin/heats');
     };
 
     const handleCancel = () => {
@@ -84,33 +79,6 @@ const AutoGenerateHeats = () => {
 
     return (
         <Box className='form-container' sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
-            <Dialog
-                open={open}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Generating Heats
-                </DialogTitle>
-                <DialogContent>
-                    <Box
-                        display="flex"
-                        flexDirection="column"
-                        alignItems="center"
-                        justifyContent="center"
-                        minHeight="150px" // Adjust height as needed
-                    >
-                        <DialogContentText
-                            id="alert-dialog-description"
-                            align="center" // Center text horizontally
-                        >
-                            Please allow a few seconds for the heats to be generated.
-                        </DialogContentText>
-                        <CircularProgress sx={{ mt: 2 }} /> {/* Adds some margin to separate text and spinner */}
-                    </Box>
-                </DialogContent>
-            </Dialog>
-
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary, maxWidth: '500px' }}>
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <FormControl fullWidth margin="normal">
