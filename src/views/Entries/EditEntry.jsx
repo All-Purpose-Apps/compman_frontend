@@ -56,11 +56,11 @@ export default function EditEntry() {
 
     const onSubmit = (data) => {
         dispatch(editCouple({ id, ...data }));
-        navigate('/admin/entries/' + id);
+        navigate(-1);
     };
 
     const handleCancel = () => {
-        navigate('/admin/entries/' + id);
+        navigate(-1);
     };
 
     const danceOptions = dances.map(dance => ({

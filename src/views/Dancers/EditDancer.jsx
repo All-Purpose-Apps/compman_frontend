@@ -82,13 +82,13 @@ const EditDancer = () => {
             setOpen(true);
             setTimeout(() => {
                 setOpen(false);
-                navigate(`/admin/dancers/${id}`);
+                navigate(-1);
             }, 1000)
         }
     };
 
     const handleCancel = () => {
-        navigate('/admin/dancers');
+        navigate(-1);
     };
 
     if (isLoading) {

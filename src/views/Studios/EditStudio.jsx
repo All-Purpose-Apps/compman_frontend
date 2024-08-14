@@ -37,7 +37,7 @@ export default function EditStudio() {
         onSubmit: (values) => {
             dispatch(editStudio({ id, ...values }));
             dispatch(getOneStudio(id));
-            navigate(`/admin/studios/${id}`);
+            navigate(-1);
         },
     });
 
@@ -60,7 +60,7 @@ export default function EditStudio() {
     }, [dispatch, id]);
 
     const handleCancel = () => {
-        navigate(`/admin/studios/${id}`);
+        navigate(-1);
     };
 
     const isLoading = useSelector(state => state.studios.status) === 'loading';
