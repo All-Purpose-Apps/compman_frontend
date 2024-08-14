@@ -13,9 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { Collapse, Paper, useTheme } from '@mui/material';
+import { Paper, useTheme, Snackbar } from '@mui/material';
 import { tokens } from 'src/utils/theme';
 
 const schema = yup.object().shape({
@@ -35,7 +34,11 @@ const NewDancer = () => {
     const firstNameRef = useRef(null); // Ref to focus on the first input field
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(schema),
+        defaultValues: {
+            identifier: '',
+            studio: ''// or 'professional' or any default value you prefer
+        }
     });
 
     useEffect(() => {
@@ -47,6 +50,10 @@ const NewDancer = () => {
     const error = useSelector(state => state.studios.error);
 
     const onSubmit = (data) => {
+        if (!data.identifier && !data.studio) {
+            data.identifier = '';
+            data.studio = '';
+        }
         dispatch(addDancer(data));
         if (!error) {
             setOpen(true);
@@ -64,6 +71,10 @@ const NewDancer = () => {
         navigate('/admin/dancers');
     };
 
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -74,9 +85,13 @@ const NewDancer = () => {
 
     return (
         <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
-            <Collapse in={open}>
-                <Alert severity="success">Dancer added successfully!</Alert>
-            </Collapse>
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message="Dancer added successfully"
+            />
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <TextField
@@ -109,6 +124,7 @@ const NewDancer = () => {
                         <InputLabel>Identifier</InputLabel>
                         <Select
                             {...register('identifier')}
+                            defaultValue=""
                         >
                             <MenuItem value="professional">Professional</MenuItem>
                             <MenuItem value="student">Student</MenuItem>
@@ -120,6 +136,7 @@ const NewDancer = () => {
                         <InputLabel>Studio</InputLabel>
                         <Select
                             {...register('studio')}
+                            defaultValue=""
                         >
                             {studios.map(studio => (
                                 <MenuItem key={studio._id} value={studio._id}>
