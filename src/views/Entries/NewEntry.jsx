@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField, Button, FormControl, Container, CircularProgress, Typography, Autocomplete, MenuItem, useTheme, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,10 +76,22 @@ const NewEntry = () => {
         label: `${dance.title} - ${dance.danceCategory.name}`
     }));
 
-    const dancerOptions = dancers.map(dancer => ({
-        value: dancer._id,
-        label: dancer.fullName
-    }));
+    const filteredDancerOptions = (role) => {
+        return dancers
+            .filter(dancer => {
+                if (role === 'leader' && formValues.follower) {
+                    return dancer._id !== formValues.follower;
+                }
+                if (role === 'follower' && formValues.leader) {
+                    return dancer._id !== formValues.leader;
+                }
+                return true;
+            })
+            .map(dancer => ({
+                value: dancer._id,
+                label: dancer.fullName
+            }));
+    };
 
     if (isLoading) {
         return (
@@ -103,9 +115,10 @@ const NewEntry = () => {
                 <form onSubmit={onSubmit}>
                     <FormControl fullWidth margin="normal">
                         <Autocomplete
-                            options={dancerOptions}
+                            options={filteredDancerOptions('leader')}
                             getOptionLabel={(option) => option.label}
                             onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'leader')}
+                            isOptionEqualToValue={(option, value) => option.value === value.value}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -119,9 +132,10 @@ const NewEntry = () => {
 
                     <FormControl fullWidth margin="normal">
                         <Autocomplete
-                            options={dancerOptions}
+                            options={filteredDancerOptions('follower')}
                             getOptionLabel={(option) => option.label}
                             onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'follower')}
+                            isOptionEqualToValue={(option, value) => option.value === value.value}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
