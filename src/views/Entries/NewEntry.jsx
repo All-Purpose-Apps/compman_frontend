@@ -6,9 +6,9 @@ import { fetchDancers } from 'src/store/dancersSlice';
 import { addCouple, fetchCouples } from 'src/store/couplesSlice';
 import { fetchDances } from 'src/store/dancesSlice';
 import { capitalizeWords } from 'src/utils/capitalize';
-import { AGE_CATEGORIES, LEVELS } from 'src/utils/constants';
+import { AGE_CATEGORIES, LEVELS } from 'src/utils';
 import { tokens } from "src/utils/theme";
-import { formSxSettings } from 'src/utils/customSX';
+import { formSxSettings } from 'src/utils';
 
 const NewEntry = () => {
     const theme = useTheme();

@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { tokens } from "src/utils/theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import twoPeople from 'src/assets/images/two-people-ballroom-dancing.svg';
-import { BRAND } from "src/utils/constants";
+import { BRAND } from "src/utils";
 // ICONS
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";

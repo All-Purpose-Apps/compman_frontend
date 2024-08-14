@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { checkCouples } from 'src/utils/createEntries';
 
 const initialState = {
   couples: [],

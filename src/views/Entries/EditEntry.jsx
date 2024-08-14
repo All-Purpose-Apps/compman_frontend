@@ -8,10 +8,10 @@ import { Box, Button, Typography, TextField, FormControl, CircularProgress, Pape
 import { getOneCouple, editCouple } from 'src/store/couplesSlice';
 import { fetchDancers } from 'src/store/dancersSlice';
 import { fetchDances } from 'src/store/dancesSlice';
-import { AGE_CATEGORIES, LEVELS } from 'src/utils/constants';
+import { AGE_CATEGORIES, LEVELS } from 'src/utils';
 import { capitalizeWords } from 'src/utils/capitalize';
 import { tokens } from 'src/utils/theme';
-import { formSxSettings } from 'src/utils/customSX';
+import { formSxSettings } from 'src/utils';
 
 const schema = yup.object().shape({
     leader: yup.string().required('Leader is required'),
