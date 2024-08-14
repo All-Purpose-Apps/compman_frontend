@@ -11,10 +11,6 @@ export default function MainLayout() {
   const [theme, colorMode] = useMode();
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const handleClose = () => {
-    setAlertVisible(false);
-  };
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -25,17 +21,7 @@ export default function MainLayout() {
               {isMobile && (
                 <Box sx={{ mt: 2, mb: 2, mx: 2 }}>
                   <Alert
-                    severity="warning"
-                    action={
-                      <IconButton
-                        aria-label="close"
-                        color="inherit"
-                        size="small"
-                        onClick={handleClose}
-                      >
-                        <CloseIcon fontSize="inherit" />
-                      </IconButton>
-                    }
+                    severity="error"
                   >
                     Be advised, some components will not show up well on mobile. We suggest using a tablet or laptop to use this app.
                   </Alert>
