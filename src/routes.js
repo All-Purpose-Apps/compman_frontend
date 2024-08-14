@@ -20,6 +20,8 @@ import NewHeat from 'src/views/Heats/NewHeat';
 import AutoGenerateHeats from 'src/views/Heats/AutoGenerateHeats';
 // Settings Imports
 import Settings from 'src/views/Settings';
+import FAQ from 'src/views/FAQ';
+import ScheduleCall from 'src/views/ScheduleCall';
 
 const routes = [
   {
@@ -110,6 +112,16 @@ const routes = [
     path: 'settings',
     layout: '/admin',
     component: Settings,
+  },
+  {
+    path: 'faq',
+    layout: '/admin',
+    component: FAQ,
+  },
+  {
+    path: 'schedule-call',
+    layout: '/admin',
+    component: ScheduleCall,
   },
 ];
 

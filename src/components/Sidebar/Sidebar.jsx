@@ -234,22 +234,15 @@ const MyProSidebar = () => {
                             Help
                         </Typography>
                         <Item
-                            title="Documentation"
-                            to="/admin/dashboard"
-                            icon={<ArticleOutlinedIcon />}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                        <Item
                             title="Schedule a Call"
-                            to="/admin/dashboard"
+                            to="/admin/schedule-call"
                             icon={<CalendarTodayOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
                         />
                         <Item
                             title="FAQ Page"
-                            to="/admin/dashboard"
+                            to="/admin/faq"
                             icon={<HelpOutlineOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
