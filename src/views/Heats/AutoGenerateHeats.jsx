@@ -46,6 +46,10 @@ const AutoGenerateHeats = () => {
         navigate('/admin/heats');
     };
 
+    const handleGoToEntries = () => {
+        navigate('/admin/entries');
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -70,7 +74,7 @@ const AutoGenerateHeats = () => {
                     >
                         No Entries, Please create entries first.
                     </DialogContentText>
-                    <Button variant="outlined" onClick={() => navigate('/admin/entries')} sx={{ color: 'white', mt: 2 }}>
+                    <Button variant="outlined" onClick={() => handleGoToEntries()} sx={{ color: 'white', mt: 2 }}>
                         Go to Entries
                     </Button>
                 </Box>
