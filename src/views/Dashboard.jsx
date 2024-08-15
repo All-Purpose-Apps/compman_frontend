@@ -5,7 +5,7 @@ import { fetchDancers } from 'src/store/dancersSlice';
 import { fetchStudios } from 'src/store/studiosSlice';
 import { fetchHeats } from 'src/store/heatsSlice';
 import { Card, CardContent, CardHeader, Grid, Button, Box, Typography } from '@mui/material';
-import { fetchCouples } from 'src/store/couplesSlice';
+import { fetchEntries } from 'src/store/entriesSlice';
 
 export default function Dashboard() {
 
@@ -15,13 +15,13 @@ export default function Dashboard() {
     const dancers = useSelector(state => state.dancers.dancers);
     const studios = useSelector(state => state.studios.studios);
     const heats = useSelector(state => state.heats.heats);
-    const couples = useSelector(state => state.couples.couples);
+    const entries = useSelector(state => state.entries.entries);
 
     useEffect(() => {
         dispatch(fetchDancers());
         dispatch(fetchStudios());
         dispatch(fetchHeats());
-        dispatch(fetchCouples());
+        dispatch(fetchEntries());
     }, [dispatch]);
 
     const handleClick = () => {
@@ -59,7 +59,7 @@ export default function Dashboard() {
                     <Card>
                         <CardHeader title="Total Entries" />
                         <CardContent>
-                            <Typography variant="h6">{couples.length}</Typography>
+                            <Typography variant="h6">{entries.length}</Typography>
                         </CardContent>
                     </Card>
                 </Grid>

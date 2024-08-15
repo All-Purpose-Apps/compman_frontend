@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, CircularProgress, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCouples } from 'src/store/couplesSlice';
+import { fetchEntries } from 'src/store/entriesSlice';
 import { addHeat, fetchHeats } from 'src/store/heatsSlice';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
@@ -16,27 +16,27 @@ const NewHeat = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(dayjs(new Date()));
-    const [selectedCouples, setSelectedCouples] = useState([]);
+    const [selectedEntries, setSelectedEntries] = useState([]);
 
     useEffect(() => {
-        dispatch(fetchCouples());
+        dispatch(fetchEntries());
     }, [dispatch]);
 
-    const couples = useSelector(state => state.couples.couples);
-    const isLoading = useSelector(state => state.couples.status) === 'loading';
-    const errors = useSelector(state => state.couples.error);
+    const entries = useSelector(state => state.entries.entries);
+    const isLoading = useSelector(state => state.entries.status) === 'loading';
+    const errors = useSelector(state => state.entries.error);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const coupleIds = selectedCouples.map(couple => couple.value);
-        dispatch(addHeat({ dateTime: selectedDate, couples: coupleIds }));
+        const entryIds = selectedEntries.map(entry => entry.value);
+        dispatch(addHeat({ dateTime: selectedDate, entries: entryIds }));
         dispatch(fetchHeats());
         navigate('/admin/heats');
     };
 
-    const coupleOptions = couples.map(couple => ({
-        value: couple._id,
-        label: `${couple.leader.fullName} & ${couple.follower.fullName} - ${couple.dance.danceCategory.name} - ${couple.dance.title}`
+    const entryOptions = entries.map(entry => ({
+        value: entry._id,
+        label: `${entry.leader.fullName} & ${entry.follower.fullName} - ${entry.dance.danceCategory.name} - ${entry.dance.title}`
     }));
 
     const handleCancel = () => {
@@ -44,7 +44,7 @@ const NewHeat = () => {
     };
 
     const handleChange = (selected) => {
-        setSelectedCouples(selected);
+        setSelectedEntries(selected);
     };
 
     if (isLoading) {
@@ -52,8 +52,8 @@ const NewHeat = () => {
     }
 
 
-    if (couples.length === 0) {
-        return <Typography>No couples available. Please create couples first.</Typography>;
+    if (entries.length === 0) {
+        return <Typography>No entries available. Please create entries first.</Typography>;
     }
 
     return (
@@ -77,14 +77,14 @@ const NewHeat = () => {
             </FormControl>
 
             <FormControl fullWidth margin="normal">
-                <InputLabel>Couples</InputLabel>
+                <InputLabel>Entries</InputLabel>
                 <Select
                     multiple
-                    value={selectedCouples}
+                    value={selectedEntries}
                     onChange={handleChange}
-                    renderValue={(selected) => selected.map(couple => couple.label).join(', ')}
+                    renderValue={(selected) => selected.map(entry => entry.label).join(', ')}
                 >
-                    {coupleOptions.map((option) => (
+                    {entryOptions.map((option) => (
                         <MenuItem key={option.value} value={option}>
                             {option.label}
                         </MenuItem>

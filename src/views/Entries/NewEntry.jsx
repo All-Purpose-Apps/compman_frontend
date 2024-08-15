@@ -3,7 +3,7 @@ import { TextField, Button, FormControl, Container, CircularProgress, Typography
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers } from 'src/store/dancersSlice';
-import { addCouple, fetchCouples } from 'src/store/couplesSlice';
+import { addEntry, fetchEntries } from 'src/store/entriesSlice';
 import { fetchDances } from 'src/store/dancesSlice';
 import { capitalizeWords } from 'src/utils/capitalize';
 import { AGE_CATEGORIES, LEVELS } from 'src/utils';
@@ -61,8 +61,8 @@ const NewEntry = () => {
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            dispatch(addCouple(formValues));
-            dispatch(fetchCouples());
+            dispatch(addEntry(formValues));
+            dispatch(fetchEntries());
             navigate('/admin/entries');
         }
     };

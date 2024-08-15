@@ -1,6 +1,6 @@
-export function autoGenerateHeats(timeRange, couples, currentHeats) {
+export function autoGenerateHeats(timeRange, entries, currentHeats) {
   const times = generateTimeIntervals(timeRange.start, timeRange.end, timeRange.interval);
-  const timeSlots = scheduleCouples(times, couples.data, currentHeats.data);
+  const timeSlots = scheduleEntries(times, entries.data, currentHeats.data);
   return timeSlots;
 }
 function generateTimeIntervals(startDate, endDate, intervalMinutes) {
@@ -16,9 +16,9 @@ function generateTimeIntervals(startDate, endDate, intervalMinutes) {
   return times;
 }
 
-function scheduleCouples(timeslots, couples, currentHeats) {
-  let heats = []; // To store the final heats with scheduled couples
-  let usedCombinations = new Set(); // To track used (dance, ageCategory, level) combinations for each couple
+function scheduleEntries(timeslots, entries, currentHeats) {
+  let heats = []; // To store the final heats with scheduled entries
+  let usedCombinations = new Set(); // To track used (dance, ageCategory, level) combinations for each entry
   let heatMap = new Map(); // To map timeslots to their respective heats
 
   // Sort timeslots by datetime to ensure they are in order
@@ -27,8 +27,8 @@ function scheduleCouples(timeslots, couples, currentHeats) {
   // Populate the heatMap with currentHeats and mark used combinations
   currentHeats.forEach((heat) => {
     heatMap.set(heat.dateTime, heat);
-    heat.couples.forEach((couple) => {
-      let combination = `${couple.id}-${couple.dance}-${couple.ageCategory}-${couple.level}`;
+    heat.entries.forEach((entry) => {
+      let combination = `${entry.id}-${entry.dance}-${entry.ageCategory}-${entry.level}`;
       usedCombinations.add(combination);
     });
   });
@@ -51,7 +51,7 @@ function scheduleCouples(timeslots, couples, currentHeats) {
       // Create a new heat if it doesn't exist and there's no overlap
       heat = {
         number: heatNumber++,
-        couples: [],
+        entries: [],
         dateTime: timeslot,
         dance: null,
         ageCategory: null,
@@ -60,17 +60,17 @@ function scheduleCouples(timeslots, couples, currentHeats) {
       heatMap.set(timeslot, heat);
     }
 
-    let participantsInHeat = new Set(heat.couples.flatMap((couple) => [couple.leader._id, couple.follower._id]));
+    let participantsInHeat = new Set(heat.entries.flatMap((entry) => [entry.leader._id, entry.follower._id]));
 
-    for (let couple of couples) {
-      let dance = couple.dance._id;
-      let ageCategory = couple.ageCategory;
-      let level = couple.level;
-      let combination = `${couple.id}-${dance}-${ageCategory}-${level}`;
-      let leaderId = couple.leader._id;
-      let followerId = couple.follower._id;
+    for (let entry of entries) {
+      let dance = entry.dance._id;
+      let ageCategory = entry.ageCategory;
+      let level = entry.level;
+      let combination = `${entry.id}-${dance}-${ageCategory}-${level}`;
+      let leaderId = entry.leader._id;
+      let followerId = entry.follower._id;
 
-      // Check if the couple's combination is already used in this heat or any previous heat
+      // Check if the entry's combination is already used in this heat or any previous heat
       if (usedCombinations.has(combination)) {
         continue;
       }
@@ -80,30 +80,30 @@ function scheduleCouples(timeslots, couples, currentHeats) {
         continue;
       }
 
-      // If this is the first couple in the heat, set the dance, ageCategory, and level for this heat
+      // If this is the first entry in the heat, set the dance, ageCategory, and level for this heat
       if (!heat.dance) {
         heat.dance = dance;
         heat.ageCategory = ageCategory;
         heat.level = level;
       }
 
-      // Ensure this couple's combination matches the heat's dance, ageCategory, and level
+      // Ensure this entry's combination matches the heat's dance, ageCategory, and level
       if (heat.dance === dance && heat.ageCategory === ageCategory && heat.level === level) {
-        // Add couple to the heat
-        heat.couples.push(couple);
+        // Add entry to the heat
+        heat.entries.push(entry);
         usedCombinations.add(combination);
         participantsInHeat.add(leaderId);
         participantsInHeat.add(followerId);
 
-        // If the heat is full, stop adding more couples
-        if (heat.couples.length === 8) {
-          break; // Stop adding couples once the heat is full
+        // If the heat is full, stop adding more entries
+        if (heat.entries.length === 8) {
+          break; // Stop adding entries once the heat is full
         }
       }
     }
 
-    // Only add the heat to the final list if it has at least one couple and it doesn't already exist
-    if (!heats.includes(heat) && heat.couples.length > 0) {
+    // Only add the heat to the final list if it has at least one entry and it doesn't already exist
+    if (!heats.includes(heat) && heat.entries.length > 0) {
       heats.push(heat);
     }
 

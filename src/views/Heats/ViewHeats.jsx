@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// Redux
+
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeats, deleteHeat } from "src/store/heatsSlice";
-// MUI Components
+
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-// Components
+
 import CustomToolbar from "src/components/CustomToolbar";
 import ActionButtons from "src/components/ActionButtons";
-// Utils
+
 import { tokens } from "src/utils/theme";
 import { capitalize, capitalizeWords } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils";
@@ -63,11 +63,11 @@ const ViewHeats = () => {
     };
 
     const getRowHeight = (params) => {
-        const numberOfCouples = params.model.couples.length;
-        const baseHeight = 32; // Default row height for one line
-        const lineHeight = 24; // Estimated line height for each additional couple entry
+        const numberOfEntries = params.model.entries.length;
+        const baseHeight = 32;
+        const lineHeight = 24;
 
-        return baseHeight + (numberOfCouples - 1) * lineHeight;
+        return baseHeight + (numberOfEntries - 1) * lineHeight;
     };
 
     const columns = [
@@ -107,14 +107,14 @@ const ViewHeats = () => {
             renderCell: (params) => (capitalizeWords(params.row.level))
         },
         {
-            field: "couples",
+            field: "entries",
             headerName: "Entries",
             flex: 1,
             sortable: false,
             renderCell: (params) => {
                 return (
                     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        {params.row.couples.map(({ follower, leader }, i) => (
+                        {params.row.entries.map(({ follower, leader }, i) => (
                             <Typography key={i} component="li" sx={{ listStyleType: "none" }}>
                                 {follower.fullName} & {leader.fullName}
                             </Typography>

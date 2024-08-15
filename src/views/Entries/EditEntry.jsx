@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Box, Button, Typography, TextField, FormControl, CircularProgress, Paper, useTheme, Autocomplete, MenuItem } from '@mui/material';
-import { getOneCouple, editCouple } from 'src/store/couplesSlice';
+import { getOneEntry, editEntry } from 'src/store/entriesSlice';
 import { fetchDancers } from 'src/store/dancersSlice';
 import { fetchDances } from 'src/store/dancesSlice';
 import { AGE_CATEGORIES, LEVELS } from 'src/utils';
@@ -27,35 +27,35 @@ export default function EditEntry() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const couple = useSelector(state => state.couples.couple[0]);
 
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
 
     useEffect(() => {
-        const fetchCouple = async () => {
-            const response = await dispatch(getOneCouple(id));
-            const couple = response.payload[0];
-            setValue('leader', couple.leader._id);
-            setValue('follower', couple.follower._id);
-            setValue('dance', couple.dance._id);
-            setValue('ageCategory', couple.ageCategory);
-            setValue('level', couple.level);
+        const fetchEntry = async () => {
+            const response = await dispatch(getOneEntry(id));
+            const entry = response.payload[0];
+            setValue('leader', entry.leader._id);
+            setValue('follower', entry.follower._id);
+            setValue('dance', entry.dance._id);
+            setValue('ageCategory', entry.ageCategory);
+            setValue('level', entry.level);
         };
 
-        fetchCouple();
+        fetchEntry();
         dispatch(fetchDancers());
         dispatch(fetchDances());
     }, [dispatch, id, setValue]);
 
+    const entry = useSelector(state => state.entries.entry[0]);
     const dancers = useSelector(state => state.dancers.dancers);
     const dances = useSelector(state => state.dances.dances);
-    const isLoading = useSelector(state => state.couples.status) === 'loading';
-    const error = useSelector(state => state.couples.error);
+    const isLoading = useSelector(state => state.entries.status) === 'loading';
+    const error = useSelector(state => state.entries.error);
 
     const onSubmit = (data) => {
-        dispatch(editCouple({ id, ...data }));
+        dispatch(editEntry({ id, ...data }));
         navigate(-1);
     };
 
@@ -89,7 +89,7 @@ export default function EditEntry() {
                         <Autocomplete
                             options={dancerOptions}
                             getOptionLabel={(option) => option.label}
-                            defaultValue={dancerOptions.find(option => option.value === couple?.leader._id)}
+                            defaultValue={dancerOptions.find(option => option.value === entry?.leader._id)}
                             onChange={(e, value) => setValue('leader', value?.value || '')}
                             renderInput={(params) => (
                                 <TextField
@@ -106,7 +106,7 @@ export default function EditEntry() {
                         <Autocomplete
                             options={dancerOptions}
                             getOptionLabel={(option) => option.label}
-                            defaultValue={dancerOptions.find(option => option.value === couple?.follower._id)}
+                            defaultValue={dancerOptions.find(option => option.value === entry?.follower._id)}
                             onChange={(e, value) => setValue('follower', value?.value || '')}
                             renderInput={(params) => (
                                 <TextField
@@ -123,7 +123,7 @@ export default function EditEntry() {
                         <Autocomplete
                             options={danceOptions}
                             getOptionLabel={(option) => option.label}
-                            defaultValue={danceOptions.find(option => option.value === couple?.dance._id)}
+                            defaultValue={danceOptions.find(option => option.value === entry?.dance._id)}
                             onChange={(e, value) => setValue('dance', value?.value || '')}
                             renderInput={(params) => (
                                 <TextField
@@ -140,7 +140,7 @@ export default function EditEntry() {
                         <TextField
                             select
                             label="Age Category"
-                            defaultValue={couple?.ageCategory || ''}
+                            defaultValue={entry?.ageCategory || ''}
                             {...register('ageCategory')}
                             error={!!errors.ageCategory}
                             helperText={errors.ageCategory?.message}
@@ -160,7 +160,7 @@ export default function EditEntry() {
                         <TextField
                             select
                             label="Level"
-                            defaultValue={couple?.level || ''}
+                            defaultValue={entry?.level || ''}
                             {...register('level')}
                             error={!!errors.level}
                             helperText={errors.level?.message}

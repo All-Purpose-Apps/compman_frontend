@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCouples, deleteCouple } from "src/store/couplesSlice";
+import { fetchEntries, deleteEntry } from 'src/store/entriesSlice';
 // MUI Components
 import { Box, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -24,15 +24,15 @@ export default function Entries() {
 
     useEffect(() => {
         const fetchData = async () => {
-            await dispatch(fetchCouples());
+            await dispatch(fetchEntries());
         };
 
         fetchData();
     }, [dispatch]);
 
-    const couples = useSelector(state => state.couples.couples);
-    const loading = useSelector(state => state.couples.status) === 'loading';
-    const error = useSelector(state => state.couples.error);
+    const entries = useSelector(state => state.entries.entries);
+    const loading = useSelector(state => state.entries.status) === 'loading';
+    const error = useSelector(state => state.entries.error);
 
     function getRowId(row) {
         return row._id;
@@ -43,16 +43,16 @@ export default function Entries() {
     };
 
     const handleDelete = async (id) => {
-        await dispatch(deleteCouple(id));
+        await dispatch(deleteEntry(id));
         navigate('/admin/entries');
     };
 
     const handleMultiDelete = async () => {
-        await dispatch(deleteCouple(selectedRows));
-        dispatch(fetchCouples());
+        await dispatch(deleteEntry(selectedRows));
+        dispatch(fetchEntries());
     }
 
-    const handleGetCouple = id => {
+    const handleGetEntry = id => {
         navigate(`/admin/entries/${id}`);
     };
 
@@ -102,10 +102,10 @@ export default function Entries() {
                 sx={boxSxSettings(colors)}
             >
                 <DataGrid
-                    rows={couples}
+                    rows={entries}
                     columns={columns}
                     getRowId={getRowId}
-                    onRowClick={params => handleGetCouple(params.row._id)}
+                    onRowClick={params => handleGetEntry(params.row._id)}
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddEntry, theme: theme.palette.mode, button: 'Add Entry' } }}
                     checkboxSelection

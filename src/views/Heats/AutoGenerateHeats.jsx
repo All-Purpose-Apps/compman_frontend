@@ -3,7 +3,7 @@ import { Box, Button, TextField, FormControl, Dialog, DialogTitle, DialogContent
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCouples } from 'src/store/couplesSlice';
+import { fetchEntries } from 'src/store/entriesSlice'
 import { addHeat, fetchHeats } from 'src/store/heatsSlice';
 import dayjs from 'dayjs';
 import { tokens } from 'src/utils/theme';
@@ -18,12 +18,12 @@ const AutoGenerateHeats = () => {
     const [interval, setInterval] = useState(1.5);
 
     useEffect(() => {
-        dispatch(fetchCouples());
+        dispatch(fetchEntries());
     }, [dispatch]);
 
-    const couples = useSelector(state => state.couples.couples);
-    const isLoading = useSelector(state => state.couples.status) === 'loading';
-    const errors = useSelector(state => state.couples.error);
+    const entries = useSelector(state => state.entries.entries);
+    const isLoading = useSelector(state => state.entries.status) === 'loading';
+    const errors = useSelector(state => state.entries.error);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -49,9 +49,9 @@ const AutoGenerateHeats = () => {
         return <div>Loading...</div>;
     }
 
-    if (couples.length === 0) {
+    if (entries.length === 0) {
         return <Dialog
-            open={couples.length === 0}
+            open={entries.length === 0}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
