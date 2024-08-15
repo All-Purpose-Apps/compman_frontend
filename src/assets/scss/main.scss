@@ -27,7 +27,9 @@ body,
 ::-webkit-scrollbar-track:hover {
   background: #555;
 }
-
+.MuiPopper-root.MuiDataGrid-menu {
+  z-index: 999999 !important;
+}
 @import './authpages';
 @import '~react-big-calendar/lib/sass/styles';
 @import '~bootstrap/scss/bootstrap';
