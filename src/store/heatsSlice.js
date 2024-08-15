@@ -30,6 +30,15 @@ export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
   }
 });
 
+export const getOneHeat = createAsyncThunk('heats/getOneHeat', async (id) => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'Failed to fetch heat');
+  }
+});
+
 export const deleteHeat = createAsyncThunk('heats/deleteHeat', async (id) => {
   try {
     const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/heats/${id}`);
@@ -75,6 +84,17 @@ export const heatsSlice = createSlice({
         state.heats = action.payload;
       })
       .addCase(deleteHeat.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(getOneHeat.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getOneHeat.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.heat = action.payload;
+      })
+      .addCase(getOneHeat.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

@@ -18,6 +18,8 @@ import EditEntry from 'src/views/Entries/EditEntry';
 import ViewHeats from 'src/views/Heats/ViewHeats';
 import NewHeat from 'src/views/Heats/NewHeat';
 import AutoGenerateHeats from 'src/views/Heats/AutoGenerateHeats';
+import EditHeat from 'src/views/Heats/EditHeat';
+import ViewOneHeat from 'src/views/Heats/ViewOneHeat';
 // Settings Imports
 import Settings from 'src/views/Settings';
 import FAQ from 'src/views/FAQ';
@@ -107,6 +109,16 @@ const routes = [
     path: 'heats/new',
     layout: '/admin',
     component: NewHeat,
+  },
+  {
+    path: 'heats/edit/:id',
+    layout: '/admin',
+    component: EditHeat,
+  },
+  {
+    path: 'heats/:id',
+    layout: '/admin',
+    component: ViewOneHeat,
   },
   {
     path: 'settings',
