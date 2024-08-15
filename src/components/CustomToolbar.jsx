@@ -1,6 +1,7 @@
 import { Button, Box } from "@mui/material";
 import { GridToolbar, GridToolbarContainer } from "@mui/x-data-grid";
-const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, button }) => {
+const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, button, location = '', handleAddHeat }) => {
+
     return (
         <GridToolbarContainer>
             <Box sx={{ flexGrow: 1 }}>
@@ -20,6 +21,13 @@ const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, butt
             >
                 {button}
             </Button>
+            {location === 'heats' && <Button
+                color="secondary"
+                variant="contained"
+                onClick={handleAddHeat}
+            >
+                Add Heat
+            </Button>}
             {selectedRows?.length > 0 && (
                 <Button
                     variant="contained"

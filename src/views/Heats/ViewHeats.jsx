@@ -62,6 +62,10 @@ const ViewHeats = () => {
         navigate('/admin/heats/generate');
     };
 
+    const handleAddHeat = () => {
+        navigate('/admin/heats/new');
+    };
+
     const getRowHeight = (params) => {
         const numberOfEntries = params.model.entries.length;
         const baseHeight = 32;
@@ -151,7 +155,7 @@ const ViewHeats = () => {
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, theme: theme.palette.mode, button: 'Generate Heats' } }}
+                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, handleAddHeat, theme: theme.palette.mode, button: 'Generate Heats', location: 'heats' } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}
