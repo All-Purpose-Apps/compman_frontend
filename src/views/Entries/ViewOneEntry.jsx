@@ -4,6 +4,7 @@ import { getOneEntry } from 'src/store/entriesSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Container, Grid, Card, CardContent, Typography } from '@mui/material';
 import { FaUser, FaChild, FaIdBadge } from 'react-icons/fa';
+import PeopleIcon from '@mui/icons-material/People';
 import { capitalize, capitalizeWords } from 'src/utils';
 
 export default function ViewOneEntry() {
@@ -68,7 +69,7 @@ export default function ViewOneEntry() {
                                 </Box>
                                 <Grid container spacing={2} alignItems="center">
                                     <Grid item>
-                                        <FaUser size={20} />
+                                        <PeopleIcon size={20} />
                                     </Grid>
                                     <Grid item>
                                         <Typography>Leader: {capitalize(entry.leader.fullName)}</Typography>
