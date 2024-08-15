@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getOneHeat } from 'src/store/heatsSlice'; // Adjust the import according to your project structure
 import { capitalizeWords } from 'src/utils'; // Adjust the import according to your project structure
+import moment from 'moment';
 
 export default function ViewOneHeat() {
     const [heat, setHeat] = useState(null);
@@ -102,7 +103,7 @@ export default function ViewOneHeat() {
                             <CardContent>
                                 <Box textAlign="center" mb={4}>
                                     <Typography variant="h4" color="secondary">
-                                        Heat #{heat.number}
+                                        HEAT #{heat.number}
                                     </Typography>
                                 </Box>
                                 <Grid container spacing={2} alignItems="center" sx={{ mb: 4 }}>
@@ -111,16 +112,44 @@ export default function ViewOneHeat() {
                                     </Grid>
                                     <Grid item xs>
                                         <Typography variant="h6">
-                                            <strong>Dance:</strong> {heat.dance.title} - {heat.dance.danceCategory.name}
+                                            <Box display="flex">
+                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                    Dance:
+                                                </Box>
+                                                <Box>
+                                                    {heat.dance.title} - {heat.dance.danceCategory.name}
+                                                </Box>
+                                            </Box>
                                         </Typography>
                                         <Typography variant="h6">
-                                            <strong>Date & Time:</strong> {heat.dateTime}
+                                            <Box display="flex">
+                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                    Date & Time:
+                                                </Box>
+                                                <Box>
+                                                    {moment(heat.dateTime, 'MM/DD/YYYY, h:mm:ss A').format('MM/DD/YYYY, h:mm A')}
+                                                </Box>
+                                            </Box>
                                         </Typography>
                                         <Typography variant="h6">
-                                            <strong>Age Category:</strong> {heat.ageCategory}
+                                            <Box display="flex">
+                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                    Age Category:
+                                                </Box>
+                                                <Box>
+                                                    {heat.ageCategory}
+                                                </Box>
+                                            </Box>
                                         </Typography>
                                         <Typography variant="h6">
-                                            <strong>Level:</strong> {heat.level}
+                                            <Box display="flex">
+                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                    Level:
+                                                </Box>
+                                                <Box>
+                                                    {heat.level}
+                                                </Box>
+                                            </Box>
                                         </Typography>
                                     </Grid>
                                 </Grid>

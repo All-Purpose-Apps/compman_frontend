@@ -14,6 +14,7 @@ import { tokens } from "src/utils/theme";
 import { capitalize, capitalizeWords } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/LoadingModal";
+import moment from "moment";
 
 const ViewHeats = () => {
     const theme = useTheme();
@@ -78,37 +79,44 @@ const ViewHeats = () => {
         {
             field: "number",
             headerName: "#",
-            flex: .10,
+            flex: 0.10,
             sortable: false,
         },
         {
-            field: "dateTime",
-            headerName: "Date/Time",
-            flex: .6,
+            field: "date",
+            headerName: "Date",
+            flex: 0.30,
             sortable: false,
-            renderCell: (params) => (new Date(params.row.dateTime).toLocaleString())
+            renderCell: (params) => moment(params.row.dateTime).format('MM/DD/YYYY')
+        },
+        {
+            field: "time",
+            headerName: "Time",
+            flex: 0.25,
+            sortable: false,
+            renderCell: (params) => moment(params.row.dateTime).format('h:mm A')
         },
         {
             field: "dance",
             headerName: "Dance",
-            flex: 1,
+            flex: .5,
             sortable: false,
-            renderCell: (params) => (`${params.row.dance.title} - ${params.row.dance.danceCategory.name}`)
+            renderCell: (params) => `${params.row.dance.title} - ${params.row.dance.danceCategory.name}`
         },
         {
             field: "ageCategory",
             headerName: "Age Category",
-            flex: .3,
+            flex: 0.3,
             sortable: false,
             align: 'center',
-            renderCell: (params) => (capitalize(params.row.ageCategory))
+            renderCell: (params) => capitalize(params.row.ageCategory)
         },
         {
             field: "level",
             headerName: "Level",
-            flex: .5,
+            flex: 0.5,
             sortable: false,
-            renderCell: (params) => (capitalizeWords(params.row.level))
+            renderCell: (params) => capitalizeWords(params.row.level)
         },
         {
             field: "entries",
@@ -125,13 +133,12 @@ const ViewHeats = () => {
                         ))}
                     </div>
                 );
-
             }
         },
         {
             field: "actions",
             headerName: "Actions",
-            flex: .5,
+            flex: 0.5,
             sortable: false,
             renderCell: (params) => (
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
