@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, FormControl, Container, CircularProgress, Typography, TextField, MenuItem, useTheme, Paper } from '@mui/material';
+import { Button, FormControl, Container, CircularProgress, Typography, TextField, MenuItem, useTheme, Paper, Dialog, DialogContent, Box, DialogContentText } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,6 +41,9 @@ const CreateCustomHeat = () => {
     const handleDateTimeChange = (newValue) => {
         setFormValues({ ...formValues, dateTime: newValue });
     };
+    const handleGoToEntries = () => {
+        navigate('/admin/entries');
+    };
 
     const handleEntriesChange = (event) => {
         const selectedValues = event.target.value;
@@ -48,11 +51,11 @@ const CreateCustomHeat = () => {
         if (selectedValues.length <= 8) {
             const selectedEntries = selectedValues.map(id => availableEntries.find(entry => entry._id === id));
 
-            // Extract the leaders and followers from the selected entries
+
             const selectedLeaders = selectedEntries.map(entry => entry.leader.fullName);
             const selectedFollowers = selectedEntries.map(entry => entry.follower.fullName);
 
-            // Filter the available entries to exclude those with the same leader or follower
+
             const filteredEntries = entries.filter(entry =>
                 selectedValues.includes(entry._id) ||
                 (!selectedLeaders.includes(entry.leader.fullName) && !selectedFollowers.includes(entry.follower.fullName))
@@ -80,7 +83,7 @@ const CreateCustomHeat = () => {
             setErrors(validationErrors);
         } else {
             dispatch(addOneHeat(formValues));
-            // navigate(-1); // Adjust the navigation path as needed
+            navigate(-1);
         }
     };
 
@@ -107,6 +110,34 @@ const CreateCustomHeat = () => {
                 <Typography variant="h6" color="error">{error}</Typography>
             </Container>
         );
+    }
+
+    if (entries.length === 0) {
+        return <Dialog
+            open={entries.length === 0}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+            <DialogContent>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    minHeight="150px" // Adjust height as needed
+                >
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        align="center" // Center text horizontally
+                    >
+                        No Entries, Please create entries first.
+                    </DialogContentText>
+                    <Button variant="outlined" onClick={() => handleGoToEntries()} sx={{ color: 'white', mt: 2 }}>
+                        Go to Entries
+                    </Button>
+                </Box>
+            </DialogContent>
+        </Dialog>
     }
 
     return (
