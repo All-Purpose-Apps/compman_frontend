@@ -21,13 +21,13 @@ const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, butt
             >
                 {button}
             </Button>
-            {location === 'heats' && <Button
+            {/* {location === 'heats' && <Button
                 color="secondary"
                 variant="contained"
                 onClick={handleAddHeat}
             >
                 Add Heat
-            </Button>}
+            </Button>} */}
             {selectedRows?.length > 0 && (
                 <Button
                     variant="contained"
