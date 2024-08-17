@@ -35,7 +35,6 @@ const ViewHeats = () => {
     const loading = useSelector(state => state.heats.status) === 'loading';
     const error = useSelector(state => state.heats.error);
 
-
     function getRowId(row) {
         return row._id;
     }
@@ -101,7 +100,7 @@ const ViewHeats = () => {
             headerName: "Dance",
             flex: .5,
             sortable: false,
-            renderCell: (params) => `${params.row.dance.title} - ${params.row.dance.danceCategory.name}`
+            renderCell: (params) => `${params.row.dance.title} - ${params.row.dance.danceCategory?.name}`
         },
         {
             field: "ageCategory",

@@ -30,6 +30,15 @@ export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
   }
 });
 
+export const addOneHeat = createAsyncThunk('heats/addOneHeat', async (heatData) => {
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heatData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message || 'Failed to add heat');
+  }
+});
+
 export const getOneHeat = createAsyncThunk('heats/getOneHeat', async (id) => {
   try {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats/${id}`);
