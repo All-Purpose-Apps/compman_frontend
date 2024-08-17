@@ -5,12 +5,12 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from 'src/store/userSlice';
 import { useSidebarContext } from "src/components/Sidebar/sidebarContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { tokens } from "src/utils/theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import twoPeople from 'src/assets/images/two-people-ballroom-dancing.svg';
 import { BRAND } from "src/utils";
-// ICONS
+
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
@@ -46,7 +46,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 const MyProSidebar = () => {
     const auth = getAuth(app);
     const dispatch = useDispatch();
-
+    const location = useLocation();
 
     const [selected, setSelected] = useState(localStorage.getItem('selectedMenuItem') || "Dashboard");
 
@@ -60,6 +60,18 @@ const MyProSidebar = () => {
         });
         return () => unsubscribe();
     }, [dispatch, auth]);
+
+    useEffect(() => {
+        const pathName = location.pathname;
+        const pathSegments = pathName.split('/');
+
+
+        const adminIndex = pathSegments.indexOf('admin');
+        const currentItem = pathSegments[adminIndex + 1] || "Dashboard";
+
+
+        setSelected(currentItem.charAt(0).toUpperCase() + currentItem.slice(1));
+    }, [location]);
 
     const user = useSelector((state) => state.user.user);
 
