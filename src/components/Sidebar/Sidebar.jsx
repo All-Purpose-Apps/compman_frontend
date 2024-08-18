@@ -23,6 +23,7 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { EventNoteOutlined } from "@mui/icons-material";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
     const theme = useTheme();
@@ -227,6 +228,13 @@ const MyProSidebar = () => {
                             title="Entries"
                             to="/admin/entries"
                             icon={<PeopleOutlinedIcon />}
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
+                        <Item
+                            title="Schedule"
+                            to="/admin/schedule"
+                            icon={<EventNoteOutlined />}
                             selected={selected}
                             setSelected={setSelected}
                         />

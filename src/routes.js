@@ -24,6 +24,8 @@ import ViewOneHeat from 'src/views/Heats/ViewOneHeat';
 import Settings from 'src/views/Settings';
 import FAQ from 'src/views/FAQ';
 import ScheduleCall from 'src/views/ScheduleCall';
+import ViewSchedule from './views/Schedules/ViewSchedule';
+import NewSchedule from './views/Schedules/NewSchedule';
 
 const routes = [
   {
@@ -119,6 +121,16 @@ const routes = [
     path: 'heats/:id',
     layout: '/admin',
     component: ViewOneHeat,
+  },
+  {
+    path: 'schedule',
+    layout: '/admin',
+    component: ViewSchedule,
+  },
+  {
+    path: 'schedule/new',
+    layout: '/admin',
+    component: NewSchedule,
   },
   {
     path: 'settings',
