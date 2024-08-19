@@ -14,6 +14,7 @@ import { tokens } from "src/utils/theme";
 import { capitalizeWords } from 'src/utils';
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/LoadingModal";
+import NewEntryModal from "./NewEntry";
 
 export default function Entries() {
     const theme = useTheme();
@@ -21,6 +22,7 @@ export default function Entries() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,9 +59,12 @@ export default function Entries() {
     };
 
     const handleAddEntry = () => {
-        navigate('/admin/entries/new');
+        setOpen(true);
     };
 
+    const onClose = () => {
+        setOpen(false);
+    }
 
     const columns = [
         { field: 'leader', headerName: 'Leader', flex: 1, valueGetter: (params) => params.fullName },
@@ -96,6 +101,7 @@ export default function Entries() {
     return (
         <Box m="20px">
             <LoadingModal loading={loading} resource='Entries' />
+            <NewEntryModal open={open} onClose={onClose} />
             <Box
                 m="40px 0 0 0"
                 height="75vh"

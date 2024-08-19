@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchDances } from 'src/store/dancesSlice';
+import { fetchDances, fetchDanceCategories, turnOnOffDanceCategory } from 'src/store/dancesSlice';
 // MUI Components
-import { Card, Grid, Button, useTheme, Tabs, Tab, Box, Typography } from '@mui/material';
+import { Card, Grid, Button, useTheme, Tabs, Tab, Box, Typography, Switch } from '@mui/material';
 // Components
 import TabPanel from 'src/components/TabPanel';
 // Utils
@@ -20,23 +20,22 @@ export default function Settings() {
 
     useEffect(() => {
         dispatch(fetchDances());
+        dispatch(fetchDanceCategories());
     }, [dispatch]);
 
     const user = useSelector((state) => state.user.user);
     const dances = useSelector((state) => state.dances.dances);
+    const danceCategories = useSelector((state) => state.dances.danceCategories);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
-    const danceCategories = [
-        "American Smooth",
-        "American Rhythm",
-        "Specialty",
-        "International Ballroom",
-        "International Latin",
-        "Country Western"
-    ];
+    const handleToggleChange = (category) => {
+        // create a new object with the same properties as the category object but with the turnedOn property toggled
+        const updatedCategory = { ...category, turnedOn: !category.turnedOn };
+        dispatch(turnOnOffDanceCategory(updatedCategory));
+    }
 
     return (
         <Box className="dashboard">
@@ -69,17 +68,31 @@ export default function Settings() {
                                 aria-label="dance categories"
                             >
                                 {danceCategories.map((category, index) => (
-                                    <Tab key={index} label={category} sx={{
-                                        // change selected tab color
-                                        '&.Mui-selected': {
-                                            color: colors.greenAccent[300],
+                                    <Tab
+                                        key={category._id}
+                                        label={
+                                            <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                                                <Typography variant="body1">{category.name}</Typography>
+                                                <Switch
+                                                    size="small"
+                                                    checked={category.turnedOn}
+                                                    onChange={() => handleToggleChange(category)}
+                                                    color="secondary"
+                                                    sx={{ marginLeft: 1 }}
+                                                />
+                                            </Box>
                                         }
-                                    }} />
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                color: colors.greenAccent[300],
+                                            }
+                                        }}
+                                    />
                                 ))}
                             </Tabs>
                             {danceCategories.map((category, index) => (
                                 <TabPanel key={index} value={tabValue} index={index}>
-                                    {dances.filter(dance => dance.danceCategory.name === category).map(dance => (
+                                    {dances.filter(dance => dance.danceCategory.name === category.name).map(dance => (
                                         <Typography key={dance._id}>{dance.title}</Typography>
                                     ))}
                                 </TabPanel>

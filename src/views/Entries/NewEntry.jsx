@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { TextField, Button, FormControl, Container, CircularProgress, Typography, Autocomplete, MenuItem, useTheme, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { TextField, Button, FormControl, CircularProgress, Typography, Autocomplete, MenuItem, useTheme, Dialog, DialogTitle, DialogContent, DialogActions, Paper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers } from 'src/store/dancersSlice';
 import { addEntry, fetchEntries } from 'src/store/entriesSlice';
@@ -9,14 +8,15 @@ import { capitalizeWords } from 'src/utils/capitalize';
 import { AGE_CATEGORIES, LEVELS } from 'src/utils';
 import { tokens } from "src/utils/theme";
 import { formSxSettings } from 'src/utils';
+import { fetchStudios } from 'src/store/studiosSlice';
 
-const NewEntry = () => {
+const NewEntryModal = ({ open, onClose }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [formValues, setFormValues] = useState({
+        studio: '',
         leader: '',
         follower: '',
         dance: [],
@@ -29,10 +29,12 @@ const NewEntry = () => {
     useEffect(() => {
         dispatch(fetchDancers());
         dispatch(fetchDances());
+        dispatch(fetchStudios());
     }, [dispatch]);
 
     const dancers = useSelector(state => state.dancers.dancers);
     const dances = useSelector(state => state.dances.dances);
+    const studios = useSelector(state => state.studios.studios);
     const isLoading = useSelector(state => state.dancers.status) === 'loading';
     const error = useSelector(state => state.dancers.error);
 
@@ -47,11 +49,12 @@ const NewEntry = () => {
 
     const validate = () => {
         const newErrors = {};
+        if (!formValues.studio) newErrors.studio = 'Studio is required';
         if (!formValues.leader) newErrors.leader = 'Leader is required';
         if (!formValues.follower) newErrors.follower = 'Follower is required';
-        if (!formValues.dance) newErrors.dance = 'Dance is required';
-        if (!formValues.ageCategory) newErrors.ageCategory = 'Age Category is required';
-        if (!formValues.level) newErrors.level = 'Level is required';
+        if (!formValues.dance.length) newErrors.dance = 'Dance is required';
+        if (!formValues.ageCategory.length) newErrors.ageCategory = 'Age Category is required';
+        if (!formValues.level.length) newErrors.level = 'Level is required';
         return newErrors;
     };
 
@@ -63,13 +66,22 @@ const NewEntry = () => {
         } else {
             dispatch(addEntry(formValues));
             dispatch(fetchEntries());
-            navigate('/admin/entries');
+            setFormValues({
+                studio: '',
+                leader: '',
+                follower: '',
+                dance: [],
+                ageCategory: [],
+                level: [],
+            });
+            onClose();
         }
     };
 
-    const handleCancel = () => {
-        navigate('/admin/entries');
-    };
+    const studioOptions = studios.map(studio => ({
+        value: studio._id,
+        label: studio.name
+    }));
 
     const danceOptions = dances.map(dance => ({
         value: dance._id,
@@ -79,6 +91,10 @@ const NewEntry = () => {
     const filteredDancerOptions = (role) => {
         return dancers
             .filter(dancer => {
+                // Filter dancers by the selected studio
+                if (formValues.studio && dancer.studio._id !== formValues.studio) {
+                    return false;
+                }
                 if (role === 'leader' && formValues.follower) {
                     return dancer._id !== formValues.follower;
                 }
@@ -93,38 +109,67 @@ const NewEntry = () => {
             }));
     };
 
+    const handleOnClose = () => {
+        setFormValues({
+            studio: '',
+            leader: '',
+            follower: '',
+            dance: [],
+            ageCategory: [],
+            level: [],
+        });
+        setErrors({});
+        onClose();
+    }
+
     if (isLoading) {
-        return (
-            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <CircularProgress />
-            </Container>
-        );
+        return <CircularProgress />;
     }
 
     if (error) {
-        return (
-            <Container sx={{ mt: 4 }}>
-                <Typography variant="h6" color="error">{error}</Typography>
-            </Container>
-        );
+        return <Typography variant="h6" color="error">{error}</Typography>;
     }
 
     return (
-        <Container sx={{ mt: 4 }}>
-            <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
+        <Dialog open={open} onClose={(event, reason) => {
+            if (reason !== 'backdropClick') {
+                onClose();
+            }
+        }} maxWidth="sm" fullWidth>
+            <DialogTitle>New Entry</DialogTitle>
+            <DialogContent>
                 <form onSubmit={onSubmit}>
+                    <FormControl fullWidth margin="normal">
+                        <Autocomplete
+                            options={studioOptions}
+                            getOptionLabel={(option) => option.label}
+                            onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'studio')}
+                            isOptionEqualToValue={(option, value) => option.value === value.value}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Studio"
+                                    error={!!errors.studio}
+                                    helperText={errors.studio}
+                                />
+                            )}
+                        />
+                    </FormControl>
+
                     <FormControl fullWidth margin="normal">
                         <Autocomplete
                             options={filteredDancerOptions('leader')}
                             getOptionLabel={(option) => option.label}
                             onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'leader')}
                             isOptionEqualToValue={(option, value) => option.value === value.value}
+                            disabled={!formValues.studio}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Leader"
                                     error={!!errors.leader}
                                     helperText={errors.leader}
+                                    disabled={!formValues.studio}
                                 />
                             )}
                         />
@@ -136,12 +181,14 @@ const NewEntry = () => {
                             getOptionLabel={(option) => option.label}
                             onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'follower')}
                             isOptionEqualToValue={(option, value) => option.value === value.value}
+                            disabled={!formValues.studio}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Follower"
                                     error={!!errors.follower}
                                     helperText={errors.follower}
+                                    disabled={!formValues.studio}
                                 />
                             )}
                         />
@@ -156,6 +203,7 @@ const NewEntry = () => {
                             onChange={handleChange}
                             error={!!errors.dance}
                             helperText={errors.dance}
+                            disabled={!formValues.studio}
                             SelectProps={{
                                 multiple: true,
                             }}
@@ -177,6 +225,7 @@ const NewEntry = () => {
                             onChange={handleChange}
                             error={!!errors.ageCategory}
                             helperText={errors.ageCategory}
+                            disabled={!formValues.studio}
                             SelectProps={{
                                 multiple: true,
                             }}
@@ -198,6 +247,7 @@ const NewEntry = () => {
                             onChange={handleChange}
                             error={!!errors.level}
                             helperText={errors.level}
+                            disabled={!formValues.studio}
                             SelectProps={{
                                 multiple: true,
                             }}
@@ -209,17 +259,18 @@ const NewEntry = () => {
                             ))}
                         </TextField>
                     </FormControl>
-
-                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 2, mr: 2 }}>
-                        Submit
-                    </Button>
-                    <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ mt: 2 }}>
-                        Cancel
-                    </Button>
                 </form>
-            </Paper>
-        </Container>
+            </DialogContent>
+            <DialogActions>
+                <Button variant="contained" color="primary" onClick={onSubmit}>
+                    Submit
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleOnClose}>
+                    Cancel
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 };
 
-export default NewEntry;
+export default NewEntryModal;

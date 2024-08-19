@@ -14,6 +14,7 @@ import { tokens } from "src/utils/theme";
 import { capitalize } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/LoadingModal";
+import NewDancerModal from "./NewDancer";
 
 const ViewDancers = () => {
     const theme = useTheme();
@@ -21,6 +22,7 @@ const ViewDancers = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         dispatch(fetchDancers());
@@ -53,8 +55,13 @@ const ViewDancers = () => {
     };
 
     const handleAddDancer = () => {
-        navigate('/admin/dancers/new');
+        setOpen(true);
     };
+
+    const onClose = () => {
+        setOpen(false);
+    }
+
 
     const columns = [
         { field: 'number', headerName: '#', flex: .2, align: 'center', headerAlign: 'center' },
@@ -95,6 +102,7 @@ const ViewDancers = () => {
     return (
         <Box m="20px">
             <LoadingModal loading={loading} resource='Dancers' />
+            <NewDancerModal open={open} onClose={onClose} />
             <Box
                 m="40px 0 0 0"
                 height="75vh"

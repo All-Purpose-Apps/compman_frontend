@@ -5,7 +5,7 @@ import dancesSlice from './dancesSlice';
 import entriesSlice from './entriesSlice';
 import userSlice from './userSlice';
 import heatsSlice from './heatsSlice';
-
+import schedulesSlice from './schedulesSlice';
 export default configureStore({
   reducer: {
     studios: studiosSlice,
@@ -14,5 +14,6 @@ export default configureStore({
     dances: dancesSlice,
     user: userSlice,
     heats: heatsSlice,
+    schedules: schedulesSlice,
   },
 });
