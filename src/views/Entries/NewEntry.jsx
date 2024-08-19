@@ -162,12 +162,14 @@ const NewEntryModal = ({ open, onClose }) => {
                             getOptionLabel={(option) => option.label}
                             onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'leader')}
                             isOptionEqualToValue={(option, value) => option.value === value.value}
+                            disabled={!formValues.studio}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Leader"
                                     error={!!errors.leader}
                                     helperText={errors.leader}
+                                    disabled={!formValues.studio}
                                 />
                             )}
                         />
@@ -179,12 +181,14 @@ const NewEntryModal = ({ open, onClose }) => {
                             getOptionLabel={(option) => option.label}
                             onChange={(event, value) => handleAutocompleteChange(event, value?.value, 'follower')}
                             isOptionEqualToValue={(option, value) => option.value === value.value}
+                            disabled={!formValues.studio}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Follower"
                                     error={!!errors.follower}
                                     helperText={errors.follower}
+                                    disabled={!formValues.studio}
                                 />
                             )}
                         />
@@ -199,6 +203,7 @@ const NewEntryModal = ({ open, onClose }) => {
                             onChange={handleChange}
                             error={!!errors.dance}
                             helperText={errors.dance}
+                            disabled={!formValues.studio}
                             SelectProps={{
                                 multiple: true,
                             }}
@@ -220,6 +225,7 @@ const NewEntryModal = ({ open, onClose }) => {
                             onChange={handleChange}
                             error={!!errors.ageCategory}
                             helperText={errors.ageCategory}
+                            disabled={!formValues.studio}
                             SelectProps={{
                                 multiple: true,
                             }}
@@ -241,6 +247,7 @@ const NewEntryModal = ({ open, onClose }) => {
                             onChange={handleChange}
                             error={!!errors.level}
                             helperText={errors.level}
+                            disabled={!formValues.studio}
                             SelectProps={{
                                 multiple: true,
                             }}
