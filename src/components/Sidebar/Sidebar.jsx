@@ -75,6 +75,7 @@ const MyProSidebar = () => {
     }, [location]);
 
     const user = useSelector((state) => state.user.user);
+    const entries = useSelector((state) => state.entries.entries);
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -238,14 +239,15 @@ const MyProSidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
-                        <Item
-                            title="Heats"
-                            to="/admin/heats"
-                            icon={<LocalFireDepartmentOutlinedIcon />}
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-
+                        {entries.length > 0 &&
+                            <Item
+                                title="Heats"
+                                to="/admin/heats"
+                                icon={<LocalFireDepartmentOutlinedIcon />}
+                                selected={selected}
+                                setSelected={setSelected}
+                            />
+                        }
                         <Typography
                             variant="h6"
                             color={colors.grey[300]}
