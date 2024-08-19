@@ -26,6 +26,15 @@ export const fetchDanceCategories = createAsyncThunk('dances/fetchDanceCategorie
   }
 });
 
+export const turnOnOffDanceCategory = createAsyncThunk('dances/turnOnOffDanceCategory', async (danceCategory) => {
+  try {
+    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/danceCategory/${danceCategory._id}`, danceCategory);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+});
+
 export const dancesSlice = createSlice({
   name: 'dances',
   initialState,
@@ -37,7 +46,11 @@ export const dancesSlice = createSlice({
       })
       .addCase(fetchDances.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dances = action.payload;
+        state.dances = action.payload
+          .map((dance) => {
+            return dance.danceCategory.turnedOn ? dance : null;
+          })
+          .filter((dance) => dance !== null);
       })
       .addCase(fetchDances.rejected, (state, action) => {
         state.status = 'failed';
@@ -51,6 +64,17 @@ export const dancesSlice = createSlice({
         state.danceCategories = action.payload;
       })
       .addCase(fetchDanceCategories.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(turnOnOffDanceCategory.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(turnOnOffDanceCategory.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.danceCategories = action.payload;
+      })
+      .addCase(turnOnOffDanceCategory.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
