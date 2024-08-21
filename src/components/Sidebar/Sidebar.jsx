@@ -10,6 +10,8 @@ import { tokens } from "src/utils/theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import twoPeople from 'src/assets/images/two-people-ballroom-dancing.svg';
 import { BRAND } from "src/utils";
+import { fetchEntries } from "src/store/entriesSlice";
+import { fetchSchedules } from "src/store/schedulesSlice";
 
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
@@ -72,6 +74,8 @@ const MyProSidebar = () => {
 
 
         setSelected(currentItem.charAt(0).toUpperCase() + currentItem.slice(1));
+        dispatch(fetchEntries());
+        dispatch(fetchSchedules());
     }, [location]);
 
     const user = useSelector((state) => state.user.user);
