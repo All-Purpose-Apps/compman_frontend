@@ -13,7 +13,6 @@ export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () =>
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios`);
     return response.data;
   } catch (error) {
-    console.log(error);
     throw new Error(error.message);
   }
 });

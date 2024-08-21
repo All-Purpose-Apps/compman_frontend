@@ -44,7 +44,7 @@ const ViewSchedule = () => {
     }
 
     const handleEdit = id => {
-        navigate(`/admin/schedules/edit/${id}`);
+        navigate(`/admin/schedule/edit/${id}`);
     };
 
     const handleDelete = async (id) => {
