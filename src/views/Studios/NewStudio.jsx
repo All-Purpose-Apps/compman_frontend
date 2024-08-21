@@ -1,9 +1,10 @@
-import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Button, MenuItem, Box, Grid, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+// Material UI
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
+// Redux
 import { addStudio } from 'src/store/studiosSlice';
 
 // Validation schema using Yup
@@ -20,7 +21,7 @@ const validationSchema = yup.object({
         .required('Website is required'),
 });
 
-const NewStudioModal = ({ open, onClose }) => {
+export default function NewStudioModal({ open, onClose }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -135,5 +136,3 @@ const NewStudioModal = ({ open, onClose }) => {
         </Dialog>
     );
 };
-
-export default NewStudioModal;
