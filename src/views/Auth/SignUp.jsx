@@ -4,7 +4,8 @@ import { TextField, Button, Card, CardContent, CardHeader, Alert, Box, Typograph
 import { useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { setUser } from 'src/store/userSlice'; // Adjust the path as necessary
-import { app } from 'src/firebase'; // Adjust the path as necessary
+import { app, db } from 'src/firebase'; // Adjust the path as necessary
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function Signup() {
     const [email, setEmail] = useState('');
@@ -27,12 +28,20 @@ export default function Signup() {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            const serializableUser = {
-                uid: user.uid,
-                email: user.email,
-            };
-            dispatch(setUser(serializableUser));
-            navigate('/admin/dashboard');
+
+            const userDocRef = doc(db, 'authorizedUsers', email);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+                const serializableUser = {
+                    uid: user.uid,
+                    email: user.email,
+                };
+                dispatch(setUser(serializableUser));
+                navigate('/admin/dashboard');
+            } else {
+                setError('You are not authorized to signup.');
+                auth.signOut();
+            }
         } catch (error) {
             setError(error.message);
         }
