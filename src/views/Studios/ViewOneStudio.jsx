@@ -19,7 +19,7 @@ export default function ViewOneStudio() {
     useEffect(() => {
         async function fetchStudio() {
             const response = await dispatch(getOneStudio(id));
-            setPeople(response.payload.people);
+            setPeople(response.payload.dancers);
             setStudio({
                 name: capitalize(response.payload[0].name),
                 location: capitalize(response.payload[0].location),

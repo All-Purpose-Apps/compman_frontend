@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { tokens } from "src/utils/theme";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,12 +12,15 @@ import { GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import LoadingModal from "src/components/LoadingModal";
 import CustomToolbar from "src/components/CustomToolbar";
 import { boxSxSettings, gridSxSettings } from "src/utils";
+import NewStudioModal from "./NewStudio";
+import ErrorModal from "src/components/ErrorModal";
 
 const Studios = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         dispatch(fetchStudios());
@@ -25,7 +28,7 @@ const Studios = () => {
 
     const studios = useSelector(state => state.studios.studios);
     const loading = useSelector(state => state.studios.status) === 'loading';
-    const error = useSelector(state => state.studios.error);
+    const error = useSelector(state => state.studios.error) || false;
 
     function getRowId(row) {
         return row._id;
@@ -41,12 +44,21 @@ const Studios = () => {
     };
 
     const handleAddStudio = () => {
-        navigate('/admin/studios/new');
+        setOpen(true);
     };
 
     const handleGetStudio = id => {
         navigate(`/admin/studios/${id}`);
     };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
+    const reloadWindow = () => {
+        window.location.reload();
+    };
+
 
     const columns = [
         {
@@ -97,6 +109,8 @@ const Studios = () => {
     return (
         <Box m="20px">
             <LoadingModal loading={loading} resource="Studios" />
+            <NewStudioModal open={open} onClose={onClose} />
+            <ErrorModal errorOpen={error} onErrorClose={reloadWindow} errorMessage={error} button="Refresh Page" />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
