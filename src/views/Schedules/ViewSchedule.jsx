@@ -145,7 +145,7 @@ const ViewSchedule = () => {
                     rows={rows}
                     columns={columns}
                     getRowId={getRowId}
-                    onRowClick={params => handleGetSchedule(params.row._id)}
+                    // onRowClick={params => handleGetSchedule(params.row._id)}
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
