@@ -9,7 +9,7 @@ import { fetchDances } from 'src/store/dancesSlice';
 import { useTheme } from '@mui/material/styles';
 import { tokens } from 'src/utils/theme';
 import { formSxSettings } from 'src/utils';
-import { addSchedule, fetchSchedules, getOneSchedule } from 'src/store/schedulesSlice';
+import { editSchedule, fetchSchedules, getOneSchedule } from 'src/store/schedulesSlice';
 import dayjs from 'dayjs';
 
 const EditSchedule = () => {
@@ -36,7 +36,7 @@ const EditSchedule = () => {
                 name: entry.name,
                 startDate: dayjs(entry.startDate),
                 endDate: dayjs(entry.endDate),
-                dances: entry.dances.map(dance => dance._id), // Store only the dance IDs
+                dances: entry.dances.map(dance => dance._id),
                 location: entry.location,
             });
         };
@@ -79,9 +79,9 @@ const EditSchedule = () => {
             setErrors(validationErrors);
         } else {
             try {
-                await dispatch(addSchedule(formValues));
+                await dispatch(editSchedule({ id, ...formValues }));
                 await dispatch(fetchSchedules());
-                navigate('/schedules'); // Redirect to schedules list or appropriate page
+                navigate(-1);
             } catch (error) {
                 console.error("Failed to submit schedule:", error);
             }
