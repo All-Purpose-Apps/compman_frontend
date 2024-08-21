@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { TextField, Button, FormControl, Container, CircularProgress, Typography, Autocomplete, Paper, Grid } from '@mui/material';
+import React, { useEffect } from 'react';
+import {
+    TextField, Button, FormControl, CircularProgress, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem
+} from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDances } from 'src/store/dancesSlice';
 import { useTheme } from '@mui/material/styles';
 import { tokens } from 'src/utils/theme';
+import { formSxSettings } from 'src/utils';
+import { addSchedule, fetchSchedules } from 'src/store/schedulesSlice';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 
-const ScheduleDanceForm = () => {
+const ScheduleDanceForm = ({ open, onClose }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
-
-    const [formValues, setFormValues] = useState({
-        startDateTime: null,
-        endDateTime: null,
-        dance: null,
-        location: '',
-    });
-
-    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         dispatch(fetchDances());
@@ -28,36 +25,31 @@ const ScheduleDanceForm = () => {
     const isLoading = useSelector(state => state.dances.status) === 'loading';
     const error = useSelector(state => state.dances.error);
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormValues({ ...formValues, [name]: value });
+    const initialValues = {
+        name: '',
+        startDate: null,
+        endDate: null,
+        dances: [],
+        location: '',
     };
 
-    const handleAutocompleteChange = (event, value) => {
-        setFormValues({ ...formValues, dance: value });
-    };
+    const validationSchema = Yup.object({
+        name: Yup.string().required('Name is required'),
+        startDate: Yup.date().nullable().required('Start Date & Time is required'),
+        endDate: Yup.date().nullable().required('End Date & Time is required'),
+        dances: Yup.array().min(1, 'At least one Dance Category is required').required('Dance is required'),
+        location: Yup.string().required('Location is required'),
+    });
 
-    const handleDateTimeChange = (name, value) => {
-        setFormValues({ ...formValues, [name]: value });
-    };
-
-    const validate = () => {
-        const newErrors = {};
-        if (!formValues.startDateTime) newErrors.startDateTime = 'Start Date & Time is required';
-        if (!formValues.endDateTime) newErrors.endDateTime = 'End Date & Time is required';
-        if (!formValues.dance) newErrors.dance = 'Dance Category is required';
-        if (!formValues.location) newErrors.location = 'Location is required';
-        return newErrors;
-    };
-
-    const onSubmit = (event) => {
-        event.preventDefault();
-        const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-        } else {
-            console.log('Form Submitted:', formValues);
-            // Submit form logic here
+    const handleSubmit = async (values, { setSubmitting }) => {
+        try {
+            await dispatch(addSchedule(values));
+            await dispatch(fetchSchedules());
+            onClose();
+        } catch (error) {
+            console.error("Failed to submit schedule:", error);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -66,95 +58,127 @@ const ScheduleDanceForm = () => {
         label: `${dance.title} - ${dance.danceCategory.name}`
     }));
 
-    if (isLoading) {
-        return (
-            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <CircularProgress />
-            </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Container sx={{ mt: 4 }}>
-                <Typography variant="h6" color="error">{error}</Typography>
-            </Container>
-        );
-    }
-
     return (
-        <Container sx={{ mt: 4 }}>
-            <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
-                <form onSubmit={onSubmit}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                            <FormControl fullWidth>
-                                <DateTimePicker
-                                    label="Start Date & Time"
-                                    value={formValues.startDateTime}
-                                    onChange={(newValue) => handleDateTimeChange('startDateTime', newValue)}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            error={!!errors.startDateTime}
-                                            helperText={errors.startDateTime}
-                                        />
-                                    )}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <FormControl fullWidth>
-                                <DateTimePicker
-                                    label="End Date & Time"
-                                    value={formValues.endDateTime}
-                                    onChange={(newValue) => handleDateTimeChange('endDateTime', newValue)}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            error={!!errors.endDateTime}
-                                            helperText={errors.endDateTime}
-                                        />
-                                    )}
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
+        <Dialog open={open} onClose={(event, reason) => {
+            if (reason !== 'backdropClick') {
+                onClose();
+            }
+        }} maxWidth="sm" fullWidth>
+            <DialogTitle>Schedule Dance</DialogTitle>
+            <DialogContent dividers>
+                {isLoading ? (
+                    <CircularProgress sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+                ) : error ? (
+                    <Typography variant="h6" color="error">{error}</Typography>
+                ) : (
+                    <Formik
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={handleSubmit}
+                    >
+                        {({ values, errors, touched, handleChange, handleBlur, setFieldValue, isSubmitting }) => (
+                            <Form>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <FormControl fullWidth margin="normal">
+                                            <TextField
+                                                label="Name"
+                                                name="name"
+                                                value={values.name}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={touched.name && !!errors.name}
+                                                helperText={touched.name && errors.name}
+                                                fullWidth
+                                            />
+                                        </FormControl>
+                                    </Grid>
 
-                    <FormControl fullWidth margin="normal">
-                        <Autocomplete
-                            options={danceOptions}
-                            getOptionLabel={(option) => option.label}
-                            onChange={handleAutocompleteChange}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Dance Category"
-                                    error={!!errors.dance}
-                                    helperText={errors.dance}
-                                />
-                            )}
-                        />
-                    </FormControl>
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <DateTimePicker
+                                                label="Start Date & Time"
+                                                value={values.startDate}
+                                                onChange={(newValue) => setFieldValue('startDate', newValue)}
+                                                slot={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        error={touched.startDate && !!errors.startDate}
+                                                        helperText={touched.startDate && errors.startDate}
+                                                        fullWidth
+                                                    />
+                                                )}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <DateTimePicker
+                                                label="End Date & Time"
+                                                value={values.endDate}
+                                                onChange={(newValue) => setFieldValue('endDate', newValue)}
+                                                slot={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        error={touched.endDate && !!errors.endDate}
+                                                        helperText={touched.endDate && errors.endDate}
+                                                        fullWidth
+                                                    />
+                                                )}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
 
-                    <FormControl fullWidth margin="normal">
-                        <TextField
-                            label="Location"
-                            name="location"
-                            value={formValues.location}
-                            onChange={handleChange}
-                            error={!!errors.location}
-                            helperText={errors.location}
-                            fullWidth
-                        />
-                    </FormControl>
+                                <FormControl fullWidth margin="normal">
+                                    <TextField
+                                        select
+                                        name="dances"
+                                        label="Dance"
+                                        value={values.dances}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.dances && !!errors.dances}
+                                        helperText={touched.dances && errors.dances}
+                                        SelectProps={{
+                                            multiple: true,
+                                        }}
+                                    >
+                                        {danceOptions.map(option => (
+                                            <MenuItem key={option.value} value={option.value} sx={formSxSettings(colors)}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </FormControl>
 
-                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 2, mr: 2 }}>
-                        Submit
-                    </Button>
-                </form>
-            </Paper>
-        </Container>
+                                <FormControl fullWidth margin="normal">
+                                    <TextField
+                                        label="Location"
+                                        name="location"
+                                        value={values.location}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.location && !!errors.location}
+                                        helperText={touched.location && errors.location}
+                                        fullWidth
+                                    />
+                                </FormControl>
+
+                                <DialogActions>
+                                    <Button onClick={onClose} color="secondary" disabled={isSubmitting}>
+                                        Cancel
+                                    </Button>
+                                    <Button type="submit" color="primary" variant="contained" disabled={isSubmitting}>
+                                        Submit
+                                    </Button>
+                                </DialogActions>
+                            </Form>
+                        )}
+                    </Formik>
+                )}
+            </DialogContent>
+        </Dialog>
     );
 };
 

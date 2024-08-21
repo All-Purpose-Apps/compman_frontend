@@ -13,7 +13,7 @@ export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () =>
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error.message);
   }
 });
 
@@ -22,7 +22,7 @@ export const getOneStudio = createAsyncThunk('studios/getOneStudio', async (id) 
     const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios/${id}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error.message);
   }
 });
 

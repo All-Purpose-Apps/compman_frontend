@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, FormControl, Dialog, DialogTitle, DialogContent, DialogContentText, CircularProgress, Paper, useTheme } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import {
+    Button, Dialog, DialogTitle, DialogContent, DialogContentText, Paper, useTheme, DialogActions
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEntries } from 'src/store/entriesSlice'
-import { addHeat, fetchHeats } from 'src/store/heatsSlice';
+import { fetchEntries } from 'src/store/entriesSlice';
+import { addHeats, fetchHeats } from 'src/store/heatsSlice';
 import dayjs from 'dayjs';
 import { tokens } from 'src/utils/theme';
 
-const AutoGenerateHeats = () => {
+const AutoGenerateHeats = ({ open, onClose }) => {
     const theme = useTheme();
-    const colors = tokens(theme);
+    const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedStartDate, setSelectedStartDate] = useState(dayjs(new Date()));
@@ -21,98 +22,53 @@ const AutoGenerateHeats = () => {
         dispatch(fetchEntries());
     }, [dispatch]);
 
-    const entries = useSelector(state => state.entries.entries);
-    const isLoading = useSelector(state => state.entries.status) === 'loading';
-    const errors = useSelector(state => state.entries.error);
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = {
-            start: selectedStartDate,
-            end: selectedEndDate,
-            interval: interval
-        };
-        dispatch(addHeat(data));
+        dispatch(addHeats());
         dispatch(fetchHeats());
+        onClose();
         navigate('/admin/heats');
     };
 
     const handleCancel = () => {
-        navigate('/admin/heats');
+        onClose();
     };
-
-    const handleGoToEntries = () => {
-        navigate('/admin/entries');
-    };
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (entries.length === 0) {
-        return <Dialog
-            open={entries.length === 0}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogContent>
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    minHeight="150px" // Adjust height as needed
-                >
-                    <DialogContentText
-                        id="alert-dialog-description"
-                        align="center" // Center text horizontally
-                    >
-                        No Entries, Please create entries first.
-                    </DialogContentText>
-                    <Button variant="outlined" onClick={() => handleGoToEntries()} sx={{ color: 'white', mt: 2 }}>
-                        Go to Entries
-                    </Button>
-                </Box>
-            </DialogContent>
-        </Dialog>
-    }
 
     return (
-        <Box className='form-container' sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
-            <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary, maxWidth: '500px' }}>
-                <form onSubmit={(e) => handleSubmit(e)}>
-                    <FormControl fullWidth margin="normal">
-                        <DateTimePicker
-                            label="Start"
-                            value={selectedStartDate}
-                            onChange={(date) => setSelectedStartDate(date)}
-                            slotProps={{ textField: { variant: 'outlined' } }}
-                        />
-                    </FormControl>
-                    <FormControl fullWidth margin="normal">
-                        <DateTimePicker
-                            label="End"
-                            value={selectedEndDate}
-                            onChange={(date) => setSelectedEndDate(date)}
-                            slotProps={{ textField: { variant: 'outlined' } }}
-                        />
-                    </FormControl>
-                    <FormControl fullWidth margin="normal">
-                        <TextField
-                            label="Interval (minutes)"
-                            type="number"
-                            value={interval}
-                            onChange={(e) => setInterval(e.target.value)}
-                            required
-                        />
-                    </FormControl>
-                    <Box display="flex" justifyContent="space-between" mt={2}>
-                        <Button variant="contained" color="primary" type="submit">Generate</Button>
-                        <Button variant="outlined" color="secondary" onClick={handleCancel}>Cancel</Button>
-                    </Box>
-                </form>
-            </Paper>
-        </Box>
+        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+            <DialogTitle>Auto Generate Heats</DialogTitle>
+            <DialogContent
+                dividers
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '200px', // Adjust height as needed
+                }}
+            >
+                <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary, textAlign: 'center' }}>
+                    <DialogContentText color="error">
+                        WARNING:
+                    </DialogContentText>
+                    <DialogContentText color="error">
+                        After you click the generate button, the heats will be automatically generated.
+                    </DialogContentText>
+                    <DialogContentText color="error">
+                        If you do this twice, you may end up with duplicate heats.</DialogContentText>
+                    <DialogContentText color="error">
+                        ONLY CLICK THE GENERATE BUTTON ONCE, THEN EDIT HEATS AS NEEDED.</DialogContentText>
+                </Paper>
+            </DialogContent>
+            <DialogActions>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Generate
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                    Cancel
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 };
 

@@ -1,8 +1,18 @@
-export function autoGenerateHeats(timeRange, entries, currentHeats) {
-  const times = generateTimeIntervals(timeRange.start, timeRange.end, timeRange.interval);
-  const timeSlots = scheduleEntries(times, entries.data, currentHeats.data);
-  return timeSlots;
+export function autoGenerateHeats(schedules, entries, currentHeats) {
+  let allHeats = [];
+
+  // Iterate over each schedule to generate time slots and schedule entries accordingly
+  schedules.forEach((schedule) => {
+    const times = generateTimeIntervals(schedule.startDate, schedule.endDate, 1.5); // 1.5 minutes interval
+    const allowedDances = schedule.dances.map((dance) => dance._id);
+
+    const timeSlots = scheduleEntries(times, entries.data, currentHeats.data, allowedDances);
+    allHeats = allHeats.concat(timeSlots);
+  });
+
+  return allHeats;
 }
+
 function generateTimeIntervals(startDate, endDate, intervalMinutes) {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -16,7 +26,7 @@ function generateTimeIntervals(startDate, endDate, intervalMinutes) {
   return times;
 }
 
-function scheduleEntries(timeslots, entries, currentHeats) {
+function scheduleEntries(timeslots, entries, currentHeats, allowedDances) {
   let heats = []; // To store the final heats with scheduled entries
   let usedCombinations = new Set(); // To track used (dance, ageCategory, level) combinations for each entry
   let heatMap = new Map(); // To map timeslots to their respective heats
@@ -72,6 +82,11 @@ function scheduleEntries(timeslots, entries, currentHeats) {
 
       // Check if the entry's combination is already used in this heat or any previous heat
       if (usedCombinations.has(combination)) {
+        continue;
+      }
+
+      // Check if the dance is allowed in the current time range (schedule)
+      if (!allowedDances.includes(dance)) {
         continue;
       }
 

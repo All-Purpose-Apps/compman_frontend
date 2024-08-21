@@ -26,6 +26,7 @@ import FAQ from 'src/views/FAQ';
 import ScheduleCall from 'src/views/ScheduleCall';
 import ViewSchedule from './views/Schedules/ViewSchedule';
 import NewSchedule from './views/Schedules/NewSchedule';
+import EditSchedule from './views/Schedules/EditSchedule';
 
 const routes = [
   {
@@ -131,6 +132,11 @@ const routes = [
     path: 'schedule/new',
     layout: '/admin',
     component: NewSchedule,
+  },
+  {
+    path: 'schedule/edit/:id',
+    layout: '/admin',
+    component: EditSchedule,
   },
   {
     path: 'settings',

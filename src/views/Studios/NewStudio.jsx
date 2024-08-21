@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Button, MenuItem, Box, Grid } from '@mui/material';
+import { TextField, Button, MenuItem, Box, Grid, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addStudio } from 'src/store/studiosSlice';
@@ -20,7 +20,7 @@ const validationSchema = yup.object({
         .required('Website is required'),
 });
 
-const NewStudio = () => {
+const NewStudioModal = ({ open, onClose }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -35,113 +35,105 @@ const NewStudio = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             dispatch(addStudio(values));
+            onClose();
             navigate('/admin/studios');
         },
     });
 
     const handleCancel = () => {
+        onClose();
         navigate('/admin/studios');
     };
 
     return (
-        <Box sx={{ maxWidth: 600, mx: 'auto', mt: 4 }}>
-            <form onSubmit={() => formik.handleSubmit()}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            id="name"
-                            name="name"
-                            label="Name"
-                            value={formik.values.name}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.name && Boolean(formik.errors.name)}
-                            helperText={formik.touched.name && formik.errors.name}
-                        />
-                    </Grid>
+        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+            <DialogTitle>Add New Studio</DialogTitle>
+            <form onSubmit={formik.handleSubmit}>
+                <DialogContent>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="name"
+                                name="name"
+                                label="Name"
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
+                            />
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            id="location"
-                            name="location"
-                            label="Location"
-                            value={formik.values.location}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.location && Boolean(formik.errors.location)}
-                            helperText={formik.touched.location && formik.errors.location}
-                        />
-                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="location"
+                                name="location"
+                                label="Location"
+                                value={formik.values.location}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.location && Boolean(formik.errors.location)}
+                                helperText={formik.touched.location && formik.errors.location}
+                            />
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            id="phone"
-                            name="phone"
-                            label="Phone"
-                            value={formik.values.phone}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.phone && Boolean(formik.errors.phone)}
-                            helperText={formik.touched.phone && formik.errors.phone}
-                        />
-                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="phone"
+                                name="phone"
+                                label="Phone"
+                                value={formik.values.phone}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.phone && Boolean(formik.errors.phone)}
+                                helperText={formik.touched.phone && formik.errors.phone}
+                            />
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            id="email"
-                            name="email"
-                            label="Email"
-                            type="email"
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
-                            helperText={formik.touched.email && formik.errors.email}
-                        />
-                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="email"
+                                name="email"
+                                label="Email"
+                                type="email"
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.email && Boolean(formik.errors.email)}
+                                helperText={formik.touched.email && formik.errors.email}
+                            />
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            id="website"
-                            name="website"
-                            label="Website"
-                            value={formik.values.website}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.website && Boolean(formik.errors.website)}
-                            helperText={formik.touched.website && formik.errors.website}
-                        />
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="website"
+                                name="website"
+                                label="Website"
+                                value={formik.values.website}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={formik.touched.website && Boolean(formik.errors.website)}
+                                helperText={formik.touched.website && formik.errors.website}
+                            />
+                        </Grid>
                     </Grid>
-
-                    <Grid item xs={12}>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            fullWidth
-                            type="submit"
-                        >
-                            Submit
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button
-                            color="secondary"
-                            variant="outlined"
-                            fullWidth
-                            onClick={handleCancel}
-                        >
-                            Cancel
-                        </Button>
-                    </Grid>
-                </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="primary" variant="contained" type="submit">
+                        Submit
+                    </Button>
+                    <Button color="secondary" variant="outlined" onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                </DialogActions>
             </form>
-        </Box>
+        </Dialog>
     );
 };
 
-export default NewStudio;
+export default NewStudioModal;
