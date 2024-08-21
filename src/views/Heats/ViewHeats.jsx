@@ -9,6 +9,7 @@ import { DataGrid } from "@mui/x-data-grid";
 
 import CustomToolbar from "src/components/CustomToolbar";
 import ActionButtons from "src/components/ActionButtons";
+import AutoGenerateHeats from "src/views/Heats/AutoGenerateHeats";
 
 import { tokens } from "src/utils/theme";
 import { capitalize, capitalizeWords } from "src/utils";
@@ -22,6 +23,7 @@ const ViewHeats = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,12 +60,16 @@ const ViewHeats = () => {
         navigate(`/admin/heats/${id}`);
     };
 
-    const handleAddDancer = () => {
-        navigate('/admin/heats/generate');
+    const handleGenerateHeats = () => {
+        setOpen(true);
     };
 
     const handleAddHeat = () => {
         navigate('/admin/heats/new');
+    };
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const getRowHeight = (params) => {
@@ -148,6 +154,7 @@ const ViewHeats = () => {
     return (
         <Box m="20px">
             <LoadingModal loading={loading} resource='Heats' />
+            <AutoGenerateHeats open={open} onClose={handleClose} />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
@@ -161,7 +168,7 @@ const ViewHeats = () => {
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, handleAddHeat, theme: theme.palette.mode, button: 'Generate Heats', location: 'heats' } }}
+                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleGenerateHeats, handleAddHeat, theme: theme.palette.mode, button: 'Generate Heats', location: 'heats' } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}

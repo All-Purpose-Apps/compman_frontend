@@ -18,11 +18,12 @@ export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
   }
 });
 
-export const addHeat = createAsyncThunk('heats/addHeat', async (heatData) => {
+export const addHeats = createAsyncThunk('heats/addHeats', async () => {
   try {
     const entries = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/entries`);
     const currentHeats = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
-    const heats = await autoGenerateHeats(heatData, entries, currentHeats);
+    const schedules = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/schedules`);
+    const heats = await autoGenerateHeats(schedules.data, entries, currentHeats);
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heats);
     return response.data;
   } catch (error) {
@@ -74,14 +75,14 @@ export const heatsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(addHeat.pending, (state) => {
+      .addCase(addHeats.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(addHeat.fulfilled, (state, action) => {
+      .addCase(addHeats.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.heats = action.payload;
       })
-      .addCase(addHeat.rejected, (state, action) => {
+      .addCase(addHeats.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
