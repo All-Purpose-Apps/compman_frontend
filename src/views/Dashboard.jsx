@@ -9,6 +9,10 @@ import { fetchEntries } from 'src/store/entriesSlice';
 import { fetchSchedules } from 'src/store/schedulesSlice'; // Assuming this exists
 import moment from 'moment';
 import { BarChart } from '@mui/x-charts/BarChart'; // Import the BarChart component from MUI X Charts
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 export default function Dashboard() {
 
@@ -45,32 +49,44 @@ export default function Dashboard() {
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={3}>
                         <Card>
-                            <CardContent style={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => navigate('/admin/studios')} sx={{ cursor: 'pointer' }}>
-                                <Typography variant="subtitle1">Total Studios</Typography>
+                            <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => navigate('/admin/studios')} sx={{ cursor: 'pointer' }}>
+                                <Box textAlign="center">
+                                    <Typography variant="subtitle1">Total Studios</Typography>
+                                    <HomeIcon fontSize="large" />
+                                </Box>
                                 <Typography variant="h4">{studios.length}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Card>
-                            <CardContent style={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => navigate('/admin/dancers')} sx={{ cursor: 'pointer' }}>
-                                <Typography variant="subtitle1">Total Dancers</Typography>
+                            <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => navigate('/admin/dancers')} sx={{ cursor: 'pointer' }}>
+                                <Box textAlign="center">
+                                    <Typography variant="subtitle1">Total Dancers</Typography>
+                                    <PersonIcon fontSize="large" />
+                                </Box>
                                 <Typography variant="h4">{dancers.length}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Card>
-                            <CardContent style={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => navigate('/admin/entries')} sx={{ cursor: 'pointer' }}>
-                                <Typography variant="subtitle1">Total Entries</Typography>
+                            <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => navigate('/admin/entries')} sx={{ cursor: 'pointer' }}>
+                                <Box textAlign="center">
+                                    <Typography variant="subtitle1">Total Entries</Typography>
+                                    <AssignmentIcon fontSize="large" />
+                                </Box>
                                 <Typography variant="h4">{entries.length}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Card>
-                            <CardContent style={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => navigate('/admin/heats')} sx={{ cursor: 'pointer' }}>
-                                <Typography variant="subtitle1">Total Heats</Typography>
+                            <CardContent style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} onClick={() => navigate('/admin/heats')} sx={{ cursor: 'pointer' }}>
+                                <Box textAlign="center">
+                                    <Typography variant="subtitle1">Total Heats</Typography>
+                                    <WhatshotIcon fontSize="large" />
+                                </Box>
                                 <Typography variant="h4">{heats.length}</Typography>
                             </CardContent>
                         </Card>
