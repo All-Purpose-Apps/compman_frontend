@@ -76,6 +76,7 @@ const MyProSidebar = () => {
 
     const user = useSelector((state) => state.user.user);
     const entries = useSelector((state) => state.entries.entries);
+    const schedules = useSelector((state) => state.schedules.schedules);
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -239,7 +240,7 @@ const MyProSidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
-                        {entries.length > 0 &&
+                        {entries.length > 0 && schedules.length > 0 &&
                             <Item
                                 title="Heats"
                                 to="/admin/heats"
