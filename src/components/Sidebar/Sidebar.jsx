@@ -8,7 +8,7 @@ import { useSidebarContext } from "src/components/Sidebar/sidebarContext";
 import { Link, useLocation } from "react-router-dom";
 import { tokens } from "src/utils/theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
-import twoPeople from 'src/assets/images/two-people-ballroom-dancing.svg';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { BRAND } from "src/utils";
 import { fetchEntries } from "src/store/entriesSlice";
 import { fetchSchedules } from "src/store/schedulesSlice";
@@ -68,10 +68,8 @@ const MyProSidebar = () => {
         const pathName = location.pathname;
         const pathSegments = pathName.split('/');
 
-
         const adminIndex = pathSegments.indexOf('admin');
         const currentItem = pathSegments[adminIndex + 1] || "Dashboard";
-
 
         setSelected(currentItem.charAt(0).toUpperCase() + currentItem.slice(1));
         dispatch(fetchEntries());
@@ -171,19 +169,16 @@ const MyProSidebar = () => {
                                 justifyContent="center"
                                 alignItems="center"
                                 sx={{
-                                    "& .avater-image": {
+                                    "& .avatar-icon": {
+                                        color: colors.grey[100],
                                         backgroundColor: colors.primary[500],
+                                        borderRadius: "50%",
+                                        width: "100px",
+                                        height: "100px",
                                     },
                                 }}
                             >
-                                <img
-                                    className="avater-image"
-                                    alt="profile user"
-                                    width="100px"
-                                    height="100px"
-                                    src={twoPeople}
-                                    style={{ cursor: "pointer", borderRadius: "50%" }}
-                                />
+                                <AccountCircleOutlinedIcon className="avatar-icon" fontSize="small" />
                             </Box>
                             <Box textAlign="center">
                                 <Typography

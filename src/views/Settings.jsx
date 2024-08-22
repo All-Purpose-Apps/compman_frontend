@@ -35,6 +35,8 @@ export default function Settings() {
         // create a new object with the same properties as the category object but with the turnedOn property toggled
         const updatedCategory = { ...category, turnedOn: !category.turnedOn };
         dispatch(turnOnOffDanceCategory(updatedCategory));
+        dispatch(fetchDances());
+        dispatch(fetchDanceCategories());
     }
 
     return (
