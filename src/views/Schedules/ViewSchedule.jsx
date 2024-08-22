@@ -20,7 +20,7 @@ const ViewSchedule = () => {
     const [selectedRows, setSelectedRows] = useState([]);
     const [open, setOpen] = useState(false);
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Detect small screens
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,7 +34,10 @@ const ViewSchedule = () => {
     const loading = useSelector(state => state.schedules.status) === 'loading';
     const error = useSelector(state => state.schedules.error);
 
-    const rows = Array.isArray(schedules) ? schedules : [];
+    const rows = Array.isArray(schedules) ? schedules.map(schedule => ({
+        ...schedule,
+        dancesString: schedule.dances.map(dance => `${dance.title} - ${dance.danceCategory.name}`).join(', '),
+    })) : [];
 
     function getRowId(row) {
         return row._id;
@@ -69,8 +72,8 @@ const ViewSchedule = () => {
 
     const getRowHeight = (params) => {
         const numberOfDances = params.model.dances.length;
-        const baseHeight = 52;  // Base height for a row with no dances
-        const lineHeight = 24;  // Line height for each additional dance
+        const baseHeight = 52;
+        const lineHeight = 24;
 
         return baseHeight + (numberOfDances * lineHeight);
     };
@@ -97,10 +100,11 @@ const ViewSchedule = () => {
             renderCell: (params) => moment(params.row.endDate).format('MM/DD/YYYY, h:mm A'),
         },
         !isSmallScreen && {
-            field: "dances",
+            field: "dancesString",
             headerName: "Dances",
             flex: 0.5,
             sortable: false,
+            filterable: true,
             renderCell: (params) => (
                 <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     {params.row.dances.map((dance, index) => (
@@ -127,7 +131,7 @@ const ViewSchedule = () => {
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
             ),
         },
-    ].filter(Boolean); // Filter out null or false values
+    ].filter(Boolean);
 
     return (
         <Box m="20px">
@@ -142,7 +146,6 @@ const ViewSchedule = () => {
                     rows={rows}
                     columns={columns}
                     getRowId={getRowId}
-                    // onRowClick={params => handleGetSchedule(params.row._id)}
                     checkboxSelection={!isSmallScreen}
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
