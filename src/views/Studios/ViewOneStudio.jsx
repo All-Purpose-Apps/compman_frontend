@@ -85,15 +85,14 @@ export default function ViewOneStudio() {
                         <Card elevation={3}>
                             <CardContent>
                                 <Box textAlign="center" mb={4}>
-                                    <Typography variant="h4">{studio.name}</Typography>
+                                    <Typography variant="h1">{studio.name}</Typography>
                                 </Box>
                                 <StudioInfoItem icon={LocationOnIcon} text={studio.location} />
                                 <StudioInfoItem icon={PhoneIcon} text={studio.phone} />
-                                <StudioInfoItem icon={BusinessIcon} text={studio.studioType} />
                                 <StudioInfoItem icon={EmailIcon} text={studio.email} />
                                 <StudioInfoItem
                                     icon={LanguageIcon}
-                                    text={<a href={studio.website} target="_blank" rel="noopener noreferrer">{studio.website}</a>}
+                                    text={studio.website}
                                 />
                             </CardContent>
                         </Card>
@@ -103,11 +102,8 @@ export default function ViewOneStudio() {
                         <Card elevation={3}>
                             <CardContent>
                                 <Box textAlign="center" mb={4}>
-                                    <Typography variant="h5">Dancers</Typography>
+                                    <Typography variant="h2">Dancers</Typography>
                                 </Box>
-                                <Button variant="contained" color="primary" sx={{ mb: 2 }} onClick={() => navigate('/admin/dancers/new')}>
-                                    Add Dancer
-                                </Button>
                                 <TableContainer component={Paper}>
                                     <Table>
                                         <TableHead>

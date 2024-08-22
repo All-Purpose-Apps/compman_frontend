@@ -86,7 +86,7 @@ export default function ViewOneHeat() {
                             Back to Heats
                         </Button>
                     </Grid>
-                    <Grid item>
+                    {/* <Grid item>
                         <Button
                             variant="contained"
                             color="primary"
@@ -95,14 +95,14 @@ export default function ViewOneHeat() {
                         >
                             Edit Heat
                         </Button>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
                 <Grid container justifyContent="center">
                     <Grid item xs={12} md={8}>
                         <Card elevation={3} sx={{ borderRadius: 2 }}>
                             <CardContent>
                                 <Box textAlign="center" mb={4}>
-                                    <Typography variant="h4" color="secondary">
+                                    <Typography variant="h1" color="secondary">
                                         HEAT #{heat.number}
                                     </Typography>
                                 </Box>
@@ -113,7 +113,7 @@ export default function ViewOneHeat() {
                                     <Grid item xs>
                                         <Typography variant="h6">
                                             <Box display="flex">
-                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                <Box width="200px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
                                                     Dance:
                                                 </Box>
                                                 <Box>
@@ -123,7 +123,7 @@ export default function ViewOneHeat() {
                                         </Typography>
                                         <Typography variant="h6">
                                             <Box display="flex">
-                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                <Box width="200px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
                                                     Date & Time:
                                                 </Box>
                                                 <Box>
@@ -133,7 +133,7 @@ export default function ViewOneHeat() {
                                         </Typography>
                                         <Typography variant="h6">
                                             <Box display="flex">
-                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                <Box width="200px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
                                                     Age Category:
                                                 </Box>
                                                 <Box>
@@ -143,7 +143,7 @@ export default function ViewOneHeat() {
                                         </Typography>
                                         <Typography variant="h6">
                                             <Box display="flex">
-                                                <Box width="150px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
+                                                <Box width="200px" fontWeight="bold" mr={4} sx={{ textAlign: 'right' }}>
                                                     Level:
                                                 </Box>
                                                 <Box>
