@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStudios } from '../../store/studiosSlice';
-import { getOneDancer, editDancer } from '../../store/dancersSlice';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import { Collapse, Paper, useTheme } from '@mui/material';
+import { fetchStudios } from 'src/store/studiosSlice';
+import { getOneDancer, editDancer } from 'src/store/dancersSlice';
+import { TextField, Button, MenuItem, Box, Paper, useTheme } from '@mui/material';
 import { tokens } from 'src/utils/theme';
 
 const EditDancer = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
-    const [open, setOpen] = useState(false);
 
     const [formData, setFormData] = useState({
         number: '',
@@ -28,16 +21,19 @@ const EditDancer = () => {
         identifier: '',
         studio: '',
     });
-
     const [errors, setErrors] = useState({});
 
+    const studios = useSelector(state => state.studios.studios);
+    const isLoading = useSelector(state => state.studios.status) === 'loading';
+    const error = useSelector(state => state.studios.error);
+
     useEffect(() => {
-        const fetchDancerData = async () => {
+        const fetchData = async () => {
             const response = await dispatch(getOneDancer(id));
             const dancer = response.payload[0];
             if (dancer) {
                 setFormData({
-                    number: dancer.number ? dancer.number : '',
+                    number: dancer.number || '',
                     firstName: dancer.firstName,
                     lastName: dancer.lastName,
                     age: dancer.age,
@@ -47,43 +43,34 @@ const EditDancer = () => {
             }
         };
 
-        fetchDancerData();
+        fetchData();
         dispatch(fetchStudios());
     }, [dispatch, id]);
 
-    const studios = useSelector(state => state.studios.studios);
-    const isLoading = useSelector(state => state.studios.status) === 'loading';
-    const error = useSelector(state => state.studios.error);
-
     const validate = () => {
-        const newErrors = {};
-        if (!formData.firstName) newErrors.firstName = 'First Name is required';
-        if (!formData.lastName) newErrors.lastName = 'Last Name is required';
-        if (!formData.age || formData.age <= 0) newErrors.age = 'Age is required and must be a positive integer';
-        if (!['professional', 'student', 'coach'].includes(formData.identifier)) newErrors.identifier = 'Identifier is required';
-        if (!formData.studio) newErrors.studio = 'Studio is required';
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        const validationErrors = {};
+        if (!formData.firstName) validationErrors.firstName = 'First Name is required';
+        if (!formData.lastName) validationErrors.lastName = 'Last Name is required';
+        if (!formData.age || formData.age <= 0) validationErrors.age = 'Age must be a positive integer';
+        if (!['professional', 'student', 'coach'].includes(formData.identifier)) validationErrors.identifier = 'Invalid Identifier';
+        if (!formData.studio) validationErrors.studio = 'Studio is required';
+        setErrors(validationErrors);
+        return Object.keys(validationErrors).length === 0;
     };
 
     const handleChange = (e) => {
-
-        setFormData({
-            ...formData,
+        setFormData(prevState => ({
+            ...prevState,
             [e.target.name]: e.target.value,
-        });
+        }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validate()) {
-            dispatch(editDancer({ id, ...formData }));
-            getOneDancer(id)
+            await dispatch(editDancer({ id, ...formData }));
             setOpen(true);
-            setTimeout(() => {
-                setOpen(false);
-                navigate(-1);
-            }, 1000)
+            navigate(-1);
         }
     };
 
@@ -101,9 +88,6 @@ const EditDancer = () => {
 
     return (
         <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
-            <Collapse in={open}>
-                <Alert severity="success" sx={{ mb: 2 }}> Updated dancer successfully, redirecting... </Alert>
-            </Collapse>
             <Paper elevation={3} sx={{ padding: 3, backgroundColor: colors.primary[400] }}>
                 <form onSubmit={handleSubmit}>
                     <TextField
@@ -111,8 +95,6 @@ const EditDancer = () => {
                         name="number"
                         value={formData.number}
                         onChange={handleChange}
-                        error={!!errors.number}
-                        helperText={errors.number?.message}
                         fullWidth
                         margin="normal"
                     />
