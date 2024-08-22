@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers, deleteDancer } from "src/store/dancersSlice";
 // MUI Components
-import { Box, useTheme } from "@mui/material";
+import { Box, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 // Components
 import CustomToolbar from "src/components/CustomToolbar";
@@ -23,6 +23,8 @@ const ViewDancers = () => {
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
     const [open, setOpen] = useState(false);
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Detect small screens
 
     useEffect(() => {
         dispatch(fetchDancers());
@@ -62,42 +64,40 @@ const ViewDancers = () => {
         setOpen(false);
     }
 
-
+    // Define columns with conditional rendering based on screen size
     const columns = [
-        { field: 'number', headerName: '#', flex: .2, align: 'center', headerAlign: 'center' },
+        !isSmallScreen && { field: 'number', headerName: '#', flex: 0.2, align: 'center', headerAlign: 'center' },
         {
             field: "fullName",
             headerName: "Full Name",
             flex: 1,
         },
-        {
+        !isSmallScreen && {
             field: "age",
             headerName: "Age",
-            flex: .5,
+            flex: 0.5,
         },
-        {
+        !isSmallScreen && {
             field: "identifier",
             headerName: "Identifier",
             flex: 1,
-            renderCell: (params) => (
-                capitalize(params.row.identifier))
+            renderCell: (params) => capitalize(params.row.identifier)
         },
-        {
+        !isSmallScreen && {
             field: "studio",
             headerName: "Studio",
             flex: 1,
-            renderCell: (params) => (
-                params.row.studio.name)
+            renderCell: (params) => params.row.studio.name
         },
-        {
+        !isSmallScreen && {
             field: "actions",
             headerName: "Actions",
-            flex: .5,
+            flex: 0.5,
             renderCell: (params) => (
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
             ),
         },
-    ];
+    ].filter(Boolean); // Filter out null or false values
 
     return (
         <Box m="20px">
@@ -113,7 +113,7 @@ const ViewDancers = () => {
                     columns={columns}
                     getRowId={getRowId}
                     onRowClick={params => handleGetStudio(params.row._id)}
-                    checkboxSelection
+                    checkboxSelection={!isSmallScreen}
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddDancer, theme: theme.palette.mode, button: 'Add Dancer' } }}

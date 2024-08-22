@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSchedules, deleteSchedule } from "src/store/schedulesSlice";
-
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-
 import CustomToolbar from "src/components/CustomToolbar";
 import ActionButtons from "src/components/ActionButtons";
-
 import { tokens } from "src/utils/theme";
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/LoadingModal";
@@ -24,6 +20,8 @@ const ViewSchedule = () => {
     const [selectedRows, setSelectedRows] = useState([]);
     const [open, setOpen] = useState(false);
 
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Detect small screens
+
     useEffect(() => {
         const fetchData = async () => {
             await dispatch(fetchSchedules());
@@ -36,7 +34,6 @@ const ViewSchedule = () => {
     const loading = useSelector(state => state.schedules.status) === 'loading';
     const error = useSelector(state => state.schedules.error);
 
-    // Ensure schedules is always an array
     const rows = Array.isArray(schedules) ? schedules : [];
 
     function getRowId(row) {
@@ -85,21 +82,21 @@ const ViewSchedule = () => {
             flex: 0.2,
             sortable: false,
         },
-        {
+        !isSmallScreen && {
             field: "startDate",
             headerName: "Start Date",
             flex: 0.3,
             sortable: false,
             renderCell: (params) => moment(params.row.startDate).format('MM/DD/YYYY, h:mm A'),
         },
-        {
+        !isSmallScreen && {
             field: "endDate",
             headerName: "End Date",
             flex: 0.3,
             sortable: false,
             renderCell: (params) => moment(params.row.endDate).format('MM/DD/YYYY, h:mm A'),
         },
-        {
+        !isSmallScreen && {
             field: "dances",
             headerName: "Dances",
             flex: 0.5,
@@ -114,14 +111,14 @@ const ViewSchedule = () => {
                 </div>
             ),
         },
-        {
+        !isSmallScreen && {
             field: "location",
             headerName: "Location",
             flex: 0.3,
             sortable: false,
             renderCell: (params) => params.row.location,
         },
-        {
+        !isSmallScreen && {
             field: "actions",
             headerName: "Actions",
             flex: 0.3,
@@ -130,7 +127,7 @@ const ViewSchedule = () => {
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
             ),
         },
-    ];
+    ].filter(Boolean); // Filter out null or false values
 
     return (
         <Box m="20px">
@@ -146,7 +143,7 @@ const ViewSchedule = () => {
                     columns={columns}
                     getRowId={getRowId}
                     // onRowClick={params => handleGetSchedule(params.row._id)}
-                    checkboxSelection
+                    checkboxSelection={!isSmallScreen}
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddSchedule, theme: theme.palette.mode, button: 'Add Schedule', location: 'schedules' } }}

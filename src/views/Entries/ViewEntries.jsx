@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEntries, deleteEntry } from 'src/store/entriesSlice';
 // MUI Components
-import { Box, useTheme } from "@mui/material";
+import { Box, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 // Components
 import CustomToolbar from "src/components/CustomToolbar";
@@ -23,6 +23,8 @@ export default function Entries() {
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
     const [open, setOpen] = useState(false);
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Detect small screens
 
     useEffect(() => {
         const fetchData = async () => {
@@ -69,34 +71,34 @@ export default function Entries() {
     const columns = [
         { field: 'leader', headerName: 'Leader', flex: 1, valueGetter: (params) => params.fullName },
         { field: 'follower', headerName: 'Follower', flex: 1, valueGetter: (params) => params.fullName },
-        {
+        !isSmallScreen && {
             field: 'dance',
             headerName: 'Dance',
             flex: 1,
             valueGetter: (params) => `${params.title} - ${params.danceCategory.name}`,
         },
-        {
+        !isSmallScreen && {
             field: 'ageCategory',
             headerName: 'Age Category',
-            flex: .5,
+            flex: 0.5,
             valueGetter: (params) => capitalizeWords(params),
         },
-        {
+        !isSmallScreen && {
             field: 'level',
             headerName: 'Level',
             flex: 1,
             valueGetter: (params) => capitalizeWords(params),
         },
-        {
+        !isSmallScreen && {
             field: 'actions',
             headerName: 'Actions',
-            flex: .5,
+            flex: 0.5,
             sortable: false,
             renderCell: (params) => (
                 <ActionButtons params={params} handleEdit={handleEdit} handleDelete={handleDelete} />
             ),
         },
-    ];
+    ].filter(Boolean); // Filter out null or false values
 
     return (
         <Box m="20px">
@@ -114,7 +116,7 @@ export default function Entries() {
                     onRowClick={params => handleGetEntry(params.row._id)}
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddEntry, theme: theme.palette.mode, button: 'Add Entry' } }}
-                    checkboxSelection
+                    checkboxSelection={!isSmallScreen}
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     initialState={{
@@ -125,6 +127,6 @@ export default function Entries() {
                     sx={gridSxSettings(colors)}
                 />
             </Box>
-        </Box >
+        </Box>
     );
-};
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, useTheme } from "@mui/material";
+import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,6 +24,8 @@ const Studios = () => {
     const studios = useSelector(state => state.studios.studios);
     const loading = useSelector(state => state.studios.status) === 'loading';
     const error = useSelector(state => state.studios.error) || false;
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Detect small screens
 
     useEffect(() => {
         dispatch(fetchStudios());
@@ -53,19 +55,19 @@ const Studios = () => {
     const reloadWindow = () => {
         window.location.reload();
     };
-
+    // Define columns with conditional rendering based on screen size
     const columns = [
         { field: "name", headerName: "Name", flex: 1 },
-        { field: "location", headerName: "Location", flex: 1 },
-        {
+        !isSmallScreen && { field: "location", headerName: "Location", flex: 1 },
+        !isSmallScreen && {
             field: "phone",
             headerName: "Phone Number",
             flex: 0.5,
             renderCell: (params) => formatPhoneNumber(params.row.phone),
         },
-        { field: "email", headerName: "Email", flex: 1 },
-        { field: "website", headerName: "Website", flex: 1 },
-        {
+        !isSmallScreen && { field: "email", headerName: "Email", flex: 1 },
+        !isSmallScreen && { field: "website", headerName: "Website", flex: 1 },
+        !isSmallScreen && {
             field: "actions",
             headerName: "Actions",
             flex: 0.5,
@@ -80,7 +82,7 @@ const Studios = () => {
                 </Box>
             ),
         },
-    ];
+    ].filter(Boolean); // Filter out null or false values
 
     return (
         <Box m="20px">
