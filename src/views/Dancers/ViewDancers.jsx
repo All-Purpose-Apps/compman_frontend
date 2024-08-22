@@ -87,6 +87,7 @@ const ViewDancers = () => {
             field: "studio",
             headerName: "Studio",
             flex: 1,
+            valueGetter: (params) => params.name,
             renderCell: (params) => params.row.studio.name
         },
         !isSmallScreen && {
