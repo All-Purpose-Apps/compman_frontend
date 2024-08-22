@@ -176,13 +176,11 @@ export default function EditEntry() {
                         </TextField>
                     </FormControl>
 
-                    <Box mt={4}>
-                        <Button variant="contained" color="primary" type="submit" fullWidth>
+                    <Box mt={4} display="flex" justifyContent="space-between">
+                        <Button variant="contained" color="primary" type="submit">
                             Save
                         </Button>
-                    </Box>
-                    <Box mt={2}>
-                        <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>
+                        <Button variant="outlined" color="secondary" onClick={handleCancel}>
                             Cancel
                         </Button>
                     </Box>

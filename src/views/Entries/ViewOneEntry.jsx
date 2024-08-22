@@ -65,15 +65,15 @@ export default function ViewOneEntry() {
                         <Card elevation={3}>
                             <CardContent>
                                 <Box textAlign="center" mb={4}>
-                                    <Typography variant="h4">{`${entry.leader.fullName} & ${entry.follower.fullName}`}</Typography>
+                                    <Typography variant="h1">{`${entry.leader.fullName} & ${entry.follower.fullName}`}</Typography>
                                 </Box>
                                 <Grid container spacing={2} alignItems="center">
                                     <Grid item>
                                         <PeopleIcon size={20} />
                                     </Grid>
                                     <Grid item>
-                                        <Typography>Leader: {capitalize(entry.leader.fullName)}</Typography>
-                                        <Typography>Follower: {capitalize(entry.follower.fullName)}</Typography>
+                                        <Typography variant="h3">Leader: {capitalize(entry.leader.fullName)}</Typography>
+                                        <Typography variant="h3">Follower: {capitalize(entry.follower.fullName)}</Typography>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={2} alignItems="center" mt={2}>
@@ -81,8 +81,8 @@ export default function ViewOneEntry() {
                                         <FaChild size={20} />
                                     </Grid>
                                     <Grid item>
-                                        <Typography>Age Category: {entry.ageCategory}</Typography>
-                                        <Typography>Level: {entry.level}</Typography>
+                                        <Typography variant="h3">Age Category: {entry.ageCategory}</Typography>
+                                        <Typography variant="h3">Level: {entry.level}</Typography>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={2} alignItems="center" mt={2}>
@@ -90,7 +90,7 @@ export default function ViewOneEntry() {
                                         <FaIdBadge size={20} />
                                     </Grid>
                                     <Grid item>
-                                        <Typography>Dance: {entry.dance.title} - {entry.dance.danceCategory.name}</Typography>
+                                        <Typography variant="h3">Dance: {entry.dance.title} - {entry.dance.danceCategory.name}</Typography>
                                     </Grid>
                                 </Grid>
                             </CardContent>

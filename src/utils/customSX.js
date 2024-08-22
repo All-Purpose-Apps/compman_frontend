@@ -32,6 +32,13 @@ export const gridSxSettings = function (colors) {
     '& .MuiDataGrid-cell': {
       fontSize: '18px',
     },
+    '& .MuiDataGrid-columnHeader': {
+      marginTop: '10px',
+      backgroundColor: colors.blueAccent[700],
+    },
+    '& .MuiDataGrid-columnHeaderTitle': {
+      fontSize: '18px',
+    },
   };
 };
 
