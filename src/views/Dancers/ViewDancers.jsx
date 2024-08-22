@@ -120,6 +120,10 @@ const ViewDancers = () => {
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     pageSize={5}
                     pagination={true}
+                    initialState={{
+                        ...dancers.initialState,
+                        pagination: { paginationModel: { pageSize: 10 } },
+                    }}
                     sx={gridSxSettings(colors)}
                 />
             </Box>

@@ -117,7 +117,10 @@ export default function Entries() {
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
-                    pageSize={5}
+                    initialState={{
+                        ...entries.initialState,
+                        pagination: { paginationModel: { pageSize: 10 } },
+                    }}
                     pagination={true}
                     sx={gridSxSettings(colors)}
                 />

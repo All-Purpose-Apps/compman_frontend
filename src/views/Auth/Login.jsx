@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { TextField, Button, Card, CardContent, CardHeader, Alert, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { app } from 'src/firebase';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app, db } from 'src/firebase';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { collection, getDoc, doc } from 'firebase/firestore';
 import { setUser } from 'src/store/userSlice';
 import { useDispatch } from 'react-redux';
 
@@ -14,21 +15,59 @@ export default function Login() {
     const auth = getAuth(app);
     const dispatch = useDispatch();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Check if the user is in the whitelist
+            const userDocRef = doc(db, 'authorizedUsers', user.email);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                // User is authorized
                 const serializedUser = {
                     email: user.email,
                     uid: user.uid,
-                }
+                };
                 dispatch(setUser(serializedUser));
                 navigate('/admin/dashboard');
-            })
-            .catch((error) => {
-                setError(error.message);
-            });
+            } else {
+                // User is not authorized
+                setError('You are not authorized to log in.');
+                auth.signOut();
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const handleGoogleSignIn = async () => {
+        try {
+            const result = await signInWithPopup(auth, new GoogleAuthProvider());
+            const user = result.user;
+
+            // Check if the user is in the whitelist
+            const userDocRef = doc(db, 'authorizedUsers', user.email);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                // User is authorized
+                const serializedUser = {
+                    email: user.email,
+                    uid: user.uid,
+                };
+                dispatch(setUser(serializedUser));
+                navigate('/admin/dashboard');
+            } else {
+                // User is not authorized
+                setError('You are not authorized to log in.');
+                auth.signOut();
+            }
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
     return (
@@ -64,6 +103,11 @@ export default function Login() {
                     <Box mt={2}>
                         <Button variant="contained" color="primary" type="submit" fullWidth>
                             Login
+                        </Button>
+                    </Box>
+                    <Box mt={2}>
+                        <Button variant="contained" color="secondary" onClick={handleGoogleSignIn} fullWidth>
+                            Sign in with Google
                         </Button>
                     </Box>
                     <Box mt={2}>

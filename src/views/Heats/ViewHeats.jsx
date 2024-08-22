@@ -170,7 +170,7 @@ const ViewHeats = () => {
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleGenerateHeats, handleAddHeat, theme: theme.palette.mode, button: 'Generate Heats', location: 'heats' } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
-                    pageSize={5}
+                    autoPageSize
                     pagination={true}
                     sx={gridSxSettings(colors)}
                     getRowHeight={getRowHeight}
