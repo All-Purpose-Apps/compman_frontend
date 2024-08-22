@@ -3,8 +3,9 @@ import MainLayout from 'src/layouts/MainLayout'
 import AuthLayout from 'src/layouts/AuthLayout'
 import routes from 'src/routes'
 import Login from 'src/views/Auth/Login'
-import ProtectedRoute from './views/ProtectedRoute'
-import Signup from './views/Auth/SignUp'
+import ProtectedRoute from 'src/views/ProtectedRoute'
+import Signup from 'src/views/Auth/SignUp'
+import Homepage from 'src/views/Homepage'
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
