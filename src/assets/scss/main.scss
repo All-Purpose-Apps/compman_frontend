@@ -7,6 +7,10 @@ body,
   width: 100%;
 }
 
+* {
+  font-size: 1.3rem;
+}
+
 .app {
   display: flex;
   position: relative;
@@ -31,5 +35,6 @@ body,
   z-index: 999999 !important;
 }
 @import './authpages';
+@import './homepage';
 @import '~react-big-calendar/lib/sass/styles';
 @import '~bootstrap/scss/bootstrap';

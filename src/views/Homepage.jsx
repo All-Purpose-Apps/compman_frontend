@@ -7,11 +7,7 @@ import { Box } from '@mui/material'
 
 export default function Homepage() {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-        }}>
+        <Box className="homepage" >
             <TopBar />
             <HeroSection />
             <InfoSection />

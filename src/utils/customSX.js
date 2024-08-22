@@ -17,17 +17,20 @@ export const gridSxSettings = function (colors) {
       alignItems: 'center',
       marginBottom: '0',
     },
-    //increase font size select input
+
     '& .MuiSelect-select': {
       fontSize: '14px',
     },
-    // change the color of the selected row
+
     '& .MuiDataGrid-row.Mui-selected': {
       backgroundColor: colors.greenAccent[800],
     },
-    // change hover row color
+
     '& .MuiDataGrid-row:hover': {
       backgroundColor: colors.greenAccent[700],
+    },
+    '& .MuiDataGrid-cell': {
+      fontSize: '18px',
     },
   };
 };
@@ -39,12 +42,12 @@ export const boxSxSettings = function (colors) {
     },
     '& .MuiDataGrid-cell': {
       borderBottom: 'none',
-      fontSize: '16px', // Adjust cell font size
+      fontSize: '16px',
     },
     '& .MuiDataGrid-columnHeaders': {
       backgroundColor: colors.blueAccent[700],
       borderBottom: 'none',
-      fontSize: '18px', // Adjust header font size
+      fontSize: '18px',
     },
     '& .MuiDataGrid-virtualScroller': {
       backgroundColor: colors.primary[400],

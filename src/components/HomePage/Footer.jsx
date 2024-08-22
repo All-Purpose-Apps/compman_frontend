@@ -3,15 +3,7 @@ import { BRAND } from 'src/utils'
 
 export default function Footer() {
     return (
-        < Box
-            sx={{
-                backgroundColor: '#343a40',
-                color: 'white',
-                padding: '20px 0',
-                marginTop: 'auto', // Ensures the footer stays at the bottom
-            }
-            }
-        >
+        < Box className="homepage-footer">
             <Container maxWidth="lg">
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={4}>

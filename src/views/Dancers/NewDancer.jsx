@@ -12,6 +12,7 @@ import { addDancer } from 'src/store/dancersSlice';
 const validationSchema = yup.object().shape({
     number: yup.number().integer().nullable(),
     firstName: yup.string().required('First Name is required'),
+    middleInitial: yup.string().matches(/^[A-Za-z]$/, 'Middle Initial must be a single letter'),
     lastName: yup.string().required('Last Name is required'),
     age: yup.number().required('Age is required').positive().integer().min(1, 'Age must be at least 1').max(99, 'Age must be at most 99'),
     identifier: yup.string().oneOf(['professional', 'student', 'coach']).required('Identifier is required'),
@@ -33,6 +34,7 @@ const NewDancerModal = ({ open, onClose }) => {
         initialValues: {
             number: '',
             firstName: '',
+            middleInitial: '',
             lastName: '',
             age: '',
             identifier: '',
@@ -40,18 +42,23 @@ const NewDancerModal = ({ open, onClose }) => {
         },
         validationSchema,
         onSubmit: (data) => {
-            dispatch(addDancer(data));
+            const formattedData = {
+                ...data,
+                middleInitial: data.middleInitial !== '' ? `${data.middleInitial.toUpperCase()}.` : '',
+            };
+
+            dispatch(addDancer(formattedData));
             formik.resetForm();
             if (firstNameRef.current) {
                 firstNameRef.current.focus();
             }
-            setSnackbarOpen(true);  // Show snackbar on successful submit
+            setSnackbarOpen(true);
         },
     });
 
     const handleCancel = () => {
         formik.resetForm();
-        onClose();  // Close modal on cancel
+        onClose();
     };
 
     const handleSnackbarClose = () => {
@@ -67,7 +74,7 @@ const NewDancerModal = ({ open, onClose }) => {
             <DialogTitle>New Dancer</DialogTitle>
             <DialogContent>
                 <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
-                    <form onSubmit={formik.handleSubmit}>
+                    <form onSubmit={formik.handleSubmit} className="input-fontsize">
                         <TextField
                             label="Number"
                             type="number"
@@ -91,6 +98,19 @@ const NewDancerModal = ({ open, onClose }) => {
                             inputRef={firstNameRef}
                             error={formik.touched.firstName && Boolean(formik.errors.firstName)}
                             helperText={formik.touched.firstName && formik.errors.firstName}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <TextField
+                            label="Middle Initial"
+                            id="middleInitial"
+                            name="middleInitial"
+                            value={formik.values.middleInitial}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.middleInitial && Boolean(formik.errors.middleInitial)}
+                            helperText={formik.touched.middleInitial && formik.errors.middleInitial}
+                            inputProps={{ maxLength: 1 }}
                             fullWidth
                             margin="normal"
                         />
@@ -144,9 +164,10 @@ const NewDancerModal = ({ open, onClose }) => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 label="Studio"
+                                sx={{ fontSize: '18px' }}
                             >
                                 {studios.map(studio => (
-                                    <MenuItem key={studio._id} value={studio._id}>
+                                    <MenuItem key={studio._id} value={studio._id} sx={{ fontSize: '18px' }}>
                                         {studio.name}
                                     </MenuItem>
                                 ))}

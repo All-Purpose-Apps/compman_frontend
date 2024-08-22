@@ -16,7 +16,7 @@ import {
     TableRow,
     Paper,
 } from '@mui/material';
-import { capitalize, capitalizeWords } from 'src/utils';
+import { capitalize, capitalizeWords, formatPhoneNumber } from 'src/utils';
 
 export default function ViewOneDancer() {
     const [dancer, setDancer] = useState({});
@@ -75,14 +75,25 @@ export default function ViewOneDancer() {
                 <Grid item xs={12} md={6}>
                     <Card sx={{ boxShadow: 3 }}>
                         <CardContent>
-                            <Typography variant="h5" align="center" gutterBottom>
+                            <Typography variant="h2" align="center" gutterBottom>
                                 # {dancer.number}
                             </Typography>
-                            <Typography variant="h4" align="center" gutterBottom>
+                            <Typography variant="h1" align="center" gutterBottom>
                                 {dancer.fullName}
                             </Typography>
-                            <Typography variant="h6" align="center">
+                            <Typography variant="h3" align="center">
                                 {dancer.age} - {dancer.identifier}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+
+                    <Card sx={{ boxShadow: 3, mt: 4 }}>
+                        <CardContent>
+                            <Typography variant="h3" align="center" gutterBottom>
+                                Purchases and Payments
+                            </Typography>
+                            <Typography variant="h5" align="center">
+                                Financial details will be displayed here.
                             </Typography>
                         </CardContent>
                     </Card>
@@ -91,7 +102,7 @@ export default function ViewOneDancer() {
                 <Grid item xs={12} md={6}>
                     <Card sx={{ boxShadow: 3 }}>
                         <CardContent>
-                            <Typography variant="h5" align="center" gutterBottom>
+                            <Typography variant="h2" align="center" gutterBottom>
                                 Associated Studio
                             </Typography>
                             {dancer.studio ? (
@@ -112,18 +123,16 @@ export default function ViewOneDancer() {
                                             </TableRow>
                                             <TableRow>
                                                 <TableCell>Phone</TableCell>
-                                                <TableCell>{dancer.studio.phone}</TableCell>
+                                                <TableCell>{formatPhoneNumber(dancer.studio.phone)}</TableCell>
                                             </TableRow>
                                             <TableRow>
                                                 <TableCell>Email</TableCell>
                                                 <TableCell>{dancer.studio.email}</TableCell>
                                             </TableRow>
                                             <TableRow>
-                                                <TableCell>Website</TableCell>
+                                                <TableCell >Website</TableCell>
                                                 <TableCell>
-                                                    <a href={dancer.studio.website} target="_blank" rel="noopener noreferrer">
-                                                        {dancer.studio.website}
-                                                    </a>
+                                                    {dancer.studio.website}
                                                 </TableCell>
                                             </TableRow>
                                         </TableBody>
@@ -136,6 +145,6 @@ export default function ViewOneDancer() {
                     </Card>
                 </Grid>
             </Grid>
-        </Container>
+        </Container >
     );
 }

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStudios } from 'src/store/studiosSlice';
 import { getOneDancer, editDancer } from 'src/store/dancersSlice';
-import { TextField, Button, MenuItem, Box, Paper, useTheme } from '@mui/material';
+import { TextField, Button, MenuItem, Box, Paper, useTheme, FormControl, Select, InputLabel } from '@mui/material';
 import { tokens } from 'src/utils/theme';
 
 const EditDancer = () => {
@@ -69,7 +69,6 @@ const EditDancer = () => {
         e.preventDefault();
         if (validate()) {
             await dispatch(editDancer({ id, ...formData }));
-            setOpen(true);
             navigate(-1);
         }
     };
@@ -140,27 +139,27 @@ const EditDancer = () => {
                         fullWidth
                         margin="normal"
                     >
-                        <MenuItem value="professional">Professional</MenuItem>
-                        <MenuItem value="student">Student</MenuItem>
-                        <MenuItem value="coach">Coach</MenuItem>
+                        <MenuItem value="professional" >Professional</MenuItem>
+                        <MenuItem value="student" >Student</MenuItem>
+                        <MenuItem value="coach" >Coach</MenuItem>
                     </TextField>
-                    <TextField
-                        select
-                        label="Studio"
-                        name="studio"
-                        value={formData.studio}
-                        onChange={handleChange}
-                        error={!!errors.studio}
-                        helperText={errors.studio}
-                        fullWidth
-                        margin="normal"
-                    >
-                        {studios.map(studio => (
-                            <MenuItem key={studio._id} value={studio._id}>
-                                {studio.name}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <FormControl fullWidth margin="normal" error={!!errors.studio}>
+                        <InputLabel>Studio</InputLabel>
+                        <Select
+                            label="Studio"
+                            name="studio"
+                            value={formData.studio}
+                            onChange={handleChange}
+
+                        >
+                            {studios.map((studio) => (
+                                <MenuItem key={studio._id} value={studio._id} >
+                                    {studio.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {errors.studio && <FormHelperText>{errors.studio}</FormHelperText>}
+                    </FormControl>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                         <Button variant="contained" color="primary" type="submit">
                             Save
