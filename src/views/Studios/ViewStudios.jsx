@@ -101,7 +101,6 @@ const Studios = () => {
                         pagination: { paginationModel: { pageSize: 10 } },
                     }}
                     pagination
-                    autoPageSize
                     sx={gridSxSettings(colors)}
                 />
             </Box>

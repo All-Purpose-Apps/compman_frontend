@@ -151,7 +151,10 @@ const ViewSchedule = () => {
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleAddSchedule, theme: theme.palette.mode, button: 'Add Schedule', location: 'schedules' } }}
                     pageSizeOptions={[1, 3, 5, 10, 25, 50, 100]}
-                    pageSize={5}
+                    initialState={{
+                        ...rows.initialState,
+                        pagination: { paginationModel: { pageSize: 10 } },
+                    }}
                     pagination={true}
                     sx={gridSxSettings(colors)}
                     getRowHeight={getRowHeight}
