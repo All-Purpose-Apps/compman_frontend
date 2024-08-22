@@ -103,16 +103,16 @@ export default function Dashboard() {
                                         <ListItem>
                                             <ListItemText
                                                 primary={
-                                                    <Typography variant="h4" mb={2}>
+                                                    <Typography variant="h2" mb={2}>
                                                         {moment(schedule.startDate).format('MMMM Do YYYY, h:mm A')}
                                                     </Typography>
                                                 }
                                                 secondary={
                                                     <Box display="flex" flexDirection="column" mt={1}>
-                                                        <Typography component="span" variant="h5">
+                                                        <Typography component="span" variant="h3">
                                                             <strong>Event:</strong> {schedule.dances.map((dance) => `${dance.title} - ${dance.danceCategory.name}`).join(', ')}
                                                         </Typography>
-                                                        <Typography component="span" variant="h5" mt={1}>
+                                                        <Typography component="span" variant="h3" mt={1}>
                                                             <strong>Location:</strong> {schedule.location}
                                                         </Typography>
                                                     </Box>
