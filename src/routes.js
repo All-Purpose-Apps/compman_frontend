@@ -22,6 +22,7 @@ import EditSchedule from './views/Schedules/EditSchedule';
 // Settings Imports
 import Settings from 'src/views/Settings';
 import FAQ from 'src/views/FAQ';
+import EntryForm from './views/UserSide/EntryForm';
 
 const routes = [
   {
@@ -117,6 +118,11 @@ const routes = [
     path: 'schedule-call',
     layout: '/admin',
     component: ScheduleCall,
+  },
+  {
+    path: 'entry-form',
+    layout: '/user',
+    component: EntryForm,
   },
 ];
 

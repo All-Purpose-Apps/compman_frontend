@@ -3,7 +3,7 @@ import { TextField, Button, Card, CardContent, CardHeader, Alert, Box, Typograph
 import { useNavigate } from 'react-router-dom';
 import { app, db } from 'src/firebase';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { collection, getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore';
 import { setUser } from 'src/store/userSlice';
 import { useDispatch } from 'react-redux';
 
@@ -24,15 +24,24 @@ export default function Login() {
             // Check if the user is in the whitelist
             const userDocRef = doc(db, 'authorizedUsers', user.email);
             const userDoc = await getDoc(userDocRef);
-
-            if (userDoc.exists()) {
+            const { authority } = await userDoc.data();
+            if (userDoc.exists() && authority === 'admin') {
                 // User is authorized
                 const serializedUser = {
                     email: user.email,
                     uid: user.uid,
+                    role: authority,
                 };
                 dispatch(setUser(serializedUser));
                 navigate('/admin/dashboard');
+            } else if (userDoc.exists() && authority === 'user') {
+                const serializedUser = {
+                    email: user.email,
+                    uid: user.uid,
+                    role: authority,
+                };
+                dispatch(setUser(serializedUser));
+                navigate('/user/entry-form');
             } else {
                 // User is not authorized
                 setError('You are not authorized to log in.');
@@ -47,19 +56,19 @@ export default function Login() {
         try {
             const result = await signInWithPopup(auth, new GoogleAuthProvider());
             const user = result.user;
-
             // Check if the user is in the whitelist
             const userDocRef = doc(db, 'authorizedUsers', user.email);
             const userDoc = await getDoc(userDocRef);
-
+            const { authority } = await userDoc.data();
             if (userDoc.exists()) {
                 // User is authorized
                 const serializedUser = {
                     email: user.email,
                     uid: user.uid,
+                    role: authority,
                 };
                 dispatch(setUser(serializedUser));
-                navigate('/admin/dashboard');
+                navigate('/user/entry-form');
             } else {
                 // User is not authorized
                 setError('You are not authorized to log in.');

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Menu, Sidebar, MenuItem, useProSidebar } from "react-pro-sidebar";
-import { app } from 'src/firebase';
+import { app, db } from 'src/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from 'src/store/userSlice';
+import { getDoc, doc } from 'firebase/firestore';
+
 import { useSidebarContext } from "src/components/Sidebar/sidebarContext";
 import { Link, useLocation } from "react-router-dom";
 import { tokens } from "src/utils/theme";
@@ -52,15 +54,29 @@ const MyProSidebar = () => {
     const location = useLocation();
 
     const [selected, setSelected] = useState(localStorage.getItem('selectedMenuItem') || "Dashboard");
-
+    const currentUser = useSelector((state) => state.user.user);
     useEffect(() => {
+        const fetchUserData = async (user) => {
+            if (user) {
+                const userDocRef = doc(db, 'authorizedUsers', user.email);
+                const userDoc = await getDoc(userDocRef);
+                const { authority } = userDoc.exists() ? userDoc.data() : { authority: 'user' };
+                console.log(authority);
+                const serializedUser = {
+                    email: user.email,
+                    uid: user.uid,
+                    role: authority,
+                };
+                dispatch(setUser(serializedUser));
+            } else {
+                dispatch(setUser(null));
+            }
+        };
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            const serializedUser = user ? {
-                email: user.email,
-                uid: user.uid,
-            } : null;
-            dispatch(setUser(serializedUser));
+            fetchUserData(user);
         });
+
         return () => unsubscribe();
     }, [dispatch, auth]);
 

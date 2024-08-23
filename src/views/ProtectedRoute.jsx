@@ -1,16 +1,36 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function ProtectedRoute({ children }) {
-    // Get the user state from the Redux store
+const ProtectedRoute = ({ children, requiredRole }) => {
+    const navigate = useNavigate();
     const user = useSelector((state) => state.user.user);
+    const loading = useSelector((state) => state.user.loading); // Assuming you have a loading state
+    useEffect(() => {
+        // Wait until loading is false before proceeding
+        if (!loading) {
+            if (!user) {
+                // Redirect to login if not authenticated
+                navigate("/auth/login", { replace: true });
+            } else if (requiredRole && user.role !== requiredRole) {
+                // Redirect to unauthorized page if the role doesn't match
+                navigate("/unauthorized", { replace: true });
+            }
+        }
+    }, [user, requiredRole, navigate, loading]);
 
-    // If the user is not authenticated, redirect to the login page
-    if (!user) {
-        return <Navigate to="/auth/login" replace />;
+    // Render a loading spinner while loading user info
+    if (loading) {
+        return <div>Loading...</div>; // Replace with a spinner if you have one
     }
 
-    // If the user is authenticated, render the children components
-    return children;
-}
+    // Render children only if the user is authenticated and has the required role
+    if (user && (!requiredRole || user.role === requiredRole)) {
+        return children;
+    }
+
+    // Return null if none of the conditions are met, this is safe because useEffect handles navigation
+    return null;
+};
+
+export default ProtectedRoute;
