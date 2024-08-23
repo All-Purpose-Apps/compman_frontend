@@ -56,12 +56,12 @@ const ScheduleCall = () => {
 
     const isWeekday = (date) => {
         const day = date.day();
-        return day !== 0 && day !== 6; // 0 = Sunday, 6 = Saturday
+        return day !== 0 && day !== 6;
     };
 
     const isWithinWorkingHours = (time) => {
         const hour = time.hour();
-        return hour >= 9 && hour < 17; // 9 AM to 5 PM
+        return hour >= 9 && hour < 17;
     };
 
     const handleSubmit = (e) => {
@@ -78,14 +78,27 @@ const ScheduleCall = () => {
 
         const hasErrors = Object.values(errors).some((error) => error === true);
         if (!hasErrors) {
-            // Handle form submission
             console.log("Form submitted successfully", formValues);
         }
     };
 
     return (
         <Box m="20px">
-            <Paper elevation={3} sx={{ padding: "20px" }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    padding: "20px",
+                    maxWidth: {
+                        xs: "100%", // 100% width on extra-small and small screens
+                        sm: "100%", // 100% width on medium screens
+                        md: "100%",  // 60% width on medium screens and larger
+                        lg: "60%",  // 60% width on large screens
+                        xl: "60%",  // 60% width on extra-large screens
+                    },
+                    width: "100%",
+                    margin: "0 auto",
+                }}
+            >
                 <Typography variant="h4" color={colors.greenAccent[500]} gutterBottom>
                     Schedule a Call
                 </Typography>
