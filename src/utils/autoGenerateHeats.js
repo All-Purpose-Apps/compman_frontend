@@ -1,13 +1,19 @@
 export function autoGenerateHeats(schedules, entries, currentHeats) {
   let allHeats = [];
+  // Initialize the heat number based on current heats
+  let heatNumber = currentHeats.length ? Math.max(...currentHeats.map((h) => h.number)) + 1 : 1;
 
   // Iterate over each schedule to generate time slots and schedule entries accordingly
   schedules.forEach((schedule) => {
     const times = generateTimeIntervals(schedule.startDate, schedule.endDate, 1.5); // 1.5 minutes interval
     const allowedDances = schedule.dances.map((dance) => dance._id);
 
-    const timeSlots = scheduleEntries(times, entries.data, currentHeats.data, allowedDances);
+    // Pass heatNumber as a reference so it updates globally
+    const timeSlots = scheduleEntries(times, entries.data, currentHeats.data, allowedDances, heatNumber);
     allHeats = allHeats.concat(timeSlots);
+
+    // Update the global heatNumber after scheduling
+    heatNumber = allHeats.length ? Math.max(...allHeats.map((h) => h.number)) + 1 : heatNumber;
   });
 
   return allHeats;
@@ -26,7 +32,7 @@ function generateTimeIntervals(startDate, endDate, intervalMinutes) {
   return times;
 }
 
-function scheduleEntries(timeslots, entries, currentHeats, allowedDances) {
+function scheduleEntries(timeslots, entries, currentHeats, allowedDances, heatNumber) {
   let heats = []; // To store the final heats with scheduled entries
   let usedCombinations = new Set(); // To track used (dance, ageCategory, level) combinations for each entry
   let heatMap = new Map(); // To map timeslots to their respective heats
@@ -43,8 +49,6 @@ function scheduleEntries(timeslots, entries, currentHeats, allowedDances) {
     });
   });
 
-  // Start numbering heats from the current max number
-  let heatNumber = currentHeats.length ? Math.max(...currentHeats.map((h) => h.number)) + 1 : 1;
   let lastHeat = null; // To keep track of the last created or filled heat
 
   sortedTimeslots.forEach((timeslot) => {

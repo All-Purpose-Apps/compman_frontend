@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeats, deleteHeat } from "src/store/heatsSlice";
+import { fetchEntries } from "src/store/entriesSlice";
 
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -24,10 +25,12 @@ const ViewHeats = () => {
     const navigate = useNavigate();
     const [selectedRows, setSelectedRows] = useState([]);
     const [open, setOpen] = useState(false);
+    const [orphanEntries, setOrphanEntries] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             await dispatch(fetchHeats());
+            await dispatch(fetchEntries());
         };
 
         fetchData();
@@ -36,6 +39,21 @@ const ViewHeats = () => {
     const heats = useSelector(state => state.heats.heats);
     const loading = useSelector(state => state.heats.status) === 'loading';
     const error = useSelector(state => state.heats.error);
+
+    const entries = useSelector(state => state.entries.entries);
+
+    // Compare entries with heats to find orphan entries
+    useEffect(() => {
+        if (entries && heats) {
+            const allEntryIds = new Set(entries.map(entry => entry._id));
+            const heatEntryIds = new Set(
+                heats.flatMap(heat => heat.entries.map(entry => entry._id))
+            );
+
+            const orphanEntriesArray = entries.filter(entry => !heatEntryIds.has(entry._id));
+            setOrphanEntries(orphanEntriesArray);
+        }
+    }, [entries, heats]);
 
     function getRowId(row) {
         return row._id;
@@ -52,7 +70,7 @@ const ViewHeats = () => {
     };
 
     const handleMultiDelete = async () => {
-        await dispatch(deleteHeat(selectedRows.join(',')))
+        await dispatch(deleteHeat(selectedRows.join(',')));
         dispatch(fetchHeats());
     };
 
@@ -168,7 +186,7 @@ const ViewHeats = () => {
                     checkboxSelection
                     onRowSelectionModelChange={(params) => setSelectedRows(params)}
                     slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleGenerateHeats, handleAddHeat, theme: theme.palette.mode, button: 'Generate Heats', location: 'heats' } }}
+                    slotProps={{ toolbar: { selectedRows, handleMultiDelete, handleAdd: handleGenerateHeats, handleAddHeat, theme: theme.palette.mode, button: 'Generate Heats', location: 'heats', orphanEntries } }}
                     pageSizeOptions={[5, 10, 25, 50, 100]}
                     autoPageSize
                     pagination={true}

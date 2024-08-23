@@ -1,7 +1,6 @@
-import { Button, Box } from "@mui/material";
+import { Button, Box, Typography, Alert } from "@mui/material";
 import { GridToolbar, GridToolbarContainer } from "@mui/x-data-grid";
-const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, button, location = '', handleAddHeat }) => {
-
+const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, button, location = '', handleAddHeat, orphanEntries }) => {
     return (
         <GridToolbarContainer>
             <Box sx={{ flexGrow: 1 }}>
@@ -14,6 +13,16 @@ const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, butt
                     },
                 }} />
             </Box>
+            {orphanEntries && orphanEntries.length !== 0 && location == 'heats' && (<Box>
+                <Alert severity="error" sx={{
+                    '& .MuiAlert-message': {
+                        fontSize: '1rem',
+                    },
+                    '& .MuiAlert-icon': {
+                        fontSize: '1.5rem',
+                    }
+                }}>Entries NOT in heats: {orphanEntries?.length}</Alert>
+            </Box>)}
             <Button
                 color="secondary"
                 variant="contained"
