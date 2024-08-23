@@ -2,31 +2,26 @@ import Dashboard from 'src/views/Dashboard';
 // Studio Imports
 import ViewStudios from 'src/views/Studios/ViewStudios';
 import ViewOneStudio from 'src/views/Studios/ViewOneStudio';
-import NewStudio from 'src/views/Studios/NewStudio';
 import EditStudio from 'src/views/Studios/EditStudio';
 // Dancer Imports
 import ViewDancers from 'src/views/Dancers/ViewDancers';
 import ViewOneDancer from 'src/views/Dancers/ViewOneDancer';
-import NewDancer from 'src/views/Dancers/NewDancer';
 import EditDancer from 'src/views/Dancers/EditDancer';
 // Entries Imports
 import ViewEntries from 'src/views/Entries/ViewEntries';
 import ViewOneEntry from 'src/views/Entries/ViewOneEntry';
-import NewEntry from 'src/views/Entries/NewEntry';
 import EditEntry from 'src/views/Entries/EditEntry';
 // Heat Imports
 import ViewHeats from 'src/views/Heats/ViewHeats';
-import NewHeat from 'src/views/Heats/NewHeat';
-import AutoGenerateHeats from 'src/views/Heats/AutoGenerateHeats';
 import EditHeat from 'src/views/Heats/EditHeat';
 import ViewOneHeat from 'src/views/Heats/ViewOneHeat';
+// Schedule Imports
+import ScheduleCall from 'src/views/ScheduleCall';
+import ViewSchedule from './views/Schedules/ViewSchedule';
+import EditSchedule from './views/Schedules/EditSchedule';
 // Settings Imports
 import Settings from 'src/views/Settings';
 import FAQ from 'src/views/FAQ';
-import ScheduleCall from 'src/views/ScheduleCall';
-import ViewSchedule from './views/Schedules/ViewSchedule';
-import NewSchedule from './views/Schedules/NewSchedule';
-import EditSchedule from './views/Schedules/EditSchedule';
 
 const routes = [
   {
@@ -46,11 +41,6 @@ const routes = [
     component: ViewOneStudio,
   },
   {
-    path: 'studios/new',
-    layout: '/admin',
-    component: NewStudio,
-  },
-  {
     path: 'studios/edit/:id',
     layout: '/admin',
     component: EditStudio,
@@ -65,11 +55,6 @@ const routes = [
     path: 'dancers/:id',
     layout: '/admin',
     component: ViewOneDancer,
-  },
-  {
-    path: 'dancers/new',
-    layout: '/admin',
-    component: NewDancer,
   },
   {
     path: 'dancers/edit/:id',
@@ -88,11 +73,6 @@ const routes = [
     component: ViewOneEntry,
   },
   {
-    path: 'entries/new',
-    layout: '/admin',
-    component: NewEntry,
-  },
-  {
     path: 'entries/edit/:id',
     layout: '/admin',
     component: EditEntry,
@@ -102,16 +82,6 @@ const routes = [
     path: 'heats',
     layout: '/admin',
     component: ViewHeats,
-  },
-  {
-    path: 'heats/generate',
-    layout: '/admin',
-    component: AutoGenerateHeats,
-  },
-  {
-    path: 'heats/new',
-    layout: '/admin',
-    component: NewHeat,
   },
   {
     path: 'heats/edit/:id',
@@ -127,11 +97,6 @@ const routes = [
     path: 'schedule',
     layout: '/admin',
     component: ViewSchedule,
-  },
-  {
-    path: 'schedule/new',
-    layout: '/admin',
-    component: NewSchedule,
   },
   {
     path: 'schedule/edit/:id',
