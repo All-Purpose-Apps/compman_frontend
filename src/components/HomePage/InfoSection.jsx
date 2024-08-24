@@ -1,12 +1,11 @@
-import { Container, Grid, Typography } from '@mui/material'
+import { memo } from 'react';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
-export default function InfoSection() {
+const InfoSection = memo(() => {
     return (
-        <Container maxWidth="lg" className="homepage-infosection" sx={{
-            maxHeight: {
-                xs: 'auto', sm: 'auto', md: '250px', lg: '200px', xl: '200px'
-            }
-        }}>
+        <Container maxWidth="lg" className="homepage-infosection">
             <Grid container spacing={4}>
                 <Grid item xs={12} md={4}>
                     <Typography variant="h6" gutterBottom>
@@ -35,5 +34,7 @@ export default function InfoSection() {
                 </Grid>
             </Grid>
         </Container>
-    )
-}
+    );
+});
+
+export default InfoSection;

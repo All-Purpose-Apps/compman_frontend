@@ -1,9 +1,14 @@
-import { Box, Container, Grid, Link, Typography } from '@mui/material'
-import { BRAND } from 'src/utils'
+import { memo } from 'react'; // Named import for React.memo
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import { BRAND } from 'src/utils';
 
-export default function Footer() {
+const Footer = memo(() => {
     return (
-        < Box className="homepage-footer">
+        <Box className="homepage-footer">
             <Container maxWidth="lg">
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={4}>
@@ -53,6 +58,8 @@ export default function Footer() {
                     </Grid>
                 </Grid>
             </Container>
-        </ Box>
-    )
-}
+        </Box>
+    );
+});
+
+export default Footer;
