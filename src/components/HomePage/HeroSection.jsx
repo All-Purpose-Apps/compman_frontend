@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function HeroSection() {
     const navigate = useNavigate();
     const handleGoToApp = () => {
-        navigate('/admin/dashboard', { replace: true });
+        navigate('/auth/login', { replace: true });
     };
 
     return (
