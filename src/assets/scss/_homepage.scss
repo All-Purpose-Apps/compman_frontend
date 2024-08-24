@@ -21,3 +21,87 @@
     font-size: 0.8rem !important;
   }
 }
+
+.hero-section {
+  position: relative; // Ensure the Box is a containing block for the pseudo-element
+  background-color: #1e1e1e;
+  color: white;
+  padding: 30px 0;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; // Ensure the pseudo-element doesn't overflow
+  z-index: 0; // Ensure that content is above the background
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.pexels.com/photos/2057273/pexels-photo-2057273.jpeg'); // Replace with your image URL
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.1; // Adjust opacity as needed
+    z-index: -1; // Position the pseudo-element behind the content
+  }
+}
+
+.hero-section {
+  position: relative;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 30px 0;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.pexels.com/photos/2057273/pexels-photo-2057273.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+  }
+}
+
+.hero-content {
+  z-index: 1;
+}
+
+.hero-title {
+  color: #e0e0e0;
+}
+
+.hero-subtitle {
+  color: #9c9c9c;
+}
+
+.hero-buttons {
+  margin-top: 3rem;
+}
+
+.hero-button {
+  margin: 1rem !important;
+  background-color: #4e18a2;
+}
+
+.hero-version {
+  margin-top: 2rem;
+  color: #9c9c9c;
+}
