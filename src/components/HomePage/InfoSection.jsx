@@ -2,7 +2,11 @@ import { Container, Grid, Typography } from '@mui/material'
 
 export default function InfoSection() {
     return (
-        <Container maxWidth="lg" className="homepage-infosection">
+        <Container maxWidth="lg" className="homepage-infosection" sx={{
+            maxHeight: {
+                xs: 'auto', sm: 'auto', md: '250px', lg: '200px', xl: '200px'
+            }
+        }}>
             <Grid container spacing={4}>
                 <Grid item xs={12} md={4}>
                     <Typography variant="h6" gutterBottom>
