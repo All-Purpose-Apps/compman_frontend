@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { TextField, Button, Card, CardContent, CardHeader, Alert, Box, Typography } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { setUser } from 'src/store/userSlice'; // Adjust the path as necessary
-import { app, db } from 'src/firebase'; // Adjust the path as necessary
+import { setUser } from 'src/store/userSlice';
+import { app, db } from 'src/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 export default function Signup() {
@@ -40,10 +47,10 @@ export default function Signup() {
                 navigate('/admin/dashboard');
             } else {
                 setError('You are not authorized to signup.');
-                auth.signOut();
+                await auth.signOut();
             }
-        } catch (error) {
-            setError(error.message);
+        } catch (err) {
+            setError(err.message);
         }
     };
 

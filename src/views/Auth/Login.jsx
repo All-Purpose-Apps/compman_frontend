@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { TextField, Button, Card, CardContent, CardHeader, Alert, Box, Typography } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { app, db } from 'src/firebase';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
@@ -20,35 +27,9 @@ export default function Login() {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-
-            // Check if the user is in the whitelist
-            const userDocRef = doc(db, 'authorizedUsers', user.email);
-            const userDoc = await getDoc(userDocRef);
-            const { authority } = await userDoc.data();
-            if (userDoc.exists() && authority === 'admin') {
-                // User is authorized
-                const serializedUser = {
-                    email: user.email,
-                    uid: user.uid,
-                    role: authority,
-                };
-                dispatch(setUser(serializedUser));
-                navigate('/admin/dashboard');
-            } else if (userDoc.exists() && authority === 'user') {
-                const serializedUser = {
-                    email: user.email,
-                    uid: user.uid,
-                    role: authority,
-                };
-                dispatch(setUser(serializedUser));
-                navigate('/user/entry-form');
-            } else {
-                // User is not authorized
-                setError('You are not authorized to log in.');
-                auth.signOut();
-            }
-        } catch (error) {
-            setError(error.message);
+            await handleUserAuthorization(user);
+        } catch (err) {
+            setError(err.message);
         }
     };
 
@@ -56,26 +37,32 @@ export default function Login() {
         try {
             const result = await signInWithPopup(auth, new GoogleAuthProvider());
             const user = result.user;
-            // Check if the user is in the whitelist
-            const userDocRef = doc(db, 'authorizedUsers', user.email);
-            const userDoc = await getDoc(userDocRef);
-            const { authority } = await userDoc.data();
-            if (userDoc.exists()) {
-                // User is authorized
-                const serializedUser = {
-                    email: user.email,
-                    uid: user.uid,
-                    role: authority,
-                };
-                dispatch(setUser(serializedUser));
-                navigate('/user/entry-form');
+            await handleUserAuthorization(user);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleUserAuthorization = async (user) => {
+        const userDocRef = doc(db, 'authorizedUsers', user.email);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+            const { authority } = userDoc.data();
+            const serializedUser = {
+                email: user.email,
+                uid: user.uid,
+                role: authority,
+            };
+            dispatch(setUser(serializedUser));
+            if (authority === 'admin') {
+                navigate('/admin/dashboard');
             } else {
-                // User is not authorized
-                setError('You are not authorized to log in.');
-                auth.signOut();
+                navigate('/user/entry-form');
             }
-        } catch (error) {
-            setError(error.message);
+        } else {
+            setError('You are not authorized to log in.');
+            auth.signOut();
         }
     };
 
@@ -90,7 +77,7 @@ export default function Login() {
                         label="Email address"
                         type="email"
                         placeholder="Enter email"
-                        autoComplete='email'
+                        autoComplete="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         fullWidth
@@ -102,7 +89,7 @@ export default function Login() {
                         label="Password"
                         type="password"
                         placeholder="Password"
-                        autoComplete='current-password'
+                        autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         fullWidth
