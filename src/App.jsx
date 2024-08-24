@@ -10,6 +10,7 @@ import ProtectedRoute from 'src/views/ProtectedRoute'; // Import your ProtectedR
 import Unauthorized from './views/Unauthorized';
 import UserLayout from './layouts/UserLayout';
 import PricingPage from './views/Home/PricingPage';
+import NotFound from './views/NotFound';
 
 function App() {
   const getAdminRoutes = (routes) => {
@@ -54,18 +55,22 @@ function App() {
             </ProtectedRoute>
           }
         >
+          <Route index element={<NotFound />} />
           {getUserRoutes(routes)}
         </Route>
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
             <ProtectedRoute requiredRole="admin">
               <MainLayout />
             </ProtectedRoute>
           }
         >
+          <Route index element={<NotFound />} />
           {getAdminRoutes(routes)}
         </Route>
+        {/* Catch-all route for 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
