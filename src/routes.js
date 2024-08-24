@@ -16,12 +16,12 @@ import ViewHeats from 'src/views/Heats/ViewHeats';
 import EditHeat from 'src/views/Heats/EditHeat';
 import ViewOneHeat from 'src/views/Heats/ViewOneHeat';
 // Schedule Imports
-import ScheduleCall from 'src/views/ScheduleCall';
+import ScheduleCall from 'src/views/Other/ScheduleCall';
 import ViewSchedule from './views/Schedules/ViewSchedule';
 import EditSchedule from './views/Schedules/EditSchedule';
 // Settings Imports
-import Settings from 'src/views/Settings';
-import FAQ from 'src/views/FAQ';
+import Settings from 'src/views/Other/Settings';
+import FAQ from 'src/views/Other/FAQ';
 import EntryForm from './views/UserSide/EntryForm';
 
 const routes = [
