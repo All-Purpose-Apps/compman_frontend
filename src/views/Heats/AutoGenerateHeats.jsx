@@ -3,10 +3,9 @@ import {
     Button, Dialog, DialogTitle, DialogContent, DialogContentText, Paper, useTheme, DialogActions
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchEntries } from 'src/store/entriesSlice';
 import { addHeats, fetchHeats } from 'src/store/heatsSlice';
-import dayjs from 'dayjs';
 import { tokens } from 'src/utils/theme';
 
 const AutoGenerateHeats = ({ open, onClose }) => {
@@ -14,9 +13,6 @@ const AutoGenerateHeats = ({ open, onClose }) => {
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [selectedStartDate, setSelectedStartDate] = useState(dayjs(new Date()));
-    const [selectedEndDate, setSelectedEndDate] = useState(dayjs(new Date()));
-    const [interval, setInterval] = useState(1.5);
 
     useEffect(() => {
         dispatch(fetchEntries());

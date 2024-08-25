@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { tokens } from "src/utils/theme";
-import dayjs from "dayjs";
 
 const ScheduleCall = () => {
     const theme = useTheme();
