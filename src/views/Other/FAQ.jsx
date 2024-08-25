@@ -93,7 +93,7 @@ const FAQ = () => {
                                         justifyContent: 'center',
                                         padding: '20px',
                                         boxSizing: 'border-box',
-                                        backgroundColor: colors.primary[500],
+                                        backgroundColor: colors.greenAccent[600],
                                         color: colors.grey[100],
                                         borderRadius: '8px',
                                     }}
@@ -114,7 +114,7 @@ const FAQ = () => {
                                         justifyContent: 'center',
                                         padding: '20px',
                                         boxSizing: 'border-box',
-                                        backgroundColor: colors.primary[500],
+                                        backgroundColor: colors.greenAccent[600],
                                         color: colors.grey[100],
                                         borderRadius: '8px',
                                         transform: 'rotateY(180deg)',
