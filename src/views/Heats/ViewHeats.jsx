@@ -8,8 +8,8 @@ import { fetchEntries } from "src/store/entriesSlice";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-import CustomToolbar from "src/components/CustomToolbar";
-import ActionButtons from "src/components/ActionButtons";
+import CustomToolbar from "src/components/DataGridComponents/CustomToolbar";
+import ActionButtons from "src/components/DataGridComponents/ActionButtons";
 import AutoGenerateHeats from "src/views/Heats/AutoGenerateHeats";
 
 import { tokens } from "src/utils/theme";

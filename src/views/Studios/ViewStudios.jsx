@@ -5,7 +5,7 @@ import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import CustomToolbar from "src/components/CustomToolbar";
+import CustomToolbar from "src/components/DataGridComponents/CustomToolbar";
 import ErrorModal from "src/components/Modals/ErrorModal";
 import LoadingModal from "src/components/Modals/LoadingModal";
 import NewStudioModal from "./NewStudio";
