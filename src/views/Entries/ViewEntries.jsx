@@ -13,7 +13,7 @@ import ActionButtons from "src/components/ActionButtons";
 import { tokens } from "src/utils/theme";
 import { capitalizeWords } from 'src/utils';
 import { gridSxSettings, boxSxSettings } from "src/utils";
-import LoadingModal from "src/components/LoadingModal";
+import LoadingModal from "src/components/Modals/LoadingModal";
 import NewEntryModal from "./NewEntry";
 
 export default function Entries() {

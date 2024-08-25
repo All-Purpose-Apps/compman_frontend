@@ -13,7 +13,7 @@ import ActionButtons from "src/components/ActionButtons";
 import { tokens } from "src/utils/theme";
 import { capitalize } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils";
-import LoadingModal from "src/components/LoadingModal";
+import LoadingModal from "src/components/Modals/LoadingModal";
 import NewDancerModal from "./NewDancer";
 
 const ViewDancers = () => {

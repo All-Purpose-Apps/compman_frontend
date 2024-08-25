@@ -8,7 +8,7 @@ import CustomToolbar from "src/components/CustomToolbar";
 import ActionButtons from "src/components/ActionButtons";
 import { tokens } from "src/utils/theme";
 import { gridSxSettings, boxSxSettings } from "src/utils";
-import LoadingModal from "src/components/LoadingModal";
+import LoadingModal from "src/components/Modals/LoadingModal";
 import moment from "moment";
 import ScheduleDanceForm from "./NewSchedule";
 

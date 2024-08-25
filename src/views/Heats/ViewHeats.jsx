@@ -15,7 +15,7 @@ import AutoGenerateHeats from "src/views/Heats/AutoGenerateHeats";
 import { tokens } from "src/utils/theme";
 import { capitalize, capitalizeWords } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils";
-import LoadingModal from "src/components/LoadingModal";
+import LoadingModal from "src/components/Modals/LoadingModal";
 import moment from "moment";
 
 const ViewHeats = () => {
