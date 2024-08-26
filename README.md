@@ -15,6 +15,7 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d1069b73-a926-46fd-86eb-a87b0f1e2d15/deploy-status)](https://app.netlify.com/sites/compman/deploys)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -85,6 +86,8 @@ MERN STACK
 - [![Firebase][Firebase]][Firebase-url]
 - [![Redux][Redux]][Redux-url]
 - [![Vite][Vite]][Vite-url]
+- [![Heroku][Heroku]][Heroku-url]
+- [![Netlify][Netlify]][Netlify-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -235,3 +238,7 @@ Project Link: [https://github.com/All-Purpose-Apps/compman_frontend](https://git
 [Redux-url]: https://redux.js.org/
 [Vite]: https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E
 [Vite-url]: https://vitejs.dev/
+[Heroku]: https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white
+[Heroku-url]: https://www.heroku.com/
+[Netlify]: https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white
+[Netlify-url]: https://www.netlify.com/
