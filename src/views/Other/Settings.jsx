@@ -52,7 +52,7 @@ export default function Settings() {
                 </Grid>
             </Grid>
             <Grid container spacing={4} justifyContent="center">
-                <Grid item xs={12} md={10} lg={4}>
+                <Grid item xs={12} md={10} lg={4} mt={2}>
                     <Card>
                         <Box p={2}>
                             <Typography variant="h5">Dances Currently in System</Typography>
@@ -109,7 +109,7 @@ export default function Settings() {
                         </Box>
                     </Card>
                 </Grid>
-                <Grid item xs={12} md={10} lg={4}>
+                <Grid item xs={12} md={10} lg={4} mt={2}>
                     <Card>
                         <Box
                             display="flex"
