@@ -18,25 +18,33 @@ const HeroSection = React.memo(() => {
     }, [navigate]);
 
     return (
-        <Box className="hero-section">
+        <Box
+            className="hero-section"
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100vh', // Full viewport height
+                textAlign: 'center'
+            }}
+        >
             <Container maxWidth="md" className="hero-content">
-                <Typography variant="h3" gutterBottom className="hero-title">
-                    {BRAND}
-                </Typography>
-                <Typography variant="h6" gutterBottom className="hero-subtitle">
-                    The only competition manager you'll ever need.
-                </Typography>
-                <Box className="hero-buttons">
+                <img
+                    src="images/companlogo.png"
+                    width="600px"
+                    style={{
+                        maxWidth: '100%', // Responsive width
+                        height: 'auto'
+                    }}
+                />
+                <Box className="hero-buttons" sx={{ marginTop: 2 }}>
                     <Button variant="contained" className="hero-button" onClick={handleGoToApp}>
                         Get started
                     </Button>
-                    <Button variant="contained" className="hero-button" onClick={handleGoToPricing}>
+                    <Button variant="contained" className="hero-button" onClick={handleGoToPricing} sx={{ marginLeft: 1 }}>
                         Pricing & Features
                     </Button>
                 </Box>
-                <Typography variant="body2" className="hero-version">
-                    Current version: {VERSION}
-                </Typography>
             </Container>
         </Box>
     );
