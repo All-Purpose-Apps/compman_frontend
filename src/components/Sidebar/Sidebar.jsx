@@ -28,6 +28,7 @@ import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { EventNoteOutlined } from "@mui/icons-material";
+import compmanLogo from 'src/assets/images/companlogo.png';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
     const theme = useTheme();
@@ -194,7 +195,7 @@ const MyProSidebar = () => {
                                     },
                                 }}
                             >
-                                <AccountCircleOutlinedIcon className="avatar-icon" fontSize="small" />
+                                <img src={compmanLogo} width="200px" />
                             </Box>
                             <Box textAlign="center">
                                 <Typography
