@@ -62,7 +62,6 @@ const MyProSidebar = () => {
                 const userDocRef = doc(db, 'authorizedUsers', user.email);
                 const userDoc = await getDoc(userDocRef);
                 const { authority } = userDoc.exists() ? userDoc.data() : { authority: 'user' };
-                console.log(authority);
                 const serializedUser = {
                     email: user.email,
                     uid: user.uid,
