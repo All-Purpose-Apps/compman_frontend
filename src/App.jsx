@@ -45,7 +45,7 @@ function App() {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+          {/* <Route path="signup" element={<Signup />} /> */}
         </Route>
         <Route
           path="/user/*"

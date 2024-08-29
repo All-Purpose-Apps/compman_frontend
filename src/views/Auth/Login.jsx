@@ -106,11 +106,11 @@ export default function Login() {
                             Sign in with Google
                         </Button>
                     </Box>
-                    <Box mt={2}>
+                    {/* <Box mt={2}>
                         <Typography>
                             Don't have an account? <a href="/auth/signup">Sign up</a>
                         </Typography>
-                    </Box>
+                    </Box> */}
                 </Box>
             </CardContent>
         </Card>
