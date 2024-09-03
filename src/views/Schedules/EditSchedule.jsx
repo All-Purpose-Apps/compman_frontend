@@ -31,7 +31,7 @@ const EditSchedule = () => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await dispatch(getOneSchedule(id));
-            const entry = response.payload;
+            const entry = response.payload[0];
             setFormValues({
                 name: entry.name,
                 startDate: dayjs(entry.startDate),

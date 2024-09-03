@@ -20,7 +20,7 @@ export default function CurrentSchedule({ schedules }) {
                 ) : (
                     schedules.map((schedule, index) => (
                         <Fragment key={schedule._id}>
-                            <ListItem>
+                            <ListItem component="div">
                                 <ListItemText
                                     primary={
                                         <Typography variant="h6" mb={2}>
@@ -28,16 +28,16 @@ export default function CurrentSchedule({ schedules }) {
                                         </Typography>
                                     }
                                     secondary={
-                                        <Box display="flex" flexDirection="column" mt={1}>
+                                        <>
                                             <Typography component="span" variant="body1">
                                                 <strong>Event:</strong> {schedule.dances.map((dance) => `${dance.title} - ${dance.danceCategory.name}`).join(', ')}
                                             </Typography>
                                             <Typography component="span" variant="body1" mt={1}>
                                                 <strong>Location:</strong> {schedule.location}
                                             </Typography>
-                                        </Box>
+                                        </>
                                     }
-                                />
+                                    className='dashboard-schedule' />
                             </ListItem>
                             {index < schedules.length - 1 && <Divider />}
                         </Fragment>
