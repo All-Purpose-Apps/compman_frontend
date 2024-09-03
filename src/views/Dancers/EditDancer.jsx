@@ -16,6 +16,7 @@ const EditDancer = () => {
     const [formData, setFormData] = useState({
         number: '',
         firstName: '',
+        middleInitial: '',
         lastName: '',
         age: '',
         identifier: '',
@@ -35,6 +36,7 @@ const EditDancer = () => {
                 setFormData({
                     number: dancer.number || '',
                     firstName: dancer.firstName,
+                    middleInitial: dancer.middleInitial,
                     lastName: dancer.lastName,
                     age: dancer.age,
                     identifier: dancer.identifier,
@@ -108,6 +110,14 @@ const EditDancer = () => {
                         margin="normal"
                     />
                     <TextField
+                        label="Middle Initial"
+                        name="middleInitial"
+                        value={formData.middleInitial}
+                        onChange={handleChange}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
                         label="Last Name"
                         name="lastName"
                         value={formData.lastName}
@@ -139,9 +149,9 @@ const EditDancer = () => {
                         fullWidth
                         margin="normal"
                     >
-                        <MenuItem value="professional" >Professional</MenuItem>
-                        <MenuItem value="student" >Student</MenuItem>
-                        <MenuItem value="coach" >Coach</MenuItem>
+                        <MenuItem value="professional">Professional</MenuItem>
+                        <MenuItem value="student">Student</MenuItem>
+                        <MenuItem value="coach">Coach</MenuItem>
                     </TextField>
                     <FormControl fullWidth margin="normal" error={!!errors.studio}>
                         <InputLabel>Studio</InputLabel>
@@ -150,10 +160,9 @@ const EditDancer = () => {
                             name="studio"
                             value={formData.studio}
                             onChange={handleChange}
-
                         >
                             {studios.map((studio) => (
-                                <MenuItem key={studio._id} value={studio._id} >
+                                <MenuItem key={studio._id} value={studio._id}>
                                     {studio.name}
                                 </MenuItem>
                             ))}
