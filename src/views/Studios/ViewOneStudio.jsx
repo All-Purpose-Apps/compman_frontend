@@ -44,7 +44,6 @@ export default function ViewOneStudio() {
                 name: capitalize(studioData.name),
                 location: capitalize(studioData.location),
                 phone: formatPhoneNumber(studioData.phone),
-                studioType: capitalize(studioData.studioType),
                 email: studioData.email,
                 website: studioData.website,
             });

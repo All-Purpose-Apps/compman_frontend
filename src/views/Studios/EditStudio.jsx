@@ -58,7 +58,6 @@ export default function EditStudio() {
                 name: studio.name,
                 location: studio.location,
                 phone: studio.phone,
-                studioType: studio.studioType,
                 email: studio.email,
                 website: studio.website,
             });
