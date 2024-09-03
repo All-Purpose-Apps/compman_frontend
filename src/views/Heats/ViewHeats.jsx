@@ -103,7 +103,7 @@ const ViewHeats = () => {
             field: "number",
             headerName: "#",
             flex: 0.10,
-            sortable: false,
+            sortable: true,
         },
         {
             field: "date",
