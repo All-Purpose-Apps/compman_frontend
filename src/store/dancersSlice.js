@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = user ? user.uid : '';
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${user.role}`;
 const initialState = {
   dancers: [],
   dancer: {},
@@ -10,7 +12,11 @@ const initialState = {
 
 export const fetchDancers = createAsyncThunk('dancers/fetchDancers', async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/dancers`);
+    const response = await axios.get(`${BACKEND_URL}/dancers`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -19,7 +25,11 @@ export const fetchDancers = createAsyncThunk('dancers/fetchDancers', async () =>
 
 export const getOneDancer = createAsyncThunk('dancers/getOneDancer', async (id) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/dancers/${id}`);
+    const response = await axios.get(`${BACKEND_URL}/dancers/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -28,7 +38,11 @@ export const getOneDancer = createAsyncThunk('dancers/getOneDancer', async (id) 
 
 export const addDancer = createAsyncThunk('dancers/addDancer', async (dancerData) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/dancers`, dancerData);
+    const response = await axios.post(`${BACKEND_URL}/dancers`, dancerData, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -37,7 +51,11 @@ export const addDancer = createAsyncThunk('dancers/addDancer', async (dancerData
 
 export const editDancer = createAsyncThunk('dancers/editDancer', async (dancerData) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/dancers/${dancerData.id}`, dancerData);
+    const response = await axios.put(`${BACKEND_URL}/dancers/${dancerData.id}`, dancerData, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -46,7 +64,11 @@ export const editDancer = createAsyncThunk('dancers/editDancer', async (dancerDa
 
 export const deleteDancer = createAsyncThunk('dancers/deleteDancer', async (id) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/dancers/${id}`);
+    const response = await axios.delete(`${BACKEND_URL}/dancers/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

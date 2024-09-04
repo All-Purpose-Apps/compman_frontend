@@ -1,5 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useSelector } from "react-redux";
+
 import MainLayout from 'src/layouts/MainLayout';
 import AuthLayout from 'src/layouts/AuthLayout';
 import routes from 'src/routes';
@@ -13,6 +15,8 @@ import PricingPage from './views/Home/PricingPage';
 import NotFound from './views/NotFound';
 
 function App() {
+  const user = useSelector((state) => state.user.user);
+
   const getAdminRoutes = (routes) => {
     return routes
       .filter((prop) => prop.layout === '/admin')
@@ -36,6 +40,8 @@ function App() {
         />
       ));
   };
+
+  const protectedUser = user?.role == 'admin' || user?.role == 'tenant' ? user.role : ''
 
   return (
     <>
@@ -61,7 +67,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute requiredRole="admin">
+            <ProtectedRoute requiredRole={protectedUser}>
               <MainLayout />
             </ProtectedRoute>
           }

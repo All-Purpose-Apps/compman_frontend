@@ -54,8 +54,8 @@ export default function Login() {
                 uid: user.uid,
                 role: authority,
             };
-            dispatch(setUser(serializedUser));
-            if (authority === 'admin') {
+            await dispatch(setUser(serializedUser));
+            if (authority === 'admin' || authority === 'tenant') {
                 navigate('/admin/dashboard');
             } else {
                 navigate('/user/entry-form');

@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = user ? user.uid : '';
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${user.role}`;
+
 const initialState = {
   studios: [],
   studio: {},
@@ -10,7 +14,11 @@ const initialState = {
 
 export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios`);
+    const response = await axios.get(`${BACKEND_URL}/studios`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -19,7 +27,11 @@ export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () =>
 
 export const getOneStudio = createAsyncThunk('studios/getOneStudio', async (id) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/studios/${id}`);
+    const response = await axios.get(`${BACKEND_URL}/studios/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -28,7 +40,11 @@ export const getOneStudio = createAsyncThunk('studios/getOneStudio', async (id) 
 
 export const addStudio = createAsyncThunk('studios/addStudio', async (studioData) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/studios`, studioData);
+    const response = await axios.post(`${BACKEND_URL}/studios`, studioData, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -37,7 +53,11 @@ export const addStudio = createAsyncThunk('studios/addStudio', async (studioData
 
 export const editStudio = createAsyncThunk('studios/editStudio', async (studioData) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/studios/${studioData.id}`, studioData);
+    const response = await axios.put(`${BACKEND_URL}/studios/${studioData.id}`, studioData, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -46,7 +66,11 @@ export const editStudio = createAsyncThunk('studios/editStudio', async (studioDa
 
 export const deleteStudio = createAsyncThunk('studios/deleteStudio', async (id) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/studios/${id}`);
+    const response = await axios.delete(`${BACKEND_URL}/studios/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

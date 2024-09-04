@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = user ? user.uid : '';
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${user.role}`;
+
 const initialState = {
   dances: [],
   danceCategories: [],
@@ -10,7 +14,11 @@ const initialState = {
 
 export const fetchDances = createAsyncThunk('dances/fetchDances', async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/dances`);
+    const response = await axios.get(`${BACKEND_URL}/dances`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -19,7 +27,11 @@ export const fetchDances = createAsyncThunk('dances/fetchDances', async () => {
 
 export const fetchDanceCategories = createAsyncThunk('dances/fetchDanceCategories', async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/danceCategory`);
+    const response = await axios.get(`${BACKEND_URL}/danceCategory`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -28,7 +40,11 @@ export const fetchDanceCategories = createAsyncThunk('dances/fetchDanceCategorie
 
 export const turnOnOffDanceCategory = createAsyncThunk('dances/turnOnOffDanceCategory', async (danceCategory) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/danceCategory/${danceCategory._id}`, danceCategory);
+    const response = await axios.put(`${BACKEND_URL}/danceCategory/${danceCategory._id}`, danceCategory, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

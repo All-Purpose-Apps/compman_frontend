@@ -2,11 +2,16 @@ import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { useDispatch } from 'react-redux'
+import { clearUser } from 'src/store/userSlice';
+
 
 const UnauthorizedPage = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
 
     const handleGoBack = () => {
+        dispatch(clearUser())
         navigate(-1); // Navigates back to the previous page
     };
 

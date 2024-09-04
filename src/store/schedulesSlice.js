@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = user ? user.uid : '';
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${user.role}`;
+
 const initialState = {
   schedules: [],
   schedule: {},
@@ -10,7 +14,11 @@ const initialState = {
 
 export const fetchSchedules = createAsyncThunk('schedules/fetchSchedules', async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/schedules`);
+    const response = await axios.get(`${BACKEND_URL}/schedules`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -19,7 +27,11 @@ export const fetchSchedules = createAsyncThunk('schedules/fetchSchedules', async
 
 export const getOneSchedule = createAsyncThunk('schedules/getOneSchedule', async (id) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/schedules/${id}`);
+    const response = await axios.get(`${BACKEND_URL}/schedules/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -28,7 +40,11 @@ export const getOneSchedule = createAsyncThunk('schedules/getOneSchedule', async
 
 export const addSchedule = createAsyncThunk('schedules/addSchedule', async (scheduleData) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/schedules`, scheduleData);
+    const response = await axios.post(`${BACKEND_URL}/schedules`, scheduleData, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -37,7 +53,11 @@ export const addSchedule = createAsyncThunk('schedules/addSchedule', async (sche
 
 export const deleteSchedule = createAsyncThunk('schedules/deleteSchedule', async (id) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/schedules/${id}`);
+    const response = await axios.delete(`${BACKEND_URL}/schedules/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -46,7 +66,11 @@ export const deleteSchedule = createAsyncThunk('schedules/deleteSchedule', async
 
 export const editSchedule = createAsyncThunk('schedules/editSchedule', async (params) => {
   try {
-    const response = await axios.put(`${import.meta.env.VITE_BACKEND_DEV}/schedules/${params.id}`, params);
+    const response = await axios.put(`${BACKEND_URL}/schedules/${params.id}`, params, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);

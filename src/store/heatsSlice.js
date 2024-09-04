@@ -2,6 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { autoGenerateHeats } from '../utils/autoGenerateHeats';
 
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = user ? user.uid : '';
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${user.role}`;
+
 const initialState = {
   heats: [],
   heat: null,
@@ -11,7 +15,11 @@ const initialState = {
 
 export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
+    const response = await axios.get(`${BACKEND_URL}/heats`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to fetch heats');
@@ -20,11 +28,15 @@ export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
 
 export const addHeats = createAsyncThunk('heats/addHeats', async () => {
   try {
-    const entries = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/entries`);
-    const currentHeats = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats`);
-    const schedules = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/schedules`);
+    const entries = await axios.get(`${BACKEND_URL}/entries`);
+    const currentHeats = await axios.get(`${BACKEND_URL}/heats`);
+    const schedules = await axios.get(`${BACKEND_URL}/schedules`);
     const heats = await autoGenerateHeats(schedules.data, entries, currentHeats);
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heats);
+    const response = await axios.post(`${BACKEND_URL}/heats`, heats, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to add heat');
@@ -33,7 +45,11 @@ export const addHeats = createAsyncThunk('heats/addHeats', async () => {
 
 export const addOneHeat = createAsyncThunk('heats/addOneHeat', async (heatData) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_DEV}/heats`, heatData);
+    const response = await axios.post(`${BACKEND_URL}/heats`, heatData, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to add heat');
@@ -42,7 +58,11 @@ export const addOneHeat = createAsyncThunk('heats/addOneHeat', async (heatData) 
 
 export const getOneHeat = createAsyncThunk('heats/getOneHeat', async (id) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_DEV}/heats/${id}`);
+    const response = await axios.get(`${BACKEND_URL}/heats/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to fetch heat');
@@ -51,7 +71,11 @@ export const getOneHeat = createAsyncThunk('heats/getOneHeat', async (id) => {
 
 export const deleteHeat = createAsyncThunk('heats/deleteHeat', async (id) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_BACKEND_DEV}/heats/${id}`);
+    const response = await axios.delete(`${BACKEND_URL}/heats/${id}`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Failed to add heat');
