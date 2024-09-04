@@ -206,7 +206,7 @@ const MyProSidebar = () => {
                                     {user?.email}
                                 </Typography>
                                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                                    Licensed User
+                                    {user?.role}
                                 </Typography>
                             </Box>
                         </Box>
