@@ -1,8 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+
 const user = JSON.parse(localStorage.getItem('user'));
 const uid = user ? user.uid : '';
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${user.role}`;
+const userRole = user ? user.role : '';
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${userRole}`;
+
 const initialState = {
   dancers: [],
   dancer: {},
