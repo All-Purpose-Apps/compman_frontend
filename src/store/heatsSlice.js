@@ -29,9 +29,21 @@ export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
 
 export const addHeats = createAsyncThunk('heats/addHeats', async () => {
   try {
-    const entries = await axios.get(`${BACKEND_URL}/entries`);
-    const currentHeats = await axios.get(`${BACKEND_URL}/heats`);
-    const schedules = await axios.get(`${BACKEND_URL}/schedules`);
+    const entries = await axios.get(`${BACKEND_URL}/entries`, {
+      headers: {
+        tenant: uid,
+      },
+    });
+    const currentHeats = await axios.get(`${BACKEND_URL}/heats`, {
+      headers: {
+        tenant: uid,
+      },
+    });
+    const schedules = await axios.get(`${BACKEND_URL}/schedules`, {
+      headers: {
+        tenant: uid,
+      },
+    });
     const heats = await autoGenerateHeats(schedules.data, entries, currentHeats);
     const response = await axios.post(`${BACKEND_URL}/heats`, heats, {
       headers: {
