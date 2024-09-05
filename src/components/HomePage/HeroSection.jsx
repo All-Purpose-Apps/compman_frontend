@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { BRAND, VERSION } from 'src/utils';
 import { useNavigate } from 'react-router-dom';
+import compman from 'src/assets/images/companlogo.png';
 
 const HeroSection = React.memo(() => {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const HeroSection = React.memo(() => {
         >
             <Container maxWidth="md" className="hero-content">
                 <img
-                    src="images/companlogo.png"
+                    src={compman}
                     width="600px"
                     style={{
                         maxWidth: '100%', // Responsive width
