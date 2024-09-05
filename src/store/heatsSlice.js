@@ -44,7 +44,7 @@ export const addHeats = createAsyncThunk('heats/addHeats', async () => {
         tenant: uid,
       },
     });
-    const heats = await autoGenerateHeats(schedules.data, entries, currentHeats);
+    const heats = await autoGenerateHeats(schedules.data, entries.data, currentHeats.data);
     const response = await axios.post(`${BACKEND_URL}/heats`, heats, {
       headers: {
         tenant: uid,

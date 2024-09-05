@@ -2,14 +2,12 @@ export function autoGenerateHeats(schedules, entries, currentHeats) {
   let allHeats = [];
   // Initialize the heat number based on current heats
   let heatNumber = currentHeats.length ? Math.max(...currentHeats.map((h) => h.number)) + 1 : 1;
-
   // Iterate over each schedule to generate time slots and schedule entries accordingly
   schedules.forEach((schedule) => {
     const times = generateTimeIntervals(schedule.startDate, schedule.endDate, 1.5); // 1.5 minutes interval
     const allowedDances = schedule.dances.map((dance) => dance._id);
-
     // Pass heatNumber as a reference so it updates globally
-    const timeSlots = scheduleEntries(times, entries.data, currentHeats.data, allowedDances, heatNumber);
+    const timeSlots = scheduleEntries(times, entries, currentHeats, allowedDances, heatNumber);
     allHeats = allHeats.concat(timeSlots);
 
     // Update the global heatNumber after scheduling
@@ -36,7 +34,6 @@ function scheduleEntries(timeslots, entries, currentHeats, allowedDances, heatNu
   let heats = []; // To store the final heats with scheduled entries
   let usedCombinations = new Set(); // To track used (dance, ageCategory, level) combinations for each entry
   let heatMap = new Map(); // To map timeslots to their respective heats
-
   // Sort timeslots by datetime to ensure they are in order
   let sortedTimeslots = timeslots.sort((a, b) => new Date(a) - new Date(b));
 
@@ -44,7 +41,7 @@ function scheduleEntries(timeslots, entries, currentHeats, allowedDances, heatNu
   currentHeats.forEach((heat) => {
     heatMap.set(heat.dateTime, heat);
     heat.entries.forEach((entry) => {
-      let combination = `${entry.id}-${entry.dance}-${entry.ageCategory}-${entry.level}`;
+      let combination = `${entry._id}-${entry.dance._id}-${entry.ageCategory}-${entry.level}`;
       usedCombinations.add(combination);
     });
   });
@@ -80,10 +77,9 @@ function scheduleEntries(timeslots, entries, currentHeats, allowedDances, heatNu
       let dance = entry.dance._id;
       let ageCategory = entry.ageCategory;
       let level = entry.level;
-      let combination = `${entry.id}-${dance}-${ageCategory}-${level}`;
+      let combination = `${entry._id}-${dance}-${ageCategory}-${level}`;
       let leaderId = entry.leader._id;
       let followerId = entry.follower._id;
-
       // Check if the entry's combination is already used in this heat or any previous heat
       if (usedCombinations.has(combination)) {
         continue;
