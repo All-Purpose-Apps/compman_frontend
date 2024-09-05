@@ -101,11 +101,11 @@ export default function Login() {
                             Login
                         </Button>
                     </Box>
-                    <Box mt={2}>
+                    {/* <Box mt={2}>
                         <Button variant="contained" color="secondary" onClick={handleGoogleSignIn} fullWidth>
                             Sign in with Google
                         </Button>
-                    </Box>
+                    </Box> */}
                     {/* <Box mt={2}>
                         <Typography>
                             Don't have an account? <a href="/auth/signup">Sign up</a>
