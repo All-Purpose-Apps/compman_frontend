@@ -61,7 +61,7 @@ export const deleteEntry = createAsyncThunk('entries/deleteEntry', async (id) =>
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error.response.data.error);
   }
 });
 

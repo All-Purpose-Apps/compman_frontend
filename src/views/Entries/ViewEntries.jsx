@@ -15,6 +15,7 @@ import { capitalizeWords } from 'src/utils';
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/Modals/LoadingModal";
 import NewEntryModal from "./NewEntry";
+import ErrorModal from "src/components/Modals/ErrorModal";
 
 export default function Entries() {
     const theme = useTheme();
@@ -36,7 +37,7 @@ export default function Entries() {
 
     const entries = useSelector(state => state.entries.entries);
     const loading = useSelector(state => state.entries.status) === 'loading';
-    const error = useSelector(state => state.entries.error);
+    const error = useSelector(state => state.entries.error) || false;
 
     function getRowId(row) {
         return row._id;
@@ -67,6 +68,11 @@ export default function Entries() {
     const onClose = () => {
         setOpen(false);
     }
+
+    const reloadWindow = () => {
+        window.location.reload();
+    }
+
 
     const columns = [
         { field: 'leader', headerName: 'Leader', flex: 1, valueGetter: (params) => params.fullName },
@@ -104,6 +110,7 @@ export default function Entries() {
         <Box m="20px">
             <LoadingModal loading={loading} resource='Entries' />
             <NewEntryModal open={open} onClose={onClose} />
+            <ErrorModal errorOpen={error} onErrorClose={reloadWindow} errorMessage={error} button="Refresh Page" />
             <Box
                 m="40px 0 0 0"
                 height="75vh"

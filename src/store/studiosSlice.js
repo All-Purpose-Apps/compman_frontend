@@ -61,6 +61,7 @@ export const editStudio = createAsyncThunk('studios/editStudio', async (studioDa
     });
     return response.data;
   } catch (error) {
+    console.log(error.response);
     throw new Error(error.response.data.message);
   }
 });
@@ -74,7 +75,7 @@ export const deleteStudio = createAsyncThunk('studios/deleteStudio', async (id) 
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error.response.data.error);
   }
 });
 
