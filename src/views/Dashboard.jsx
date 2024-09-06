@@ -13,7 +13,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import InfoCards from 'src/components/Dashboard/InfoCards';
 import CurrentSchedule from 'src/components/Dashboard/CurrentSchedule';
 import NextHeats from 'src/components/Dashboard/NextHeats';
@@ -38,8 +38,8 @@ export default function Dashboard() {
 
     const upcomingHeats = useMemo(() => {
         return heats
-            .filter((heat) => moment(heat.dateTime).isAfter(moment()))
-            .sort((a, b) => moment(a.dateTime).diff(moment(b.dateTime)))
+            .filter((heat) => dayjs(heat.dateTime).isAfter(dayjs()))
+            .sort((a, b) => dayjs(a.dateTime).diff(dayjs(b.dateTime)))
             .slice(0, 3);
     }, [heats]);
 

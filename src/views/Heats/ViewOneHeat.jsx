@@ -16,9 +16,9 @@ import { FaCalendarAlt } from 'react-icons/fa';
 import PeopleIcon from '@mui/icons-material/People';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { getOneHeat } from 'src/store/heatsSlice'; // Adjust the import according to your project structure
-import { capitalizeWords } from 'src/utils'; // Adjust the import according to your project structure
-import moment from 'moment';
+import { getOneHeat } from 'src/store/heatsSlice';
+import { capitalizeWords } from 'src/utils';
+import dayjs from 'dayjs';
 
 export default function ViewOneHeat() {
     const [heat, setHeat] = useState(null);
@@ -69,7 +69,7 @@ export default function ViewOneHeat() {
     }
 
     if (!heat) {
-        return null; // Or you can return a loading indicator here
+        return null;
     }
 
     return (
@@ -86,16 +86,6 @@ export default function ViewOneHeat() {
                             Back to Heats
                         </Button>
                     </Grid>
-                    {/* <Grid item>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<EditIcon />}
-                            onClick={() => navigate(`/admin/heats/edit/${id}`)}
-                        >
-                            Edit Heat
-                        </Button>
-                    </Grid> */}
                 </Grid>
                 <Grid container justifyContent="center">
                     <Grid item xs={12} md={8}>
@@ -127,7 +117,7 @@ export default function ViewOneHeat() {
                                                     Date & Time:
                                                 </Box>
                                                 <Box>
-                                                    {moment(heat.dateTime, 'MM/DD/YYYY, h:mm:ss A').format('MM/DD/YYYY, h:mm A')}
+                                                    {dayjs(heat.dateTime).format('MM/DD/YYYY, h:mm A')}
                                                 </Box>
                                             </Box>
                                         </Typography>

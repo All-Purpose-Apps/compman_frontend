@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeats, deleteHeat } from "src/store/heatsSlice";
 import { fetchEntries } from "src/store/entriesSlice";
@@ -16,7 +15,7 @@ import { tokens } from "src/utils/theme";
 import { capitalize, capitalizeWords } from "src/utils";
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/Modals/LoadingModal";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const ViewHeats = () => {
     const theme = useTheme();
@@ -42,7 +41,7 @@ const ViewHeats = () => {
 
     const entries = useSelector(state => state.entries.entries);
 
-    // Compare entries with heats to find orphan entries
+
     useEffect(() => {
         if (entries && heats) {
             const allEntryIds = new Set(entries.map(entry => entry._id));
@@ -110,14 +109,14 @@ const ViewHeats = () => {
             headerName: "Date",
             flex: 0.30,
             sortable: false,
-            renderCell: (params) => moment(params.row.dateTime).format('MM/DD/YYYY')
+            renderCell: (params) => dayjs(params.row.dateTime).format('MM/DD/YYYY')
         },
         {
             field: "time",
             headerName: "Time",
             flex: 0.25,
             sortable: false,
-            renderCell: (params) => moment(params.row.dateTime).format('h:mm A')
+            renderCell: (params) => dayjs(params.row.dateTime).format('h:mm A')
         },
         {
             field: "dance",

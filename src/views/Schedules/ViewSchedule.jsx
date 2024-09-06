@@ -9,7 +9,7 @@ import ActionButtons from "src/components/DataGridComponents/ActionButtons";
 import { tokens } from "src/utils/theme";
 import { gridSxSettings, boxSxSettings } from "src/utils";
 import LoadingModal from "src/components/Modals/LoadingModal";
-import moment from "moment";
+import dayjs from "dayjs";
 import ScheduleDanceForm from "./NewSchedule";
 
 const ViewSchedule = () => {
@@ -90,14 +90,14 @@ const ViewSchedule = () => {
             headerName: "Start Date",
             flex: 0.3,
             sortable: false,
-            renderCell: (params) => moment(params.row.startDate).format('MM/DD/YYYY, h:mm A'),
+            renderCell: (params) => dayjs(params.row.startDate).format('MM/DD/YYYY, h:mm A'),
         },
         !isSmallScreen && {
             field: "endDate",
             headerName: "End Date",
             flex: 0.3,
             sortable: false,
-            renderCell: (params) => moment(params.row.endDate).format('MM/DD/YYYY, h:mm A'),
+            renderCell: (params) => dayjs(params.row.endDate).format('MM/DD/YYYY, h:mm A'),
         },
         !isSmallScreen && {
             field: "dancesString",

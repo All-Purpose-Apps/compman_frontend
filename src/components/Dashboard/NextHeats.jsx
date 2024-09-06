@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import moment from 'moment'; // Import moment for date formatting
+import dayjs from 'dayjs';
 
 export default function NextHeats({ upcomingHeats }) {
     return (
@@ -37,7 +37,7 @@ export default function NextHeats({ upcomingHeats }) {
                             upcomingHeats.map((heat) => (
                                 <TableRow key={heat._id}>
                                     <TableCell>
-                                        {moment(heat.dateTime).format('MMMM Do YYYY, h:mm A')}
+                                        {dayjs(heat.dateTime).format('MMMM D YYYY, h:mm A')}
                                     </TableCell>
                                     <TableCell>
                                         {heat.dance.title} - {heat.dance.danceCategory.name}

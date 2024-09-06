@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default function CurrentSchedule({ schedules }) {
     return (
@@ -24,7 +24,7 @@ export default function CurrentSchedule({ schedules }) {
                                 <ListItemText
                                     primary={
                                         <Typography variant="h6" mb={2}>
-                                            {moment(schedule.startDate).format('MMMM Do YYYY, h:mm A')}
+                                            {dayjs(schedule.startDate).format('MMMM D YYYY, h:mm A')}
                                         </Typography>
                                     }
                                     secondary={
