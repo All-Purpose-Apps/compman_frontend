@@ -101,7 +101,7 @@ const ScheduleCall = () => {
                 <Typography variant="h4" color={colors.greenAccent[500]} gutterBottom>
                     Schedule a Call
                 </Typography>
-                <form name="schedule" method="POST" data-netlify="true">
+                <form onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <TextField
