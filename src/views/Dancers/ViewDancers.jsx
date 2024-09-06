@@ -65,9 +65,6 @@ const ViewDancers = () => {
         setOpen(false);
     }
 
-    const reloadWindow = () => {
-        window.location.reload();
-    };
     // Define columns with conditional rendering based on screen size
     const columns = [
         !isSmallScreen && { field: 'number', headerName: '#', flex: 0.2, align: 'center', headerAlign: 'center' },
@@ -108,7 +105,7 @@ const ViewDancers = () => {
         <Box m="20px">
             <LoadingModal loading={loading} resource='Dancers' />
             <NewDancerModal open={open} onClose={onClose} />
-            <ErrorModal errorOpen={error} onErrorClose={reloadWindow} errorMessage={error} button="Refresh Page" />
+            <ErrorModal errorOpen={error} errorMessage={error} />
             <Box
                 m="40px 0 0 0"
                 height="75vh"

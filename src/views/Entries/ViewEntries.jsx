@@ -69,10 +69,6 @@ export default function Entries() {
         setOpen(false);
     }
 
-    const reloadWindow = () => {
-        window.location.reload();
-    }
-
 
     const columns = [
         { field: 'leader', headerName: 'Leader', flex: 1, valueGetter: (params) => params.fullName },
@@ -110,7 +106,7 @@ export default function Entries() {
         <Box m="20px">
             <LoadingModal loading={loading} resource='Entries' />
             <NewEntryModal open={open} onClose={onClose} />
-            <ErrorModal errorOpen={error} onErrorClose={reloadWindow} errorMessage={error} button="Refresh Page" />
+            <ErrorModal errorOpen={error} errorMessage={error} />
             <Box
                 m="40px 0 0 0"
                 height="75vh"

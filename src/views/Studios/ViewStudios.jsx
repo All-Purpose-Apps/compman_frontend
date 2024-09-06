@@ -52,9 +52,7 @@ const Studios = () => {
         setOpen(false);
     };
 
-    const reloadWindow = () => {
-        window.location.reload();
-    };
+
     // Define columns with conditional rendering based on screen size
     const columns = [
         { field: "name", headerName: "Name", flex: 1 },
@@ -88,7 +86,7 @@ const Studios = () => {
         <Box m="20px">
             <LoadingModal loading={loading} resource="Studios" />
             <NewStudioModal open={open} onClose={onClose} />
-            <ErrorModal errorOpen={error} onErrorClose={reloadWindow} errorMessage={error} button="Refresh Page" />
+            <ErrorModal errorOpen={error} errorMessage={error} />
             <Box m="40px 0 0 0" height="75vh" sx={boxSxSettings(colors)}>
                 <DataGrid
                     rows={studios}
