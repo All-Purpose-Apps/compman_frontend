@@ -1,10 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-const user = JSON.parse(localStorage.getItem('user'));
-const uid = user ? user.uid : '';
-const userRole = user ? user.role : '';
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${userRole}`;
+import getUrl from './getUrl';
 
 const initialState = {
   studios: [],
@@ -13,133 +9,99 @@ const initialState = {
   error: null,
 };
 
-export const fetchStudios = createAsyncThunk('studios/fetchStudios', async () => {
+// Utility function to get headers and URL
+const getAuthHeaders = async () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const { BACKEND_URL, uid } = await getUrl(user);
+  return {
+    BACKEND_URL,
+    headers: {
+      tenant: uid,
+    },
+  };
+};
+
+// Helper function for handling API requests
+const handleRequest = async (url, method = 'get', data = null) => {
+  const { BACKEND_URL, headers } = await getAuthHeaders();
   try {
-    const response = await axios.get(`${BACKEND_URL}/studios`, {
-      headers: {
-        tenant: uid,
-      },
+    const response = await axios({
+      url: `${BACKEND_URL}${url}`,
+      method,
+      data,
+      headers,
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error?.response?.data?.message || error?.response?.data?.error || 'An unexpected error occurred');
   }
-});
+};
 
-export const getOneStudio = createAsyncThunk('studios/getOneStudio', async (id) => {
-  try {
-    const response = await axios.get(`${BACKEND_URL}/studios/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
-  }
-});
+// Thunks
+export const fetchStudios = createAsyncThunk('studios/fetchStudios', () => handleRequest('/studios'));
 
-export const addStudio = createAsyncThunk('studios/addStudio', async (studioData) => {
-  try {
-    const response = await axios.post(`${BACKEND_URL}/studios`, studioData, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+export const getOneStudio = createAsyncThunk('studios/getOneStudio', (id) => handleRequest(`/studios/${id}`));
 
-export const editStudio = createAsyncThunk('studios/editStudio', async (studioData) => {
-  try {
-    const response = await axios.put(`${BACKEND_URL}/studios/${studioData.id}`, studioData, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error.response);
-    throw new Error(error.response.data.message);
-  }
-});
+export const addStudio = createAsyncThunk('studios/addStudio', (studioData) => handleRequest('/studios', 'post', studioData));
 
-export const deleteStudio = createAsyncThunk('studios/deleteStudio', async (id) => {
-  try {
-    const response = await axios.delete(`${BACKEND_URL}/studios/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.error);
-  }
-});
+export const editStudio = createAsyncThunk('studios/editStudio', (studioData) => handleRequest(`/studios/${studioData.id}`, 'put', studioData));
 
+export const deleteStudio = createAsyncThunk('studios/deleteStudio', (id) => handleRequest(`/studios/${id}`, 'delete'));
+
+// Slice
 export const studiosSlice = createSlice({
   name: 'studios',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    const handlePending = (state) => {
+      state.status = 'loading';
+    };
+    const handleRejected = (state, action) => {
+      state.status = 'failed';
+      state.error = action.error.message;
+    };
+
     builder
-      .addCase(fetchStudios.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      // Fetch Studios
+      .addCase(fetchStudios.pending, handlePending)
       .addCase(fetchStudios.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.studios = Array.isArray(action.payload) ? action.payload : [];
       })
-      .addCase(fetchStudios.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(getOneStudio.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(fetchStudios.rejected, handleRejected)
+
+      // Get One Studio
+      .addCase(getOneStudio.pending, handlePending)
       .addCase(getOneStudio.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.studio = action.payload;
       })
-      .addCase(getOneStudio.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(addStudio.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(getOneStudio.rejected, handleRejected)
+
+      // Add Studio
+      .addCase(addStudio.pending, handlePending)
       .addCase(addStudio.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.studios = Array.isArray(action.payload) ? action.payload : [];
       })
-      .addCase(addStudio.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(editStudio.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(addStudio.rejected, handleRejected)
+
+      // Edit Studio
+      .addCase(editStudio.pending, handlePending)
       .addCase(editStudio.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.studio = action.payload;
       })
-      .addCase(editStudio.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(deleteStudio.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(editStudio.rejected, handleRejected)
+
+      // Delete Studio
+      .addCase(deleteStudio.pending, handlePending)
       .addCase(deleteStudio.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.studios = Array.isArray(action.payload) ? action.payload : [];
       })
-      .addCase(deleteStudio.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
+      .addCase(deleteStudio.rejected, handleRejected);
   },
 });
 

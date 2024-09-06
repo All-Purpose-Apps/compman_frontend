@@ -1,10 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-const user = JSON.parse(localStorage.getItem('user'));
-const uid = user ? user.uid : '';
-const userRole = user ? user.role : '';
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${userRole}`;
+import getUrl from './getUrl';
 
 const initialState = {
   entries: [],
@@ -13,132 +9,96 @@ const initialState = {
   error: null,
 };
 
-export const fetchEntries = createAsyncThunk('entries/fetchEntries', async () => {
+// Utility function to get headers for the request
+const getAuthHeaders = async () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const { BACKEND_URL, uid } = await getUrl(user);
+  return {
+    BACKEND_URL,
+    headers: {
+      tenant: uid,
+    },
+  };
+};
+
+// Generalized function to handle HTTP requests with custom error handling
+const handleRequest = async (url, method = 'get', data = null) => {
+  const { BACKEND_URL, headers } = await getAuthHeaders();
   try {
-    const response = await axios.get(`${BACKEND_URL}/entries`, {
-      headers: {
-        tenant: uid,
-      },
+    const response = await axios({
+      url: `${BACKEND_URL}${url}`,
+      method,
+      data,
+      headers,
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error?.response?.data?.message || error?.response?.data?.error || 'An unexpected error occurred');
   }
-});
+};
 
-export const getOneEntry = createAsyncThunk('entries/getOneEntry', async (id) => {
-  try {
-    const response = await axios.get(`${BACKEND_URL}/entries/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+// Thunks
+export const fetchEntries = createAsyncThunk('entries/fetchEntries', () => handleRequest('/entries'));
 
-export const addEntry = createAsyncThunk('entries/addEntry', async (entryData) => {
-  try {
-    const response = await axios.post(`${BACKEND_URL}/entries`, entryData, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+export const getOneEntry = createAsyncThunk('entries/getOneEntry', (id) => handleRequest(`/entries/${id}`));
 
-export const deleteEntry = createAsyncThunk('entries/deleteEntry', async (id) => {
-  try {
-    const response = await axios.delete(`${BACKEND_URL}/entries/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.error);
-  }
-});
+export const addEntry = createAsyncThunk('entries/addEntry', (entryData) => handleRequest('/entries', 'post', entryData));
 
-export const editEntry = createAsyncThunk('entries/editEntry', async (params) => {
-  try {
-    const response = await axios.put(`${BACKEND_URL}/entries/${params.id}`, params, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+export const deleteEntry = createAsyncThunk('entries/deleteEntry', (id) => handleRequest(`/entries/${id}`, 'delete'));
 
+export const editEntry = createAsyncThunk('entries/editEntry', (params) => handleRequest(`/entries/${params.id}`, 'put', params));
+
+// Helper function for handling common loading and error state
+const handlePending = (state) => {
+  state.status = 'loading';
+};
+
+const handleRejected = (state, action) => {
+  state.status = 'failed';
+  state.error = action.error.message;
+};
+
+// Slice
 export const entriesSlice = createSlice({
   name: 'entries',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchEntries.pending, (state) => {
-        state.status = 'loading';
-      })
+      .addCase(fetchEntries.pending, handlePending)
       .addCase(fetchEntries.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.entries = action.payload;
       })
-      .addCase(fetchEntries.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(getOneEntry.pending, (state) => {
-        state.status = 'loading';
-      })
+      .addCase(fetchEntries.rejected, handleRejected)
+
+      .addCase(getOneEntry.pending, handlePending)
       .addCase(getOneEntry.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.entry = action.payload;
       })
-      .addCase(getOneEntry.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(addEntry.pending, (state) => {
-        state.status = 'loading';
-      })
+      .addCase(getOneEntry.rejected, handleRejected)
+
+      .addCase(addEntry.pending, handlePending)
       .addCase(addEntry.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.entries = action.payload;
       })
-      .addCase(addEntry.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(deleteEntry.pending, (state) => {
-        state.status = 'loading';
-      })
+      .addCase(addEntry.rejected, handleRejected)
+
+      .addCase(deleteEntry.pending, handlePending)
       .addCase(deleteEntry.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.entries = Array.isArray(action.payload) ? action.payload : [];
       })
-      .addCase(deleteEntry.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(editEntry.pending, (state) => {
-        state.status = 'loading';
-      })
+      .addCase(deleteEntry.rejected, handleRejected)
+
+      .addCase(editEntry.pending, handlePending)
       .addCase(editEntry.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.entry = action.payload;
       })
-      .addCase(editEntry.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
+      .addCase(editEntry.rejected, handleRejected);
   },
 });
 

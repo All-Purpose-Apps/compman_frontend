@@ -1,10 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-const user = JSON.parse(localStorage.getItem('user'));
-const uid = user ? user.uid : '';
-const userRole = user ? user.role : '';
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${userRole}`;
+import getUrl from './getUrl';
 
 const initialState = {
   dancers: [],
@@ -13,132 +9,96 @@ const initialState = {
   error: null,
 };
 
-export const fetchDancers = createAsyncThunk('dancers/fetchDancers', async () => {
+// Utility function to get headers for the request
+const getAuthHeaders = async () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const { BACKEND_URL, uid } = await getUrl(user);
+  return {
+    BACKEND_URL,
+    headers: {
+      tenant: uid,
+    },
+  };
+};
+
+// Generalized thunk to handle HTTP requests with custom error handling
+const handleRequest = async (url, method = 'get', data = null) => {
+  const { BACKEND_URL, headers } = await getAuthHeaders();
   try {
-    const response = await axios.get(`${BACKEND_URL}/dancers`, {
-      headers: {
-        tenant: uid,
-      },
+    const response = await axios({
+      url: `${BACKEND_URL}${url}`,
+      method,
+      data,
+      headers,
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error?.response?.data?.error || 'An unexpected error occurred');
   }
-});
+};
 
-export const getOneDancer = createAsyncThunk('dancers/getOneDancer', async (id) => {
-  try {
-    const response = await axios.get(`${BACKEND_URL}/dancers/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+// Thunks
+export const fetchDancers = createAsyncThunk('dancers/fetchDancers', () => handleRequest('/dancers'));
 
-export const addDancer = createAsyncThunk('dancers/addDancer', async (dancerData) => {
-  try {
-    const response = await axios.post(`${BACKEND_URL}/dancers`, dancerData, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+export const getOneDancer = createAsyncThunk('dancers/getOneDancer', (id) => handleRequest(`/dancers/${id}`));
 
-export const editDancer = createAsyncThunk('dancers/editDancer', async (dancerData) => {
-  try {
-    const response = await axios.put(`${BACKEND_URL}/dancers/${dancerData.id}`, dancerData, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+export const addDancer = createAsyncThunk('dancers/addDancer', (dancerData) => handleRequest('/dancers', 'post', dancerData));
 
-export const deleteDancer = createAsyncThunk('dancers/deleteDancer', async (id) => {
-  try {
-    const response = await axios.delete(`${BACKEND_URL}/dancers/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.error);
-  }
-});
+export const editDancer = createAsyncThunk('dancers/editDancer', (dancerData) => handleRequest(`/dancers/${dancerData.id}`, 'put', dancerData));
 
+export const deleteDancer = createAsyncThunk('dancers/deleteDancer', (id) => handleRequest(`/dancers/${id}`, 'delete'));
+
+// Helper function for handling common loading and error state
+const handlePending = (state) => {
+  state.status = 'loading';
+};
+
+const handleRejected = (state, action) => {
+  state.status = 'failed';
+  state.error = action.error.message;
+};
+
+// Slice
 export const dancersSlice = createSlice({
   name: 'dancers',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchDancers.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(fetchDancers.pending, handlePending)
       .addCase(fetchDancers.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dancers = state.dancers = action.payload;
+        state.dancers = action.payload;
       })
-      .addCase(fetchDancers.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(getOneDancer.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(fetchDancers.rejected, handleRejected)
+
+      .addCase(getOneDancer.pending, handlePending)
       .addCase(getOneDancer.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.dancer = action.payload;
       })
-      .addCase(getOneDancer.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(addDancer.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(getOneDancer.rejected, handleRejected)
+
+      .addCase(addDancer.pending, handlePending)
       .addCase(addDancer.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.dancers = Array.isArray(action.payload) ? action.payload : [];
       })
-      .addCase(addDancer.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(editDancer.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(addDancer.rejected, handleRejected)
+
+      .addCase(editDancer.pending, handlePending)
       .addCase(editDancer.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.dancer = action.payload;
       })
-      .addCase(editDancer.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(deleteDancer.pending, (state, action) => {
-        state.status = 'loading';
-      })
+      .addCase(editDancer.rejected, handleRejected)
+
+      .addCase(deleteDancer.pending, handlePending)
       .addCase(deleteDancer.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dancers = Array.isArray(action.payload) ? action.payload : [];
+        state.dancers = state.dancers.filter((dancer) => dancer.id !== action.payload.id);
       })
-      .addCase(deleteDancer.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
+      .addCase(deleteDancer.rejected, handleRejected);
   },
 });
 

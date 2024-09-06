@@ -1,11 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { autoGenerateHeats } from '../utils/autoGenerateHeats';
-
-const user = JSON.parse(localStorage.getItem('user'));
-const uid = user ? user.uid : '';
-const userRole = user ? user.role : '';
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${userRole}`;
+import getUrl from './getUrl';
 
 const initialState = {
   heats: [],
@@ -14,87 +10,60 @@ const initialState = {
   error: null,
 };
 
-export const fetchHeats = createAsyncThunk('heats/fetchHeats', async () => {
+// Utility function to get headers and URL
+const getAuthHeaders = async () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const { BACKEND_URL, uid } = await getUrl(user);
+  return {
+    BACKEND_URL,
+    headers: {
+      tenant: uid,
+    },
+  };
+};
+
+// General function for handling requests with appropriate error handling
+const handleRequest = async (url, method = 'get', data = null) => {
+  const { BACKEND_URL, headers } = await getAuthHeaders();
   try {
-    const response = await axios.get(`${BACKEND_URL}/heats`, {
-      headers: {
-        tenant: uid,
-      },
+    const response = await axios({
+      url: `${BACKEND_URL}${url}`,
+      method,
+      data,
+      headers,
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message || 'Failed to fetch heats');
+    throw new Error(error.response?.data?.message || 'An unexpected error occurred');
   }
-});
+};
+
+// Thunks
+export const fetchHeats = createAsyncThunk('heats/fetchHeats', () => handleRequest('/heats'));
 
 export const addHeats = createAsyncThunk('heats/addHeats', async () => {
+  const { BACKEND_URL, headers } = await getAuthHeaders();
   try {
-    const entries = await axios.get(`${BACKEND_URL}/entries`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    const currentHeats = await axios.get(`${BACKEND_URL}/heats`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    const schedules = await axios.get(`${BACKEND_URL}/schedules`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    const heats = await autoGenerateHeats(schedules.data, entries.data, currentHeats.data);
-    const response = await axios.post(`${BACKEND_URL}/heats`, heats, {
-      headers: {
-        tenant: uid,
-      },
-    });
+    const [entries, currentHeats, schedules] = await Promise.all([
+      axios.get(`${BACKEND_URL}/entries`, { headers }),
+      axios.get(`${BACKEND_URL}/heats`, { headers }),
+      axios.get(`${BACKEND_URL}/schedules`, { headers }),
+    ]);
+    const generatedHeats = autoGenerateHeats(schedules.data, entries.data, currentHeats.data);
+    const response = await axios.post(`${BACKEND_URL}/heats`, generatedHeats, { headers });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message || 'Failed to add heat');
+    throw new Error(error.response?.data?.message || 'Failed to add heats');
   }
 });
 
-export const addOneHeat = createAsyncThunk('heats/addOneHeat', async (heatData) => {
-  try {
-    const response = await axios.post(`${BACKEND_URL}/heats`, heatData, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message || 'Failed to add heat');
-  }
-});
+export const addOneHeat = createAsyncThunk('heats/addOneHeat', (heatData) => handleRequest('/heats', 'post', heatData));
 
-export const getOneHeat = createAsyncThunk('heats/getOneHeat', async (id) => {
-  try {
-    const response = await axios.get(`${BACKEND_URL}/heats/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message || 'Failed to fetch heat');
-  }
-});
+export const getOneHeat = createAsyncThunk('heats/getOneHeat', (id) => handleRequest(`/heats/${id}`));
 
-export const deleteHeat = createAsyncThunk('heats/deleteHeat', async (id) => {
-  try {
-    const response = await axios.delete(`${BACKEND_URL}/heats/${id}`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message || 'Failed to add heat');
-  }
-});
+export const deleteHeat = createAsyncThunk('heats/deleteHeat', (id) => handleRequest(`/heats/${id}`, 'delete'));
 
+// Slice
 export const heatsSlice = createSlice({
   name: 'heats',
   initialState,

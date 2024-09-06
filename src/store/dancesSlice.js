@@ -1,10 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-const user = JSON.parse(localStorage.getItem('user'));
-const uid = user ? user.uid : '';
-const userRole = user ? user.role : '';
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_DEV}${userRole}`;
+import getUrl from './getUrl';
 
 const initialState = {
   dances: [],
@@ -13,67 +9,65 @@ const initialState = {
   error: null,
 };
 
-export const fetchDances = createAsyncThunk('dances/fetchDances', async () => {
+// Utility function to get headers for the request
+const getAuthHeaders = async () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const { BACKEND_URL, uid } = await getUrl(user);
+  return {
+    BACKEND_URL,
+    headers: {
+      tenant: uid,
+    },
+  };
+};
+
+// Generalized function to handle HTTP requests
+const handleRequest = async (url, method = 'get', data = null) => {
+  const { BACKEND_URL, headers } = await getAuthHeaders();
   try {
-    const response = await axios.get(`${BACKEND_URL}/dances`, {
-      headers: {
-        tenant: uid,
-      },
+    const response = await axios({
+      url: `${BACKEND_URL}${url}`,
+      method,
+      data,
+      headers,
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.message);
+    throw new Error(error.response?.data?.message || 'An unexpected error occurred');
   }
-});
+};
 
-export const fetchDanceCategories = createAsyncThunk('dances/fetchDanceCategories', async () => {
-  try {
-    const response = await axios.get(`${BACKEND_URL}/danceCategory`, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+// Thunks
+export const fetchDances = createAsyncThunk('dances/fetchDances', () => handleRequest('/dances'));
 
-export const turnOnOffDanceCategory = createAsyncThunk('dances/turnOnOffDanceCategory', async (danceCategory) => {
-  try {
-    const response = await axios.put(`${BACKEND_URL}/danceCategory/${danceCategory._id}`, danceCategory, {
-      headers: {
-        tenant: uid,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data.message);
-  }
-});
+export const fetchDanceCategories = createAsyncThunk('dances/fetchDanceCategories', () => handleRequest('/danceCategory'));
 
+export const turnOnOffDanceCategory = createAsyncThunk('dances/turnOnOffDanceCategory', (danceCategory) =>
+  handleRequest(`/danceCategory/${danceCategory._id}`, 'put', danceCategory)
+);
+
+// Slice
 export const dancesSlice = createSlice({
   name: 'dances',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchDances.pending, (state, action) => {
+      // Fetch Dances
+      .addCase(fetchDances.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchDances.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.dances = action.payload
-          .map((dance) => {
-            return dance.danceCategory.turnedOn ? dance : null;
-          })
-          .filter((dance) => dance !== null);
+        state.dances = action.payload.filter((dance) => dance.danceCategory.turnedOn);
       })
       .addCase(fetchDances.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(fetchDanceCategories.pending, (state, action) => {
+
+      // Fetch Dance Categories
+      .addCase(fetchDanceCategories.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchDanceCategories.fulfilled, (state, action) => {
@@ -84,12 +78,14 @@ export const dancesSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(turnOnOffDanceCategory.pending, (state, action) => {
+
+      // Turn On/Off Dance Category
+      .addCase(turnOnOffDanceCategory.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(turnOnOffDanceCategory.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.danceCategories = action.payload;
+        state.danceCategories = state.danceCategories.map((category) => (category._id === action.payload._id ? action.payload : category));
       })
       .addCase(turnOnOffDanceCategory.rejected, (state, action) => {
         state.status = 'failed';
