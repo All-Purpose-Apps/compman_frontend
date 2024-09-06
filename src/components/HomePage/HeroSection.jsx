@@ -32,10 +32,11 @@ const HeroSection = React.memo(() => {
             <Container maxWidth="md" className="hero-content">
                 <img
                     src={compman}
+                    height="auto"
                     width="600px"
+                    alt="Compan Logo"
                     style={{
                         maxWidth: '100%', // Responsive width
-                        height: 'auto'
                     }}
                 />
                 <Box className="hero-buttons" sx={{ marginTop: 2 }}>
