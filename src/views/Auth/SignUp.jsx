@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { setUser } from 'src/store/userSlice';
 import { app, db } from 'src/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore/lite';
 
 export default function Signup() {
     const [email, setEmail] = useState('');

@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { app, db } from 'src/firebase';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore/lite';
 import { setUser } from 'src/store/userSlice';
 import { useDispatch } from 'react-redux';
 

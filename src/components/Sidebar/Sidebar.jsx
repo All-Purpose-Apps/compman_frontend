@@ -4,7 +4,7 @@ import { app, db } from 'src/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from 'src/store/userSlice';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore/lite';
 
 import { useSidebarContext } from "src/components/Sidebar/sidebarContext";
 import { Link, useLocation } from "react-router-dom";
