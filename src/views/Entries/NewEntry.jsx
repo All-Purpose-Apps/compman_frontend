@@ -122,14 +122,6 @@ const NewEntryModal = ({ open, onClose }) => {
         onClose();
     }
 
-    if (isLoading) {
-        return <CircularProgress />;
-    }
-
-    if (error) {
-        return <Typography variant="h6" color="error">{error}</Typography>;
-    }
-
     return (
         <Dialog open={open} onClose={(event, reason) => {
             if (reason !== 'backdropClick') {
