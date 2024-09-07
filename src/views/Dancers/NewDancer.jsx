@@ -2,10 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    TextField, Button, Select, MenuItem, FormControl, InputLabel,
-    FormHelperText, Box, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions
-} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import { fetchStudios } from 'src/store/studiosSlice';
 import { addDancer } from 'src/store/dancersSlice';
 

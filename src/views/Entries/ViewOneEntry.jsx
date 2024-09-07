@@ -2,8 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneEntry } from 'src/store/entriesSlice';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, Grid, Card, CardContent, Typography } from '@mui/material';
-import { FaUser, FaChild, FaIdBadge } from 'react-icons/fa';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { FaChild, FaIdBadge } from 'react-icons/fa';
 import PeopleIcon from '@mui/icons-material/People';
 import { capitalize, capitalizeWords } from 'src/utils';
 

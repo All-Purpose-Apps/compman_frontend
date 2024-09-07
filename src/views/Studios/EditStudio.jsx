@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { TextField, Button, Box, Grid, Paper } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { getOneStudio, editStudio } from '../../store/studiosSlice';
 
 // Validation schema using Yup

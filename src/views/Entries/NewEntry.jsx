@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, FormControl, CircularProgress, Typography, Autocomplete, MenuItem, useTheme, Dialog, DialogTitle, DialogContent, DialogActions, Paper } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import Autocomplete from '@mui/material/Autocomplete';
+import MenuItem from '@mui/material/MenuItem';
+import useTheme from '@mui/material/styles/useTheme';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDancers } from 'src/store/dancersSlice';
 import { addEntry, fetchEntries } from 'src/store/entriesSlice';

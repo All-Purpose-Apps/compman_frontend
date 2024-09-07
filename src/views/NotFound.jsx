@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Container, Button } from '@mui/material'; // Import Material-UI components
-
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 const NotFound = () => {
     const navigate = useNavigate();
 

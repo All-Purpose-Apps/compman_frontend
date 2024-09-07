@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchHeats, deleteHeat } from "src/store/heatsSlice";
 import { fetchEntries } from "src/store/entriesSlice";
 
-import { Box, Typography, useTheme } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import useTheme from "@mui/material/styles/useTheme";
 import { DataGrid } from "@mui/x-data-grid";
 
 import CustomToolbar from "src/components/DataGridComponents/CustomToolbar";

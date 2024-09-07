@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import useTheme from "@mui/material/styles/useTheme";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { CssBaseline, ThemeProvider, Box, Alert, IconButton } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import CssBaseline from "@mui/material/CssBaseline";
+import ThemeProvider from "@mui/material/styles/ThemeProvider";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 import { ColorModeContext, useMode } from "src/utils/theme";
 import Topbar from "src/components/Topbar";
 import { MyProSidebarProvider } from 'src/components/Sidebar/sidebarContext';

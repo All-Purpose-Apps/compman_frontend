@@ -13,7 +13,7 @@ import ViewOneEntry from 'src/views/Entries/ViewOneEntry';
 import EditEntry from 'src/views/Entries/EditEntry';
 // Heat Imports
 import ViewHeats from 'src/views/Heats/ViewHeats';
-import EditHeat from 'src/views/Heats/EditHeat';
+// import EditHeat from 'src/views/Heats/EditHeat';
 import ViewOneHeat from 'src/views/Heats/ViewOneHeat';
 // Schedule Imports
 import ScheduleCall from 'src/views/Other/ScheduleCall';
@@ -84,11 +84,11 @@ const routes = [
     layout: '/admin',
     component: ViewHeats,
   },
-  {
-    path: 'heats/edit/:id',
-    layout: '/admin',
-    component: EditHeat,
-  },
+  // {
+  //   path: 'heats/edit/:id',
+  //   layout: '/admin',
+  //   component: EditHeat,
+  // },
   {
     path: 'heats/:id',
     layout: '/admin',

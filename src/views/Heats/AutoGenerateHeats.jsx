@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Button, Dialog, DialogTitle, DialogContent, DialogContentText, Paper, useTheme, DialogActions
-} from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Paper from '@mui/material/Paper';
+import useTheme from '@mui/material/styles/useTheme';
+import DialogActions from '@mui/material/DialogActions';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchEntries } from 'src/store/entriesSlice';

@@ -3,7 +3,16 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDances, fetchDanceCategories, turnOnOffDanceCategory } from 'src/store/dancesSlice';
 // MUI Components
-import { Card, Grid, Button, useTheme, Box, Typography, Switch, Divider, Collapse, IconButton } from '@mui/material';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import useTheme from '@mui/material/styles/useTheme';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
 // Icons
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';

@@ -8,7 +8,7 @@ import routes from 'src/routes';
 import Login from 'src/views/Auth/Login';
 import Signup from 'src/views/Auth/SignUp';
 import Homepage from 'src/views/Home/Homepage';
-import ProtectedRoute from 'src/views/ProtectedRoute'; // Import your ProtectedRoute component
+import ProtectedRoute from 'src/views/ProtectedRoute';
 import Unauthorized from './views/Unauthorized';
 import UserLayout from './layouts/UserLayout';
 import PricingPage from './views/Home/PricingPage';

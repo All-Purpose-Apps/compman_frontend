@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { Box, useTheme, TextField, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import useTheme from "@mui/material/styles/useTheme";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { tokens } from "src/utils/theme";
 
 const FAQ = () => {

@@ -1,7 +1,15 @@
 import React, { useEffect } from 'react';
-import {
-    TextField, Button, FormControl, CircularProgress, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem
-} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchDances } from 'src/store/dancesSlice';

@@ -2,20 +2,18 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneDancer } from '../../store/dancersSlice';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-    Button,
-    Container,
-    Grid,
-    Card,
-    CardContent,
-    Typography,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableRow,
-    Paper,
-} from '@mui/material';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { capitalize, capitalizeWords, formatPhoneNumber } from 'src/utils';
 
 export default function ViewOneDancer() {

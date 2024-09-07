@@ -3,7 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStudios } from 'src/store/studiosSlice';
 import { getOneDancer, editDancer } from 'src/store/dancersSlice';
-import { TextField, Button, MenuItem, Box, Paper, useTheme, FormControl, Select, InputLabel } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import useTheme from '@mui/material/styles/useTheme';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
 import { tokens } from 'src/utils/theme';
 
 const EditDancer = () => {
