@@ -2,17 +2,18 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector } from "react-redux";
 
+import routes from 'src/routes';
+
 import MainLayout from 'src/layouts/MainLayout';
 import AuthLayout from 'src/layouts/AuthLayout';
-import routes from 'src/routes';
 import Login from 'src/views/Auth/Login';
 import Signup from 'src/views/Auth/SignUp';
 import Homepage from 'src/views/Home/Homepage';
 import ProtectedRoute from 'src/views/ProtectedRoute';
-import Unauthorized from './views/Unauthorized';
-import UserLayout from './layouts/UserLayout';
-import PricingPage from './views/Home/PricingPage';
-import NotFound from './views/NotFound';
+import Unauthorized from 'src/views/Unauthorized';
+import UserLayout from 'src/layouts/UserLayout';
+import PricingPage from 'src/views/Home/PricingPage';
+import NotFound from 'src/views/NotFound';
 
 function App() {
   const user = useSelector((state) => state.user.user);
