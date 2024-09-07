@@ -1,4 +1,6 @@
-import { Button, Box, Typography, Alert } from "@mui/material";
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 import { GridToolbar, GridToolbarContainer } from "@mui/x-data-grid";
 const CustomToolbar = ({ selectedRows, handleMultiDelete, handleAdd, theme, button, location = '', handleAddHeat, orphanEntries }) => {
     return (

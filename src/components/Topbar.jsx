@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import { ColorModeContext, tokens } from "src/utils/theme";
-import { useTheme, Box, IconButton, Typography } from "@mui/material";
+import useTheme from "@mui/material/styles/useTheme";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { useProSidebar } from "react-pro-sidebar";
 import { app } from 'src/firebase';
 import { getAuth, signOut } from 'firebase/auth';

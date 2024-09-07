@@ -2,8 +2,6 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { BRAND, VERSION } from 'src/utils';
 import { useNavigate } from 'react-router-dom';
 import compman from 'src/assets/images/companlogo.png';
 

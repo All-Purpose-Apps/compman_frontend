@@ -1,4 +1,6 @@
-import { Box, IconButton } from "@mui/material";
+
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 // Icons
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

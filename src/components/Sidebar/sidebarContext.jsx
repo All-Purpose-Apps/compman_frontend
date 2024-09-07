@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import MyProSidebar from 'src/components/Sidebar/Sidebar';
 

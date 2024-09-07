@@ -1,4 +1,8 @@
-import { Box, Dialog, DialogTitle, DialogContent, CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function LoadingModal({ loading, resource }) {
     return (
